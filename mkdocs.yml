@@ -1,0 +1,163 @@
+docs_dir: study
+
+site_name: FapC_VS
+site_author: FapC_VS
+
+repo_name: FapC_VS/FapC_VS
+repo_url: https://github.com/FapC_VS/FapC_VS
+copyright: <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> by OASCI
+
+# https://squidfunk.github.io/mkdocs-material/
+theme:
+  name: material
+  custom_dir: study/.overrides
+  language: en
+  logo: img/harbor-logo-square-white.svg
+  palette:
+    # Palette toggle for light mode
+    - scheme: default
+      toggle:
+        icon: material/lightbulb-outline
+        name: Switch to dark mode
+
+    # Palette toggle for dark mode
+    - scheme: dark
+      toggle:
+        icon: material/lightbulb
+        name: Switch to light mode
+  font:
+    text: Roboto
+    code: Roboto Mono
+  icon:
+    repo: fontawesome/brands/github
+    annotation: material/star-four-points-circle
+  features:
+    - content.code.annotate
+    - content.code.copy
+    - content.code.select
+    - content.tooltips
+    - content.tabs.link
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.tracking
+    - navigation.top
+    - navigation.indexes
+    - navigation.path
+    - navigation.prune
+    - toc.follow
+    - search.suggest
+
+validation:
+  omitted_files: warn
+  absolute_links: warn
+  unrecognized_links: warn
+
+# Options need to be indented twice for some reason?
+plugins:
+  - search
+  - autorefs
+  - material-plausible
+  - gen-files:
+      scripts:
+        - docs/gen_ref_pages.py
+  - mkdocstrings:
+      handlers:
+        python:
+          inventories:
+            - "https://docs.python.org/3/objects.inv"
+          paths: ["FapC_VS"]
+          options:
+            show_source: false
+            show_root_heading: false
+            annotations_path: brief
+            docstring_style: google
+            merge_init_into_class: true
+            docstring_section_style: spacy
+            show_if_no_docstring: true
+            show_labels: false
+            parameter_headings: false
+            show_symbol_type_heading: true
+            show_symbol_type_toc: true
+  - mkdocs-jupyter:
+        no_input: False
+        include_requirejs: true
+        include_source: True
+        ignore: ["*.py"]
+        remove_tag_config:
+            remove_input_tags:
+                - hide_code
+  - awesome-nav
+  - glightbox:
+      zoomable: true
+      draggable: false
+      height: 80vh
+      width: auto
+  - macros
+  - git-revision-date-localized:
+      type: iso_datetime
+      timezone: America/Detroit
+      fallback_to_build_date: true
+  - blog:
+      blog_dir: management/literature/
+      post_dir: "{blog}/articles"
+      post_date_format: medium
+      post_url_date_format: yyyy
+      blog_toc: true
+      post_excerpt_separator: <!-- more -->
+      archive: true
+      archive_name: Articles
+      archive_url_format: "articles/{date}"
+  - table-reader
+
+hooks:
+  - hooks/launchy.py
+colab_base_url: https://colab.research.google.com/github/FapC_VS/FapC_VS/blob/main/study
+
+
+extra:
+  generator: false
+
+extra_css:
+  - css/base.css
+  - css/colors.css
+  - css/mol.css
+  - css/mkdocstrings.css
+  - https://cdn.jsdelivr.net/npm/molstar@latest/build/viewer/molstar.css
+
+extra_javascript:
+  - js/mathjax-config.js
+
+markdown_extensions:
+  - abbr
+  - toc:
+      permalink: true
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - tables
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem
+  - pymdownx.caret
+  - pymdownx.details
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.snippets
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde

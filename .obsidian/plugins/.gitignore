@@ -1,0 +1,16 @@
+*.js
+*.css
+*.json
+
+*css
+*dist
+*plugin
+*template
+*icons
+
+# Don't ignore
+!citater
+!citater/main.js
+!citater/manifest.json
+!citater/data.json
+!citater/styles.css
