@@ -41,7 +41,7 @@ def main(lig_inp_dir: Path, box_dirs: Path, pdb_dir: Path, output_dir: Path):
 if __name__ == "__main__":
     # imports
     lig_inp_dir = Path("/ihome/jdurrant/nag81/PSMa1/Initial_Dock/Gypsum_Files").resolve()
-    box_dirs = Path(DIR_STUDY / "021-ftmap-box" / "box").resolve()
+    box_dirs = Path(DIR_STUDY / "021-ftmap-box" / "data" / "box").resolve()
     pdb_dir = Path(DIR_STUDY / "021-ftmap-box" / "9nqd.fftmap.cleared.pdb").resolve()
     output_dir = Path(DIR_STUDY / "024_dock-div-set" / "data").resolve()
 
