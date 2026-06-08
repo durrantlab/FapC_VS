@@ -1,14 +1,7 @@
-# Data
+# 021-FTMap-box
+Goal: determine docking boxes using FTMap
 
-TODO:
-
-## Organization
-
-The organization is loose, but specific templates for your data types may exist.
-
-Each experiment/dataset gets one subfolder.
-Here comes data that should be saved for long-term storage, published, and/or shared with collaborators.
-The experiment subfolder starts with a three-digit number.
-
-Derivative data that can be easily recreated (and should not be stored for the long term) should go in a different folder, `999-processed` data.
-I suggest splitting the data between experiments there, too.
+## Data
+9nqd.fftmap.output.pdb: PDB output from FTMap with docked molecules
+9nqd.fftmap.cleared.pdb: PDB output from FTMap, docked molecules removed. Same as input
+region_#.txt: each box output from FTMap
