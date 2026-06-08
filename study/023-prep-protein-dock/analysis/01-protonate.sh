@@ -14,6 +14,6 @@ exec > >(tee $FAPC_VS_LOG_FILE_PATH) 2>&1
 
 pdb_name="$(basename $pdb_inp)"
 echo "Protonating $pdb_name..."
-reduce -FLIP &pdb_inp > $pdb_op
+pixi run reduce -FLIP "&pdb_inp" > "$pdb_op"
 echo "Done!"
 

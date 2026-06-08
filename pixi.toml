@@ -1,8 +1,8 @@
-[project]
+[workspace]
 authors = [
     "FapC_VS <ian.herzogpohl@gmail.com>",
 ]
-channels = ["conda-forge"]
+channels = ["conda-forge", "bioconda"]
 name = "FapC_VS"
 description = "test"
 platforms = ["win-64", "linux-64", "osx-64"]
@@ -84,3 +84,6 @@ mkdocs-awesome-nav = ">=3.0.0, <4"
 [feature.docs.tasks]
 docs = { cmd = ["rm", "-rf", "./public/", "&&", "mkdocs", "build", "-d", "public/"] }
 serve = { cmd = ["mkdocs", "serve"] }
+
+[target.linux-64.dependencies]
+reduce = ">=4.15,<5"
