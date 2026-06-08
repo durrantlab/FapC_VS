@@ -26,7 +26,7 @@ def main(lig_inp_dir: Path, box_dirs: Path, pdb_dir: Path, output_dir: Path):
     for box in box_list:
         for lig in lig_list:
             # --receptor $receptor --ligand $LIGAND_FILE --config $config --out $OUT
-            out: Path = Path(output_dir / f"{lig.split(".")[0].split("__")[1]}_{box.name.split(".")[0].split("_")[1]}.sdf").resolve()
+            out: Path = Path(output_dir / f"{lig.name.split(".")[0].split("__")[1]}_{box.name.split(".")[0].split("_")[1]}.sdf").resolve()
             gnina_inputs.append(f"--receptor {pdb_dir} --ligand {lig} --config {box} --out {out}")
     
     
