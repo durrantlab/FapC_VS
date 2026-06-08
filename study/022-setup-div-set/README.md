@@ -1,14 +1,7 @@
-# Data
+# 022-setup-div-set
+Goal: Setup the diversity set for docking
 
-TODO:
+## Data
+F[].sdf: each different molecule in a seperate SDF. In each, it is protonated and has different conforms
 
-## Organization
-
-The organization is loose, but specific templates for your data types may exist.
-
-Each experiment/dataset gets one subfolder.
-Here comes data that should be saved for long-term storage, published, and/or shared with collaborators.
-The experiment subfolder starts with a three-digit number.
-
-Derivative data that can be easily recreated (and should not be stored for the long term) should go in a different folder, `999-processed` data.
-I suggest splitting the data between experiments there, too.
+This was already run. Data stored in []/PSMa1/Initial_Dock/Gypsum_Files instead of here
