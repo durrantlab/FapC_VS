@@ -1,9 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=fapc_dock_div             	 		 # Job name
-#SBATCH --cluster=gpu				   	 				 # Use cluster with GPU support
+#SBATCH --cluster=smp				   	 				 # Use cluster with GPU support
 #SBATCH --partition=preempt             				 # Use preempt partion (free)
-#SBATCH --gres=gpu:1                  			     	 # Number of GPUs
-#SBATCH --constraint=a100               			     # Use a100 GPUS
 #SBATCH --nodes=1                      					 # Number of nodes
 #SBATCH --ntasks=1                     	 				 # Number of tasks
 #SBATCH --cpus-per-task=32             	 				 # Number of CPU cores per task
@@ -11,8 +9,6 @@
 #SBATCH --time=6-00:00:00               				 # Time limit (D-HH:MM:SS)
 #SBATCH --output=logs/%A_%a.out                          # Output log path
 #SBATCH --error=logs/%x_%A_%a.err                        # Error log path
-#SBATCH --mail-user=nag81@pitt.edu	   					 # Sends email on job
-#SBATCH --mail-type=ALL                  				 # Notifications for job start, end, fail, etc.
 
 
 module purge
