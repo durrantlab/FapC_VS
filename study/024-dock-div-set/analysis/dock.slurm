@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=psma1_controls_dock       	 		 # Job name
+#SBATCH --job-name=fapc_dock_div             	 		 # Job name
 #SBATCH --cluster=gpu				   	 				 # Use cluster with GPU support
 #SBATCH --partition=preempt             				 # Use preempt partion (free)
 #SBATCH --gres=gpu:1                  			     	 # Number of GPUs
@@ -21,11 +21,12 @@ module load python/3.7.0
 module load gnina
 
 echo "Getting arguments from the job array..."
-ARGS=$(awk -v line=$((SLURM_ARRAY_TASK_ID + 1)) 'NR == line {print $0}' "$JOB_LIST")
+ARGS=$(awk -v line=$((SLURM_ARRAY_TASK_ID + 1)) 'NR == line {print $0}' "job_list.txt")
 echo "Done!"
 
 echo "Getting current receptor and config..."
 RECEPTOR=$(echo "$ARGS" | grep -oP '(?<=--receptor )\S+')
+LIGAND_FILE=$(echo "$ARGS" | grep -oP '(?<=--ligand )\S+')
 CONFIG=$(echo "$ARGS" | grep -oP '(?<=--config )\S+')
 OUT=$(echo "$ARGS" | grep -oP '(?<=--out )\S+')
 echo "Done!"

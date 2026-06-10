@@ -21,20 +21,23 @@ def main(lig_inp_dir: Path, box_dirs: Path, pdb_dir: Path, output_dir: Path):
     box_list: list[Path] = [item for item in box_dirs.iterdir() if item.is_file()]
 
     gnina_inputs = []
-
     # for every box and ligand, create an input
     for box in box_list:
         for lig in lig_list:
             # --receptor $receptor --ligand $LIGAND_FILE --config $config --out $OUT
             out: Path = Path(output_dir / f"{lig.name.split(".")[0].split("__")[1]}_{box.name.split(".")[0].split("_")[1]}.sdf").resolve()
             gnina_inputs.append(f"--receptor {pdb_dir} --ligand {lig} --config {box} --out {out}")
-    
+
     
     # write into file
     job_text: Path = Path(DIR_SCRIPT / "job_list.txt").resolve()
     with open(job_text, "w") as f:
         for line in gnina_inputs:
             f.write(line + "\n")
+    
+    # edit run gnina slurm
+    with open("run_gnina.sh", "w") as f:
+        f.write(f"sbatch --array=0-$({len(gnina_inputs)-1}) --export=ALL ../structures/protein/dock.slurm")
 
 
 
