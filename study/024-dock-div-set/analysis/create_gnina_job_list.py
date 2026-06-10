@@ -39,7 +39,7 @@ def main(lig_inp_dir: Path, box_dirs: Path, pdb_dir: Path, output_dir: Path):
     
     # edit run gnina slurm
     with open("run_gnina.sh", "w") as f:
-        f.write(f"sbatch --array=0-{len(lig_list)-1} --export=ALL dock.slurm\n")
+        f.write(f"sbatch --array=0-{len(gnina_inputs)-1} --export=ALL dock.slurm\n")
 
 
 if __name__ == "__main__":
