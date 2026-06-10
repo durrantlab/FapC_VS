@@ -25,7 +25,7 @@ def main(lig_inp_dir: Path, box_dirs: Path, pdb_dir: Path, output_dir: Path):
     for box in box_list:
         for lig in lig_list:
             # --receptor $receptor --ligand $LIGAND_FILE --config $config --out $OUT
-            out: Path = Path(output_dir / f"{box.name.split(".")[0]}" / f"{lig.name.split(".")[0].split("__")[1]}_docked.sdf").resolve()
+            out: Path = Path(output_dir / f"{box.name.split(".")[0]}" / f"{lig.name.split(".")[0].split("__")[1]}.sdf").resolve()
             gnina_inputs.append(f"--receptor {pdb_dir} --ligand {lig} --config {box} --out {out}")
             if not out.parent.is_dir():
                 out.parent.mkdir(parents=True, exist_ok=True)
@@ -47,7 +47,7 @@ if __name__ == "__main__":
     # imports
     lig_inp_dir = Path("/ihome/jdurrant/nag81/PSMa1/Initial_Dock/Gypsum_Files").resolve()
     box_dirs = Path(DIR_STUDY / "021-ftmap-box" / "data" / "box").resolve()
-    pdb_dir = Path(DIR_STUDY / "021-ftmap-box" / "9nqd.fftmap.cleared.pdb").resolve()
+    pdb_dir = Path(DIR_STUDY / "023-prep-protein-dock" / "data" / "9nqd_protonated.pdb").resolve()
     output_dir = Path(DIR_STUDY / "024_dock-div-set" / "data" / "docked_compounds").resolve()
 
     main(lig_inp_dir, box_dirs, pdb_dir, output_dir)
