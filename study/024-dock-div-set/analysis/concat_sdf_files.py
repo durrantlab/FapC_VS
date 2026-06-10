@@ -42,19 +42,15 @@ def main(lig_inp_dir: Path, lig_op_dir: Path, n_sdf: int):
             raise Exception("Somehow min messed up")
 
         towrite: str = ""
-        print(f"FILE NUM: {file_num}")
         for file_ind in range(min, max+1):
-            #with open(lig_list[file_ind], "r") as f:
-                #towrite = towrite + f.read() + "\n"
-            print(f"  {file_ind}")
+            with open(lig_list[file_ind], "r") as f:
+                towrite = towrite + f.read() + "\n"
 
         min = max + 1
         max = max + count_per_sdf
 
-        #with open(file_path, "w") as f:
-            #f.write(towrite)
-    print(f"{len(lig_list)}")
-
+        with open(file_path, "w") as f:
+            f.write(towrite)
 
 
 
@@ -63,7 +59,7 @@ def main(lig_inp_dir: Path, lig_op_dir: Path, n_sdf: int):
 if __name__ == "__main__":
     # inputs
     lig_inp_dir: Path = Path("/ihome/jdurrant/nag81/PSMa1/Initial_Dock/Gypsum_Files").resolve()
-    lig_op_dir: Path = Path(DIR_SCRIPT / "data" / "concat_lig").resolve()
+    lig_op_dir: Path = Path(DIR_SCRIPT / ".." / "data" / "concat_lig").resolve()
     
     main(lig_inp_dir, lig_op_dir, 30)
 
