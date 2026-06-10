@@ -44,7 +44,7 @@ def main(lig_inp_dir: Path, box_dirs: Path, pdb_dir: Path, output_dir: Path):
             f.write(f"sbatch --array={min+1}-{max} --export=ALL dock.slurm\n")
             min = max
         if min != len(gnina_inputs)-1:
-            f.write(f"sbatch --array={min}-{len(gnina_inputs)-1} --export=ALL dock.slurm")
+            f.write(f"sbatch --array={min+1}-{len(gnina_inputs)-1} --export=ALL dock.slurm")
 
 
 
