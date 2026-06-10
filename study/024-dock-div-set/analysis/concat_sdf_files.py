@@ -44,7 +44,11 @@ def main(lig_inp_dir: Path, lig_op_dir: Path, n_sdf: int):
         towrite: str = ""
         for file_ind in range(min, max+1):
             with open(lig_list[file_ind], "r") as f:
-                towrite = towrite + f.read() + "\n"
+                toadd: str = f.read()
+                if(toadd.endswith("\n")):
+                    towrite = towrite + toadd
+                else:
+                    towrite = towrite + toadd + "\n"
 
         min = max + 1
         max = max + count_per_sdf
