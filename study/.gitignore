@@ -1,3 +1,5 @@
 *.pdb
 *.txt
 *.log
+
+*run_gnina.sh
