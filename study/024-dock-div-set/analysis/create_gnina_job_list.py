@@ -48,7 +48,7 @@ if __name__ == "__main__":
     lig_inp_dir = Path("/ihome/jdurrant/nag81/PSMa1/Initial_Dock/Gypsum_Files").resolve()
     box_dirs = Path(DIR_STUDY / "021-ftmap-box" / "data" / "box").resolve()
     pdb_dir = Path(DIR_STUDY / "023-prep-protein-dock" / "data" / "9nqd_protonated.pdb").resolve()
-    output_dir = Path(DIR_STUDY / "024_dock-div-set" / "data" / "docked_compounds").resolve()
+    output_dir = Path(DIR_STUDY / "024-dock-div-set" / "data" / "docked_compounds").resolve()
 
     main(lig_inp_dir, box_dirs, pdb_dir, output_dir)
 
