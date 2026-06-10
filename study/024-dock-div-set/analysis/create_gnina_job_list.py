@@ -25,8 +25,10 @@ def main(lig_inp_dir: Path, box_dirs: Path, pdb_dir: Path, output_dir: Path):
     for box in box_list:
         for lig in lig_list:
             # --receptor $receptor --ligand $LIGAND_FILE --config $config --out $OUT
-            out: Path = Path(output_dir / f"{lig.name.split(".")[0].split("__")[1]}_{box.name.split(".")[0].split("_")[1]}.sdf").resolve()
+            out: Path = Path(output_dir / f"{box.name.split(".")[0]}" / f"{lig.name.split(".")[0].split("__")[1]}_docked.sdf").resolve()
             gnina_inputs.append(f"--receptor {pdb_dir} --ligand {lig} --config {box} --out {out}")
+            if not out.parent.is_dir():
+                out.parent.mkdir(parents=True, exist_ok=True)
 
     
     # write into file
@@ -37,7 +39,7 @@ def main(lig_inp_dir: Path, box_dirs: Path, pdb_dir: Path, output_dir: Path):
     
     # edit run gnina slurm
     with open("run_gnina.sh", "w") as f:
-        f.write(f"sbatch --array=0-$({len(gnina_inputs)-1}) --export=ALL ../structures/protein/dock.slurm")
+        f.write(f"sbatch --array=0-{len(gnina_inputs)-1} --export=ALL ../structures/protein/dock.slurm")
 
 
 
@@ -46,7 +48,7 @@ if __name__ == "__main__":
     lig_inp_dir = Path("/ihome/jdurrant/nag81/PSMa1/Initial_Dock/Gypsum_Files").resolve()
     box_dirs = Path(DIR_STUDY / "021-ftmap-box" / "data" / "box").resolve()
     pdb_dir = Path(DIR_STUDY / "021-ftmap-box" / "9nqd.fftmap.cleared.pdb").resolve()
-    output_dir = Path(DIR_STUDY / "024_dock-div-set" / "data").resolve()
+    output_dir = Path(DIR_STUDY / "024_dock-div-set" / "data" / "docked_compounds").resolve()
 
     main(lig_inp_dir, box_dirs, pdb_dir, output_dir)
 
