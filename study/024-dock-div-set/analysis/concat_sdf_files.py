@@ -15,8 +15,8 @@ def main(lig_inp_dir: Path, lig_op_dir: Path, n_sdf: int):
         lig_op_dir (Path): Where ligands together will be placed
         n_sdf (int): number of together SDF files to be made
     """
-    if not lig_op_dir.parent.is_dir():
-        lig_op_dir.parent.mkdir(parents=True, exist_ok=True)
+    if not lig_op_dir.is_dir():
+        lig_op_dir.mkdir(parents=True, exist_ok=True)
 
     lig_list: list[Path] = [item for item in lig_inp_dir.iterdir() if item.is_file()]
     lig_num: float = len(lig_list)
