@@ -31,8 +31,8 @@ def main(lig_inp_dir: Path, lig_op_dir: Path, n_sdf: int):
     for file_num in range(0, n_sdf):
         file_path: Path = Path(lig_op_dir / f"ligs_{file_num:03d}.sdf").resolve()
         # go through correct range and get all files
-        if max >= len(count_per_sdf):
-            max = len(count_per_sdf) - 1
+        if max >= len(lig_list):
+            max = len(lig_list) - 1
 
         towrite: str = ""
         print(f"FILE NUM: {file_num}")
