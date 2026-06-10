@@ -39,18 +39,12 @@ def main(lig_inp_dir: Path, box_dirs: Path, pdb_dir: Path, output_dir: Path):
     
     # edit run gnina slurm
     with open("run_gnina.sh", "w") as f:
-        min = -1
-        for max in range(0, len(gnina_inputs)-1, 490)[1:]:
-            f.write(f"sbatch --array={min+1}-{max} --export=ALL dock.slurm\n")
-            min = max
-        if min != len(gnina_inputs)-1:
-            f.write(f"sbatch --array={min+1}-{len(gnina_inputs)-1} --export=ALL dock.slurm")
-
+        f.write(f"sbatch --array=0-{len(lig_list)-1} --export=ALL dock.slurm\n")
 
 
 if __name__ == "__main__":
     # imports
-    lig_inp_dir = Path("/ihome/jdurrant/nag81/PSMa1/Initial_Dock/Gypsum_Files").resolve()
+    lig_inp_dir = Path(DIR_STUDY / "024-dock-div-set" / "data" / "concat_lig").resolve()
     box_dirs = Path(DIR_STUDY / "021-ftmap-box" / "data" / "box").resolve()
     pdb_dir = Path(DIR_STUDY / "023-prep-protein-dock" / "data" / "9nqd_protonated.pdb").resolve()
     output_dir = Path(DIR_STUDY / "024-dock-div-set" / "data" / "docked_compounds").resolve()
