@@ -1,5 +1,7 @@
 *.pdb
 *.txt
 *.log
+*.sdf
+*.csv
 
 *run_gnina.sh
