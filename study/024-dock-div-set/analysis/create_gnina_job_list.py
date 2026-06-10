@@ -40,7 +40,7 @@ def main(lig_inp_dir: Path, box_dirs: Path, pdb_dir: Path, output_dir: Path):
     # edit run gnina slurm
     with open("run_gnina.sh", "w") as f:
         min = -1
-        for max in range(0, len(gnina_inputs)-1, 499)[1:]:
+        for max in range(0, len(gnina_inputs)-1, 490)[1:]:
             f.write(f"sbatch --array={min+1}-{max} --export=ALL dock.slurm\n")
             min = max
         if min != len(gnina_inputs)-1:
