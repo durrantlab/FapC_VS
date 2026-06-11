@@ -57,6 +57,37 @@ def main(docked_dir: Path, csv_rank_file: Path, best_drugs_dir: Path):
             specific_path: Path = Path(sdf_path / f"r{rank_num+1}_{drug[4]}.sdf")
             with open(specific_path, "w") as f:
                 f.write(sdf_data + "\n$$$$")
+        concat_sdf_file: Path = Path(best_drugs_dir / f"{region}_concat.sdf").resolve()
+        concat_sdfs(sdf_path, concat_sdf_file)
+
+
+def concat_sdfs(lig_inp_dir: Path, lig_op_file: Path):
+    """Will take in a list of ligands and combine into
+    n_sdf number of sdf files. Number of SDF files should
+    be how many total jobs will be run
+
+    Args:
+        lig_inp_dir (Path): Where ligands by themselves are found
+        lig_op_dir (Path): Where ligands together will be placed
+        n_sdf (int): number of together SDF files to be made
+    """
+    lig_list: list[Path] = [item for item in lig_inp_dir.iterdir() if item.is_file()]
+    lig_num: float = len(lig_list)
+
+    towrite = ""
+    for lig in lig_list:
+        with open(lig, "r") as f:
+            toadd: str = f.read()
+            if(toadd.endswith("\n")):
+                towrite = towrite + toadd
+            else:
+                towrite = towrite + toadd + "\n"
+
+        with open(lig_op_file, "w") as f:
+            f.write(towrite)
+
+
+
 
 def extract_molecule(drug: list, docked_dir: Path) -> str:
     """Will take in drug data and extract its specific molecule
