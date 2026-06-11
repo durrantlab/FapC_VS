@@ -39,16 +39,42 @@ def main(docked_dir: Path, csv_rank_file: Path, best_drugs_dir: Path):
         best_drugs_dir.mkdir(parents=True, exist_ok=True)
 
     # write the best drugs for each region
-    for region, best_drugs in best_drugs.items():
+    for region, best_drug in best_drugs.items():
         csv_op_file: Path = Path(best_drugs_dir / f"{region}_best.csv").resolve()
         with open(csv_op_file, mode="w", newline="") as file:
             writer = csv.writer(file)
             
             writer.writerow(headers)
-            writer.writerows(best_drugs)
+            writer.writerows(best_drug)
 
-    # TODO: extract the best SDFs as singular SDFs for each region and place them
+    # extract the best SDFs as singular SDFs for each region and place them
+    for region, best_drug in best_drugs.items():
+        sdf_path: Path = Path(best_drugs_dir / region).resolve()
+        if not sdf_path.is_dir():
+            sdf_path.mkdir(parents=True, exist_ok=True)
+        for rank_num, drug in enumerate(best_drug):
+            sdf_data: str = extract_molecule(drug, docked_dir)
+            specific_path: Path = Path(sdf_path / f"r{rank_num+1}_{drug[4]}.sdf")
+            with open(specific_path, "w") as f:
+                f.write(sdf_data + "\n$$$$")
 
+def extract_molecule(drug: list, docked_dir: Path) -> str:
+    """Will take in drug data and extract its specific molecule
+    / pose from the docked sdfs
+
+    Args:
+        drug (list): holds data about drug. 
+            cnn_vs,directory,file_name,pose_ind,name
+        docked_dirt (Path): holds path with all docked sdfs
+
+    Returns:
+        str: the sdf data
+    """
+
+    full_path: Path = Path(docked_dir / drug[1] / f"{drug[2]}")
+    with open(full_path, "r", encoding='utf-8') as f:
+        all_drugs: list = f.read().split("\n$$$$\n")
+    return all_drugs[int(drug[3])]
 
 
 
