@@ -4,5 +4,6 @@
 *.sdf
 *.csv
 *.out
+*.err
 
 *run_gnina.sh
