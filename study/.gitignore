@@ -4,6 +4,10 @@
 *.sdf
 *.csv
 *.out
+<<<<<<< HEAD
 *.png
+=======
+*.err
+>>>>>>> fa6bee6a3e5c115766f53428c51887e404015c73
 
 *run_gnina.sh
