@@ -5,15 +5,16 @@ DIR_SCRIPT: Path = Path(__file__).parent.resolve()
 DIR_STUDY: Path = Path(DIR_SCRIPT  / ".." / "..").resolve()
 
 
-def main(docked_dir: Path, csv_rank_file: Path, best_drugs_dir: Path):
+def main(docked_dir: Path, csv_rank_file: Path, best_drugs_dir: Path, num_best: int):
     """Will take in the best drugs csv, and for each region (box) it will
-    find the top 10 best. It will output them into a csv and give the SDFs
+    find the top X best. It will output them into a csv and give the SDFs
     seperately
 
     Args:
         docked_dir (Path): where the docked SDFs are
         csv_rank_file (Path): where the ranking csv is
         best_drugs_dir (Path): where the best drug data will be placed
+        num_best (int): how many molecules for each region
     """
 
     # read in the csv
@@ -32,7 +33,7 @@ def main(docked_dir: Path, csv_rank_file: Path, best_drugs_dir: Path):
     # get the best molecules in each region
     for molecule in ranking:
         region: str = molecule[1]
-        if len(best_drugs[region]) < 10:
+        if len(best_drugs[region]) < num_best:
             best_drugs[region].append(molecule)
     
     if not best_drugs_dir.is_dir():
@@ -115,6 +116,6 @@ if __name__ == "__main__":
     csv_rank_file: Path = Path(DIR_STUDY / "025-filter-gnina-op" / "data" / "ranked_docked_mols.csv")
     best_drugs: Path = Path(DIR_STUDY / "025-filter-gnina-op" / "data" / "best_drugs")
     
-    main(docked_dir, csv_rank_file, best_drugs)
+    main(docked_dir, csv_rank_file, best_drugs, 10)
 
 
