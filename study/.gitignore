@@ -4,5 +4,6 @@
 *.sdf
 *.csv
 *.out
+*.png
 
 *run_gnina.sh
