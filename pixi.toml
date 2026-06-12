@@ -15,19 +15,20 @@ FapC_VS = { path = ".", editable = true }
 
 [system-requirements]
 linux = "3.10.0"
-libc = { family="glibc", version="2.17" }
+libc = { family="glibc", version="2.17"}
 
 [environments]
 dev = ["dev"]
 docs = ["docs"]
+pharmit = { features = ["pharmit"], no-default-feature = true }
 
 [tasks]
 
 [dependencies]
 python = "=3.12"
 loguru = ">=0.7.2,<0.8"
-rdkit = ">=2026.3.3,<2027"
 prolif = ">=2.1.0,<3"
+rdkit = ">=2026.3.3,<2027"
 
 [feature.dev.dependencies]
 black = ">=23.10.0"
@@ -86,6 +87,12 @@ mkdocs-awesome-nav = ">=3.0.0, <4"
 [feature.docs.tasks]
 docs = { cmd = ["rm", "-rf", "./public/", "&&", "mkdocs", "build", "-d", "public/"] }
 serve = { cmd = ["mkdocs", "serve"] }
+
+[feature.pharmit.target.linux-64.dependencies]
+pharmit = { url = "https://github.com/durrantlab/pharmit-dl/releases/download/v0.1.3/pharmit-0.1.3-h41f06ac_0.conda" }
+
+[feature.pharmit]
+channels = ["conda-forge"]
 
 [target.linux-64.dependencies]
 reduce = ">=4.15,<5"
