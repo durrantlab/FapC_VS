@@ -7,5 +7,6 @@
 *.png
 *.err
 *.pse
+*.json
 
 *run_gnina.sh
