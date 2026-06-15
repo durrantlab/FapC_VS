@@ -22,18 +22,20 @@ def main(docked_ligands_dir: Path, protein_file: Path, op_dir: Path):
         op_dir (Path): where output data will be placed
     """
     # read in protein
-    rdkit_prot = Chem.MolFromPDBFile(protein_file, removeHs=False)
+    rdkit_prot = Chem.MolFromPDBFile(str(protein_file), removeHs=False)
     protein_mol = plf.Molecule(rdkit_prot)
 
     div_sdf_list: list[Path] = [item for item in docked_ligands_dir.iterdir() if item.is_file() and item.suffix == ".sdf"]
     op = ""
     for div_sdf in div_sdf_list:
         print(div_sdf)
-        pose_iterable = plf.sdf_supplier(div_sdf)
+        
+        pose_iterable = plf.sdf_supplier(str(div_sdf))
         fp = plf.Fingerprint()
         fp.run_from_iterable(pose_iterable, protein_mol)
+        
         df = fp.to_dataframe(index_col="Pose")
-        csv_op: Path = (op_dir / f"{"_".join(div_sdf.name.split("_")[0:2])}_interacts.csv").resolve()
+        csv_op: Path = (op_dir / f"{'_'.join(div_sdf.name.split('_')[0:2])}_interacts.csv").resolve()
         df.to_csv(str(csv_op), index=False)
 
 
