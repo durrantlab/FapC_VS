@@ -13,7 +13,7 @@ HEADER: str = """#!/bin/bash
 #SBATCH --cpus-per-task=32             	 				 # Number of CPU cores per task
 #SBATCH --mem=128G                     	 				 # Memory allocation
 #SBATCH --time=12:00:00                    				 # Time limit (D-HH:MM:SS)
-#SBATCH --output=logs/batch.out                          # Output log path
+#SBATCH --output=batch.out                          # Output log path
 
 module purge
 module load pixi
@@ -38,7 +38,7 @@ def main(top_div_set_dir: Path, output_dir: Path):
     
     # create for every SDF
     for div_sdf in div_sdf_list:
-        out_path: Path = (output_dir / f"{div_sdf.name.split(".")[0]}.out").resolve()
+        out_path: Path = (output_dir / f"{div_sdf.name.split(".")[0]}.json").resolve()
         line: str = f"pixi run -e pharmit pharmit pharma -in {str(div_sdf)} -out {str(out_path)}"
         slurm_str = slurm_str + "\n" + line
 
