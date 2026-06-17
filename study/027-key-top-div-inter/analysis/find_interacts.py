@@ -35,9 +35,10 @@ def main(docked_ligands_dir: Path, protein_file: Path, op_dir: Path):
         pose_iterable = plf.sdf_supplier(str(div_sdf))
         fp = plf.Fingerprint(vicinity_cutoff=10, \
                             parameters={"Hydrophobic":{"distance":4}, \
-                                        "HBDonor":{"distance":2.5}, \
-                                        "HBAcceptor":{"distance":2.5}, \
+                                        "HBDonor":{"distance":3}, \
+                                        "HBAcceptor":{"distance":3}, \
                                         "Anionic":{"distance":4}, \
+                                        "VdWContact":{"distance":0}, \
                                         "Cationic":{"distance":4}, \
                                         "PiStacking":   {"ftf_kwargs": {"distance": 6.5},
                                                         "etf_kwargs": {"distance": 6.5}}})
