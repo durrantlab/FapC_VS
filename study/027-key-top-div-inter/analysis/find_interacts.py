@@ -33,13 +33,14 @@ def main(docked_ligands_dir: Path, protein_file: Path, op_dir: Path):
         print(div_sdf)
         
         pose_iterable = plf.sdf_supplier(str(div_sdf))
-        fp = plf.Fingerprint(vicinity_cutoff=10,
-                            parameters={"Hydrophobic":{"distance":4},
-                                        "HBDonor":{"distance":2.5},
-                                        "HBAcceptor":{"distance":2.5},
-                                        "Anionic":{"distance":4},
-                                        "Cationic":{"distance":4},
-                                        "PiStacking":{"distance":6.5}})
+        fp = plf.Fingerprint(vicinity_cutoff=10, \
+                            parameters={"Hydrophobic":{"distance":4}, \
+                                        "HBDonor":{"distance":2.5}, \
+                                        "HBAcceptor":{"distance":2.5}, \
+                                        "Anionic":{"distance":4}, \
+                                        "Cationic":{"distance":4}, \
+                                        "PiStacking":   {"ftf_kwargs": {"distance": 6.5},
+                                                        "etf_kwargs": {"distance": 6.5}}})
         fp.run_from_iterable(pose_iterable, protein_mol)
         
         lig_inter_list: list[dict[str,dict[str,list[int]]]] = []
