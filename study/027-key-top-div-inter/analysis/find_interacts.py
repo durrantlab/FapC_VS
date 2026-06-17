@@ -37,10 +37,10 @@ def main(docked_ligands_dir: Path, protein_file: Path, op_dir: Path):
                             interactions=["Hydrophobic", "HBDonor", "HBAcceptor", "PiStacking",
                                 "Anionic", "Cationic", "CationPi", "PiCation"],
                              parameters={"Hydrophobic":{"distance":4}, \
-                                        "HBDonor":{"distance":3}, \
-                                        "HBAcceptor":{"distance":3}, \
-                                        "Anionic":{"distance":4}, \
-                                        "Cationic":{"distance":4}, \
+                                        "HBDonor":{"distance":3.5}, \
+                                        "HBAcceptor":{"distance":3.5}, \
+                                        "Anionic":{"distance":8}, \
+                                        "Cationic":{"distance":8}, \
                                         "PiStacking":   {"ftf_kwargs": {"distance": 6.5},
                                                         "etf_kwargs": {"distance": 6.5}}})
         fp.run_from_iterable(pose_iterable, protein_mol)
