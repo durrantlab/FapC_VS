@@ -1,3 +1,5 @@
+from typing import Any
+from pandas.core.frame import DataFrame
 import warnings
 
 with warnings.catch_warnings(record=True):
@@ -33,12 +35,43 @@ def main(docked_ligands_dir: Path, protein_file: Path, op_dir: Path):
         pose_iterable = plf.sdf_supplier(str(div_sdf))
         fp = plf.Fingerprint()
         fp.run_from_iterable(pose_iterable, protein_mol)
+        lig_inter_list: list[dict[str,dict[str,list[int]]]] = []
+        """D1: each molecule D2: each protein res D3: each interaciton D4: list of atoms interacting"""
+        for mol_indx in range(len(pose_iterable)): # go through every molecule
+            lig_inter_list.append({})
+            for (lig_res, prot_res), interactions in fp.ifp[mol_indx].items(): # go through every interaction for this one
+                prot_name: str = f"{prot_res.name}{prot_res.number}.{prot_res.chain}" 
+                lig_inter_list[-1][prot_name] = {}
+                for int_name, metadata_list in interactions.items():
+                    lig_inter_list[-1][prot_name][int_name] = []
+                    for md in metadata_list:
+                        lig_atoms: tuple[int] = md["parent_indices"]["ligand"]
+                        for lig_atom in lig_atoms:
+                            if not lig_atom in lig_inter_list[-1][prot_name]:
+                                lig_inter_list[-1][prot_name][int_name].append(lig_atom)
         
-        df = fp.to_dataframe(index_col="Pose")
+        df: df = fp.to_dataframe(index_col="Pose")
+        df_list: list[list] = [df.columns.tolist()] + df.to_numpy().tolist()
+
+        for mol_indx in range(len(df_list[1:])):
+            act_indx = mol_indx + 1
+            temp_lig_inters: dict[str,dict[str,list[int]]] = lig_inter_list[mol_indx]
+            for inter_indx in range(len(df_list[0])):
+                for (prot_name, atoms_) in temp_lig_inters.items():
+                    for (inter_name, atoms) in atoms_.items():
+                        if prot_name == df_list[0][inter_indx][1] and \
+                                inter_name == df_list[0][inter_indx][2]:
+                            df_list[act_indx][inter_indx] = ".".join([str(item) for item in atoms])
+
         csv_op: Path = (op_dir / f"{'_'.join(div_sdf.name.split('_')[0:2])}_interacts.csv").resolve()
-        df.to_csv(str(csv_op), index=False)
-
-
+        with open(csv_op, "w") as f:
+            # add in headers
+            headers: list[list[Any]] = [list(row) for row in zip(*df_list[0])]
+            for header in headers:
+                f.write(",".join(header) + "\n")
+            # add in data
+            for line in df_list[1:]:
+                f.write(",".join([str(item) for item in line]) + "\n")
 
 
 
