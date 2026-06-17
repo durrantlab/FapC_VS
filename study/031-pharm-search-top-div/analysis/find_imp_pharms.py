@@ -89,7 +89,7 @@ def update_pharm(mol_pharm: list, valid_pharms: list[bool]) -> list:
     return mol_pharm
 
 
-def get_valid_pharms(mol_pharm, u: mda.Universe, res_list: list[str], 
+def get_valid_pharms(mol_pharm, mol, res_list: list[str], 
                      inter_type_list: list[str], if_interact_list: list[str | list[int]]) -> list[bool]:
     """take the location of pharmacophore and check if it close enough to one of the
     molecules with same type of interaction. If it is, adds its index to the return
@@ -111,29 +111,41 @@ def get_valid_pharms(mol_pharm, u: mda.Universe, res_list: list[str],
         pharm_loc = [pharm["x"],pharm["y"],pharm["z"]]
         pharm_type = pharm["name"]
         # go through each interacting residue
+        if_any_inside: bool = False
         for res_index, res_name in enumerate(res_list):
             # if interacting in this molecule + correct type
             atoms_interact = if_interact_list[res_index]
-            pharmit_inter_type = inter_type_list[res_index]
-            if atoms_interact != "False" and pharm_type == PROLIF_TO_PHARMACOPHORE[pharmit_inter_type]:
+            prolif_inter_type = PROLIF_TO_PHARMACOPHORE[inter_type_list[res_index]]
+            if atoms_interact != "False" and pharm_type == prolif_inter_type:
                 # go through each atom
                 for atom in atoms_interact:
-                    
-        
+                    conf = mol.GetConformer()
+                    atom_pos = list(conf.GetAtomPosition(atom))
+                    # determine distance and if valid
+                    dist: float = eucl_dist(atom_pos, pharm_loc)
+                    if_any_inside = if_inside_pharm(dist, prolif_inter_type)
+                    if if_any_inside:
+                        break 
+            if if_any_inside:
+                break
+        if if_any_inside:
+            if_pharm.append(True)
+        else:
+            if_pharm.append(False)
 
     return if_pharm
 
 
 
-def if_interacting(dist, inter_type) -> bool:
+def if_inside_pharm(dist, inter_type) -> bool:
     if inter_type == "Hydrophobic" or inter_type == "Aromatic":
-        if dist < 7:
+        if dist < 1.7:
             return True
     if inter_type == "HydrogenDonor" or inter_type == "HydrogenAcceptor":
-        if dist < 4:
+        if dist < 1.7:
             return True 
-    if inter_type == "HydrogenDonor" or inter_type == "HydrogenAcceptor":
-        if dist < 4:
+    if inter_type == "Cationic" or inter_type == "Anionic":
+        if dist < 1.7:
             return True 
     return False
 
