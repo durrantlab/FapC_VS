@@ -2,7 +2,7 @@ from pathlib import Path
 import csv
 import MDAnalysis as mda
 import json
-
+from rdkit import Chem
 from lib import *
 
 DIR_SCRIPT: Path = Path(__file__).parent.resolve()
@@ -10,12 +10,11 @@ DIR_STUDY: Path = Path(DIR_SCRIPT  / ".." / "..").resolve()
 
 PROLIF_TO_PHARMACOPHORE = {
     "Hydrophobic": "Hydrophobic",
-    "HBDonor":     "HydrogenAcceptor",
-    "HBAcceptor":  "HydrogenDonor",
+    "HBDonor":     "HydrogenDonor",
+    "HBAcceptor":  "HydrogenAcceptor",
     "PiStacking":  "Aromatic",
-    "Cationic":    "NegativeIon",
-    "Anionic":     "PositiveIon",
-    "VdWContact":  None,            
+    "Cationic":    "PositiveIon",
+    "Anionic":     "NegativeIon",
 }
 
 def main(interaction_csv_dir: Path, protein_dir: Path, 
@@ -32,14 +31,19 @@ def main(interaction_csv_dir: Path, protein_dir: Path,
     """
 
     # read in interaction_csv_dir
+    residues: dict[str, list[str]] = {}
+    """The protein residues interacting for each region"""
+    inter_type: dict[str, list[str]] = {}
+    """The type of interaction of those protein residues. Index aligns with above""" 
+    if_interact: dict[str, list[list[str | list[int]]]] = {}
+    """D1: region D2: each different molecule D3: each protein res interaction (index aligns above)
+    D4: the ligand atoms it interacts with"""
     residues, inter_type, if_interact = read_in_csv(interaction_csv_dir)
-
-    # read in the protein
-    u = mda.Universe(protein_dir)
 
     # read in the pharmacophores
     pharm_list: list[Path] = [item for item in pharm_json_dir.iterdir() if item.is_file() and item.suffix == ".json"]
-    pharm_dict: dict = {}
+    pharm_dict: dict[str, list] = {}
+    """List of pharmacophores for each molecule in each region"""
     regions: list[str] = []
     for pharm_json in pharm_list:
         region: str = "_".join(pharm_json.name.split(".")[0].split("_")[0:2])
@@ -48,15 +52,20 @@ def main(interaction_csv_dir: Path, protein_dir: Path,
             pharm_dict[region] = load_concatenated_json(pharm_json)
     
     # through each region and it's molecules
-    for region_name, pharm_list in pharm_dict.items():
-        for mol_index, mol_pharm in enumerate(pharm_list):
-            # take the location of pharmacophore and check if it close enough to one of the
-            # molecules with same type of interaction
+    for region_name, mol_list in pharm_dict.items():
+        # read in the region
+        region_file: Path = (docked_SDFs / f"{region_name}_concat.sdf").resolve()
+        supplier = Chem.SDMolSupplier(str(region_file))
+        for mol_index, mol_pharm in enumerate(mol_list):
+            # extract molecule
+            mol = supplier[mol_index]
+            # determine if pharmacophore is valid
             reg_res_list: list[str] = residues[region_name]
             reg_inter_type: list[str] = inter_type[region_name]
-            mol_if_interact: list[bool] = residues[region_name][mol_index]
-            valid_pharms: list[bool] = get_valid_pharms(mol_pharm, u, reg_res_list, 
+            mol_if_interact: list[str | list] = if_interact[region_name][mol_index]
+            valid_pharms: list[bool] = get_valid_pharms(mol_pharm, mol, reg_res_list, 
                                                         reg_inter_type, mol_if_interact)
+            # update pharmacophore based on validity
             mol_pharm = update_pharm(mol_pharm, valid_pharms)
 
 
@@ -80,8 +89,8 @@ def update_pharm(mol_pharm: list, valid_pharms: list[bool]) -> list:
     return mol_pharm
 
 
-def get_valid_pharms(mol_pharm: json, u: mda.Universe, res_list: list[str], 
-                     inter_type_list: list[str], if_interact_list: list[bool]) -> list[bool]:
+def get_valid_pharms(mol_pharm, u: mda.Universe, res_list: list[str], 
+                     inter_type_list: list[str], if_interact_list: list[str | list[int]]) -> list[bool]:
     """take the location of pharmacophore and check if it close enough to one of the
     molecules with same type of interaction. If it is, adds its index to the return
     list
@@ -102,25 +111,16 @@ def get_valid_pharms(mol_pharm: json, u: mda.Universe, res_list: list[str],
         pharm_loc = [pharm["x"],pharm["y"],pharm["z"]]
         pharm_type = pharm["name"]
         # go through each interacting residue
-        brk = False
-        for res_ind, res in enumerate(res_list):
-            # check that this res is involved in correct interacion type
-            inter_type = PROLIF_TO_PHARMACOPHORE[inter_type_list[res_ind]]
-            if inter_type == pharm_type:
-                # get every atom and go through and find distance to pharm
-                res_num = int(res.split(".")[0][3:])
-                chain_id = res.split(".")[1]
-                res_atoms_coords = u.select_atoms(f"resid {res_num} and chainID {chain_id}").positions
-                for res_pos in res_atoms_coords:
-                    dist = eucl_dist(res_pos, pharm_loc)
-                    if if_interacting(dist, inter_type):
-                        brk = True 
-                        if_pharm.append(True)
-                        break
-            if brk:
-                break
-        if not brk:
-            if_pharm.append(False)
+        for res_index, res_name in enumerate(res_list):
+            # if interacting in this molecule + correct type
+            atoms_interact = if_interact_list[res_index]
+            pharmit_inter_type = inter_type_list[res_index]
+            if atoms_interact != "False" and pharm_type == PROLIF_TO_PHARMACOPHORE[pharmit_inter_type]:
+                # go through each atom
+                for atom in atoms_interact:
+                    
+        
+
     return if_pharm
 
 

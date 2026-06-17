@@ -56,7 +56,8 @@ def main(docked_ligands_dir: Path, protein_file: Path, op_dir: Path):
                     lig_inter_list[-1][prot_name][int_name] = []
                     for md in metadata_list:
                         lig_atoms: tuple[int] = md["parent_indices"]["ligand"]
-                        for lig_atom in lig_atoms:
+                        for lig_atom_ in lig_atoms:
+                            lig_atom = lig_atom_ + 1
                             if not lig_atom in lig_inter_list[-1][prot_name]:
                                 lig_inter_list[-1][prot_name][int_name].append(lig_atom)
         

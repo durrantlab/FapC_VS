@@ -1,17 +1,19 @@
 from pathlib import Path
+import csv
+import json
 
 def eucl_dist(a: list[int], b: list[int]) -> int:
     return ((a[0]-b[0])**2 + (a[1]-b[1])**2 + (a[2]-b[2])**2) ** 0.5
 
 
 
-def read_in_csv(interaction_csv_dir: Path):
+def read_in_csv(interaction_csv_dir: Path) -> tuple[dict[str, list[str]], dict[str, list[str]], dict[str, list[list[str | list[int]]]]]:
     # read in interaction_csv_dir
     inter_csv_list: list[Path] = [item for item in interaction_csv_dir.iterdir() if item.is_file() and item.suffix == ".csv"]
 
-    residues: dict[list[str]] = {}
-    inter_type: dict[list[str]] = {}
-    if_interact: dict[list[list[str]]] = {}
+    residues: dict[str, list[str]] = {}
+    inter_type: dict[str, list[str]] = {}
+    if_interact: dict[str, list[list[str | list[int]]]] = {}
     for inter_csv in inter_csv_list:
         region: str = "_".join(inter_csv.name.split(".")[0].split("_")[0:2])
         with open(inter_csv, newline="") as f:
@@ -20,7 +22,7 @@ def read_in_csv(interaction_csv_dir: Path):
             residues[region] = next(reader)
             inter_type[region] = next(reader)
             if_interact[region] = \
-                [[to_bool(v) for v in row] for row in list(reader)]
+                [[[to_bool(u) for u in v.split(".")] for v in row if v != "False"] for row in list(reader)]
     
     return residues, inter_type, if_interact
 
