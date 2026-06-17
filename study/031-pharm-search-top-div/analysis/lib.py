@@ -22,7 +22,7 @@ def read_in_csv(interaction_csv_dir: Path) -> tuple[dict[str, list[str]], dict[s
             residues[region] = next(reader)
             inter_type[region] = next(reader)
             if_interact[region] = \
-                [[[to_bool(u) for u in v.split(".")] for v in row if v != "False"] for row in list(reader)]
+                [[[int(u) for u in v.split(".")] if v != "False" else "False" for v in row] for row in list(reader)]
     
     return residues, inter_type, if_interact
 
@@ -59,3 +59,10 @@ def load_concatenated_json(path: Path) -> list:
         objects.append(obj)
         idx = end
     return objects
+
+def write_concatenated_json(objects, path, indent=2):
+    with open(path, "w") as f:
+        for i, obj in enumerate(objects):
+            if i:
+                f.write("\n")
+            json.dump(obj, f, indent=indent)

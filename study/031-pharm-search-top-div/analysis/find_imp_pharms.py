@@ -56,6 +56,8 @@ def main(interaction_csv_dir: Path, protein_dir: Path,
         # read in the region
         region_file: Path = (docked_SDFs / f"{region_name}_concat.sdf").resolve()
         supplier = Chem.SDMolSupplier(str(region_file))
+        new_pharm: list[dict] = []
+        pharms_enable_list: list[list[bool]] = []
         for mol_index, mol_pharm in enumerate(mol_list):
             # extract molecule
             mol = supplier[mol_index]
@@ -66,11 +68,25 @@ def main(interaction_csv_dir: Path, protein_dir: Path,
             valid_pharms: list[bool] = get_valid_pharms(mol_pharm, mol, reg_res_list, 
                                                         reg_inter_type, mol_if_interact)
             # update pharmacophore based on validity
-            mol_pharm = update_pharm(mol_pharm, valid_pharms)
+            new_pharm.append(update_pharm(mol_pharm, valid_pharms))
+            pharms_enable_list.append(valid_pharms)
+        # write out the new pharmacophores
+        op_file: Path = (op_dir / "disabled_pharms_input" / f"{region_name}_disable.json").resolve()
+        if not op_file.parent.is_dir():
+            op_file.parent.mkdir(parents=True, exist_ok=True)
+        write_concatenated_json(new_pharm, op_file)
+        # write out the list of which pharms are enabled / disabled
+        op_file: Path = (op_dir / "pharm_enable_lists" / f"{region_name}.csv").resolve()
+        if not op_file.parent.is_dir():
+            op_file.parent.mkdir(parents=True, exist_ok=True)
+        with open(op_file, "w", newline="") as f:
+            writer = csv.writer(f)
+            writer.writerows(pharms_enable_list)
+        
 
 
 
-def update_pharm(mol_pharm: list, valid_pharms: list[bool]) -> list:
+def update_pharm(mol_pharm: dict, valid_pharms: list[bool]) -> dict:
     """Will update the the pharm JSONs so that are enabled / disabled based
     on valid pharm list
 
@@ -82,9 +98,9 @@ def update_pharm(mol_pharm: list, valid_pharms: list[bool]) -> list:
         list[json]: pharms now enabled / disabled correctly
     """
 
-    for index in range(len(mol_pharm)):
+    for index in range(len(mol_pharm["points"])):
         if not valid_pharms[index]:
-            mol_pharm[index]["enabled"] = False
+            mol_pharm["points"][index]["enabled"] = False
     
     return mol_pharm
 
@@ -120,7 +136,7 @@ def get_valid_pharms(mol_pharm, mol, res_list: list[str],
                 # go through each atom
                 for atom in atoms_interact:
                     conf = mol.GetConformer()
-                    atom_pos = list(conf.GetAtomPosition(atom))
+                    atom_pos = list(conf.GetAtomPosition(int(atom)-1))
                     # determine distance and if valid
                     dist: float = eucl_dist(atom_pos, pharm_loc)
                     if_any_inside = if_inside_pharm(dist, prolif_inter_type)
@@ -139,13 +155,13 @@ def get_valid_pharms(mol_pharm, mol, res_list: list[str],
 
 def if_inside_pharm(dist, inter_type) -> bool:
     if inter_type == "Hydrophobic" or inter_type == "Aromatic":
-        if dist < 1.7:
+        if dist < 2:
             return True
     if inter_type == "HydrogenDonor" or inter_type == "HydrogenAcceptor":
-        if dist < 1.7:
+        if dist < 2:
             return True 
     if inter_type == "Cationic" or inter_type == "Anionic":
-        if dist < 1.7:
+        if dist < 2:
             return True 
     return False
 
@@ -161,7 +177,7 @@ if __name__ == "__main__":
     protein_dir: Path = (DIR_STUDY / "023-prep-protein-dock" / "data" / "9nqd_protonated.pdb")
     docked_SDFs: Path = (DIR_STUDY / "025-filter-gnina-op" / "data" / "best_drugs")
     pharm_list: Path = (DIR_STUDY / "028-pharms-top-div-set" / "data")
-    op_dir: Path = (DIR_SCRIPT / ".." / "data" / "imp_pharms")
+    op_dir: Path = (DIR_SCRIPT / ".." / "data")
 
     main(interaction_csv_dir, protein_dir, docked_SDFs, pharm_list, op_dir)
 
