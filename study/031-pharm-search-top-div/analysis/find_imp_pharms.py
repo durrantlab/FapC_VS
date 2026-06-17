@@ -17,14 +17,13 @@ PROLIF_TO_PHARMACOPHORE = {
     "Anionic":     "NegativeIon",
 }
 
-def main(interaction_csv_dir: Path, protein_dir: Path, 
-         docked_SDFs: Path, pharm_json_dir: Path, op_dir: Path):
+def main(interaction_csv_dir: Path, docked_SDFs: Path, 
+        pharm_json_dir: Path, op_dir: Path):
     """Will take in pharmacophores for each sdf and its
     list of interactions to determine key pharmacophores
 
     Args:
         interaction_csv_dir (Path): each molecules interactions
-        protein_dir (Path): the protonated protein they were docked
         docked_SDFs (Path): the top molecules
         pharm_list (Path): list of the molecules pharmacophores
         op_dir (Path): where info on each molecule will be output
