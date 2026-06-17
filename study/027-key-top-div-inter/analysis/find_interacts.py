@@ -38,7 +38,7 @@ def main(docked_ligands_dir: Path, protein_file: Path, op_dir: Path):
                                         "HBDonor":{"distance":3}, \
                                         "HBAcceptor":{"distance":3}, \
                                         "Anionic":{"distance":4}, \
-                                        "VdWContact":{"distance":0}, \
+                                        "VdWContact":{"tolerance":0.0}, \
                                         "Cationic":{"distance":4}, \
                                         "PiStacking":   {"ftf_kwargs": {"distance": 6.5},
                                                         "etf_kwargs": {"distance": 6.5}}})
