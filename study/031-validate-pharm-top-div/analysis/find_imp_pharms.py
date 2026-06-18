@@ -71,11 +71,14 @@ def main(interaction_csv_dir: Path, docked_SDFs: Path,
             new_pharm.append(update_pharm(mol_pharm, valid_pharms))
             pharms_enable_list.append(valid_pharms)
         # write out the new pharmacophores
-        op_file: Path = (op_dir / "disabled_pharms_input" / f"{region_name}_disable.json").resolve()
+        op_file: Path = (op_dir / region_name).resolve()
         if not op_file.parent.is_dir():
             op_file.parent.mkdir(parents=True, exist_ok=True)
-        write_concatenated_json(new_pharm, op_file)
-        # write out the list of which pharms are enabled / disabled
+        for ind, pharm in enumerate(new_pharm):
+            op_pharm_file: Path = (op_file / f"mol{ind}_input.json")
+            with open(op_pharm_file, "w") as f:
+                json.dump(pharm, f, indent=2)
+        # write out each pharmit input based on with new enable / disable data
         op_file: Path = (op_dir / "pharm_enable_lists" / f"{region_name}.csv").resolve()
         if not op_file.parent.is_dir():
             op_file.parent.mkdir(parents=True, exist_ok=True)
