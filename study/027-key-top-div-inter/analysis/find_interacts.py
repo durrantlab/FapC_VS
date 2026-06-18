@@ -41,8 +41,8 @@ def main(docked_ligands_dir: Path, protein_file: Path, op_dir: Path):
                                         "HBAcceptor":{"distance":4.0}, \
                                         "Anionic":{"distance":8}, \
                                         "Cationic":{"distance":8}, \
-                                        "PiStacking":{"ftf_kwargs": {"distance": 6.5},
-                                                      "etf_kwargs": {"distance": 6.5}}})
+                                        "PiStacking":{"ftf_kwargs": {"distance": 8},
+                                                      "etf_kwargs": {"distance": 8}}})
         fp.run_from_iterable(pose_iterable, protein_mol)
         
         lig_inter_list: list[dict[str,dict[str,list[int]]]] = []
