@@ -7,8 +7,7 @@
 #SBATCH --cpus-per-task=32             	 				 # Number of CPU cores per task
 #SBATCH --mem=128G                     	 				 # Memory allocation
 #SBATCH --time=12:00:00                    				 # Time limit (D-HH:MM:SS)
-#SBATCH --output=logs/%A_%a.out                          # Output log path
-#SBATCH --error=logs/%x_%A_%a.err                        # Error log path
+#SBATCH --output=test.out                               # Output log path
 
 module purge
 module load pixi

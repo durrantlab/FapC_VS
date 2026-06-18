@@ -10,3 +10,4 @@
 *.json
 
 *run_gnina.sh
+*run_pharmit_search.sh
