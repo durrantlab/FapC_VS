@@ -178,6 +178,6 @@ if __name__ == "__main__":
     pharm_list: Path = (DIR_STUDY / "028-pharms-top-div-set" / "data")
     op_dir: Path = (DIR_SCRIPT / ".." / "data")
 
-    main(interaction_csv_dir, protein_dir, docked_SDFs, pharm_list, op_dir)
+    main(interaction_csv_dir, docked_SDFs, pharm_list, op_dir)
 
 
