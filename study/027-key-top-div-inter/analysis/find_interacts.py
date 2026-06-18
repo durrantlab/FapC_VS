@@ -36,9 +36,9 @@ def main(docked_ligands_dir: Path, protein_file: Path, op_dir: Path):
         fp = plf.Fingerprint(vicinity_cutoff=10, \
                             interactions=["Hydrophobic", "HBDonor", "HBAcceptor", "PiStacking",
                                           "Anionic", "Cationic", "CationPi", "PiCation"],
-                             parameters={"Hydrophobic":{"distance":4}, \
-                                        "HBDonor":{"distance":3.5}, \
-                                        "HBAcceptor":{"distance":3.5}, \
+                             parameters={"Hydrophobic":{"distance":4.5}, \
+                                        "HBDonor":{"distance":4.0}, \
+                                        "HBAcceptor":{"distance":4.0}, \
                                         "Anionic":{"distance":8}, \
                                         "Cationic":{"distance":8}, \
                                         "PiStacking":{"ftf_kwargs": {"distance": 6.5},
