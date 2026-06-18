@@ -61,8 +61,6 @@ def main(interaction_csv_dir: Path, docked_SDFs: Path,
         for mol_index, mol_pharm in enumerate(mol_list):
             # extract molecule
             mol = supplier[mol_index]
-            if mol_index == 9:
-                print(f"{Chem.MolToSmiles(mol)}")
             # determine if pharmacophore is valid
             reg_res_list: list[str] = residues[region_name]
             reg_inter_type: list[str] = inter_type[region_name]
@@ -176,7 +174,7 @@ def if_inside_pharm(dist, inter_type) -> bool:
 if __name__ == "__main__":
     # inputs
     interaction_csv_dir: Path = (DIR_STUDY / "027-key-top-div-inter" / "data").resolve()
-    protein_dir: Path = (DIR_STUDY / "023-prep-protein-dock" / "data" / "9nqd_protonated.pdb").resolve()
+    #protein_dir: Path = (DIR_STUDY / "023-prep-protein-dock" / "data" / "9nqd_protonated.pdb").resolve()
     docked_SDFs: Path = (DIR_STUDY / "025-filter-gnina-op" / "data" / "best_drugs").resolve()
     pharm_list: Path = (DIR_STUDY / "028-pharms-top-div-set" / "data").resolve()
     op_dir: Path = (DIR_SCRIPT / ".." / "data").resolve()
