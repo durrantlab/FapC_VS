@@ -72,8 +72,8 @@ def main(interaction_csv_dir: Path, docked_SDFs: Path,
             pharms_enable_list.append(valid_pharms)
         # write out the new pharmacophores
         op_file: Path = (op_dir / region_name).resolve()
-        if not op_file.parent.is_dir():
-            op_file.parent.mkdir(parents=True, exist_ok=True)
+        if not op_file.is_dir():
+            op_file.mkdir(parents=True, exist_ok=True)
         for ind, pharm in enumerate(new_pharm):
             op_pharm_file: Path = (op_file / f"mol{ind}_input.json")
             with open(op_pharm_file, "w") as f:
