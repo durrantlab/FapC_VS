@@ -51,8 +51,8 @@ def main(sdf_db_path: Path, db_main_path: Path, skip_file_format: bool = False):
     with open(job_list_path, "w") as f:
         for sdf_file in sdf_file_list:
             # sub db path
-            db_path: Path = (db_main_path / f"{sdf_file.name}").resolve()
-            f.write(f"-dbdir {db_path} -in {sdf_file}")
+            db_path: Path = (db_main_path / f"{sdf_file.name.split('.')[0]}").resolve()
+            f.write(f"-dbdir {db_path} -in {sdf_file}\n")
             job_num = job_num + 1
             # delete sub db if it exists
             if db_path.is_dir():
