@@ -21,14 +21,14 @@ module load pixi
 
 """
 
-def main(sdf_db_path: Path, db_op_path: Path, skip_file_format: bool = False):
+def main(sdf_db_path: Path, db_main_path: Path, skip_file_format: bool = False):
     """Takes in library of sdf molecules, edits files to be
     correct format and creates a script that (when run)
     will setup the database
 
     Args:
         sdf_db_path (Path): where the sdf library is
-        db_op_path (Path): where the db will be placed
+        db_main_path (Path): where the db will be placed
     """
     
     # get all sdf files
@@ -41,18 +41,28 @@ def main(sdf_db_path: Path, db_op_path: Path, skip_file_format: bool = False):
             print(f"fixing {sdf_file}")
             index = fix_names(sdf_file, index)
     
-    # create script to create db
-    slurm_path: Path = (DIR_SCRIPT / "create_db.slurm").resolve()
+    # create main db if it doesnt exist
+    if not db_main_path.is_dir():
+        db_main_path.mkdir(parents=True, exist_ok=True)
 
-    with open(slurm_path, "w") as f:
-        f.write(HEADER)
-        f.write(f"pixi run -e pharmit pharmit dbcreate -dbdir {db_op_path}")
+    # create the job list
+    job_list_path: Path = (DIR_SCRIPT / "job_list.txt").resolve()
+    job_num = 0
+    with open(job_list_path, "w") as f:
         for sdf_file in sdf_file_list:
-            f.write(f" -in {sdf_file}")
+            # sub db path
+            db_path: Path = (db_main_path / f"{sdf_file.name}").resolve()
+            f.write(f"-dbdir {db_path} -in {sdf_file}")
+            job_num = job_num + 1
+            # delete sub db if it exists
+            if db_path.is_dir():
+                shutil.rmtree(db_path)
 
-    # delete db if it exists
-    if db_op_path.is_dir():
-        shutil.rmtree(db_op_path)
+    # create bash to run db creator
+    bash_path: Path = (DIR_SCRIPT / "create_db.sh").resolve()
+    with open(bash_path, "w") as f:
+        f.write(f"sbatch --array=0-{job_num-1} --export=ALL create_db.slurm")
+
 
 
 def fix_names(sdf_file: Path, index: int) -> int:
@@ -107,8 +117,8 @@ if __name__ == "__main__":
     # inputs
     sdf_db_path: Path = Path("/ihome/jdurrant/irh24/Projects/molport_cmpds").resolve()
     #sdf_db_path: Path = Path("F:\\FapC_VS\\study\\032-create-pharm-db\\data\\").resolve() # for testing
-    db_op_path: Path = (DIR_SCRIPT / ".." / "data" / "DB").resolve()
+    db_main_path: Path = (DIR_SCRIPT / ".." / "data" / "DB").resolve()
 
-    main(sdf_db_path, db_op_path, True)
+    main(sdf_db_path, db_main_path, True)
 
 
