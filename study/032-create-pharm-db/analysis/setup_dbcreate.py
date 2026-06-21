@@ -66,10 +66,10 @@ def fix_names_arch(sdf_file: Path):
 
 if __name__ == "__main__":
     # inputs
-    #sdf_db_path: Path = Path("/ihome/jdurrant/irh24/Projects/molport_cmpds").resolve()
-    sdf_test_path: Path = Path("F:\\FapC_VS\\study\\032-create-pharm-db\\data\\").resolve()
+    sdf_db_path: Path = Path("/ihome/jdurrant/irh24/Projects/molport_cmpds").resolve()
+    #sdf_test_path: Path = Path("F:\\FapC_VS\\study\\032-create-pharm-db\\data\\").resolve()
     db_op_path: Path = (DIR_STUDY / "data").resolve()
 
-    main(sdf_test_path, db_op_path)
+    main(sdf_db_path, db_op_path)
 
 
