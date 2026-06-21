@@ -21,7 +21,7 @@ module load pixi
 
 """
 
-def main(sdf_db_path: Path, db_op_path: Path):
+def main(sdf_db_path: Path, db_op_path: Path, skip_file_format: bool = False):
     """Takes in library of sdf molecules, edits files to be
     correct format and creates a script that (when run)
     will setup the database
@@ -35,10 +35,11 @@ def main(sdf_db_path: Path, db_op_path: Path):
     sdf_file_list: list[Path] = [item for item in sdf_db_path.iterdir() if item.is_file() and item.suffix == ".sdf"]
 
     # edit all files to have different names for each molecule
-    index = 0
-    for sdf_file in sdf_file_list:
-        print(f"fixing {sdf_file}")
-        index = fix_names(sdf_file, index)
+    if not skip_file_format:
+        index = 0
+        for sdf_file in sdf_file_list:
+            print(f"fixing {sdf_file}")
+            index = fix_names(sdf_file, index)
     
     # create script to create db
     slurm_path: Path = (DIR_SCRIPT / "create_db.slurm").resolve()
@@ -106,8 +107,8 @@ if __name__ == "__main__":
     # inputs
     sdf_db_path: Path = Path("/ihome/jdurrant/irh24/Projects/molport_cmpds").resolve()
     #sdf_db_path: Path = Path("F:\\FapC_VS\\study\\032-create-pharm-db\\data\\").resolve() # for testing
-    db_op_path: Path = (DIR_STUDY / "data" / "DB").resolve()
+    db_op_path: Path = (DIR_SCRIPT / ".." / "data" / "DB").resolve()
 
-    main(sdf_db_path, db_op_path)
+    main(sdf_db_path, db_op_path, True)
 
 
