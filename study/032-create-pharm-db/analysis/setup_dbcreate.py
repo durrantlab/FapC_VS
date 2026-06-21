@@ -20,6 +20,7 @@ def main(sdf_db_path: Path, db_op_path: Path):
 
     # edit all files to have different names for each molecule
     for sdf_file in sdf_file_list:
+        print(f"fixing {sdf_file}")
         fix_names(sdf_file)
     
     # create script to create db
