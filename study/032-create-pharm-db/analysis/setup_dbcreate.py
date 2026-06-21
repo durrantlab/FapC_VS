@@ -1,9 +1,25 @@
 from pathlib import Path
 import os, tempfile
+import shutil
 
 DIR_SCRIPT: Path = Path(__file__).parent.resolve()
 DIR_STUDY: Path = Path(DIR_SCRIPT  / ".." / "..").resolve()
 
+HEADER: str = """#!/bin/bash
+#SBATCH --job-name=create_db                	 		 # Job name
+#SBATCH --cluster=smp				   	 				 # Use cluster with GPU support
+#SBATCH --partition=preempt             				 # Use preempt partion (free)
+#SBATCH --nodes=1                      					 # Number of nodes
+#SBATCH --ntasks=1                     	 				 # Number of tasks
+#SBATCH --cpus-per-task=32             	 				 # Number of CPU cores per task
+#SBATCH --mem=32G                     	 				 # Memory allocation
+#SBATCH --time=12:00:00                    				 # Time limit (D-HH:MM:SS)
+#SBATCH --output=logs/batch.out                          # Output log path
+
+module purge
+module load pixi
+
+"""
 
 def main(sdf_db_path: Path, db_op_path: Path):
     """Takes in library of sdf molecules, edits files to be
@@ -25,10 +41,17 @@ def main(sdf_db_path: Path, db_op_path: Path):
         index = fix_names(sdf_file, index)
     
     # create script to create db
-    with open((DIR_SCRIPT / "create_db.sh"), "w") as f:
-        f.write("pixi run -e pharmit pharmit dbcreate -dbdir ../data/DB")
+    slurm_path: Path = (DIR_SCRIPT / "create_db.slurm").resolve()
+
+    with open(slurm_path, "w") as f:
+        f.write(HEADER)
+        f.write(f"pixi run -e pharmit pharmit dbcreate -dbdir {db_op_path}")
         for sdf_file in sdf_file_list:
             f.write(f" -in {sdf_file}")
+
+    # delete db if it exists
+    if db_op_path.is_dir():
+        shutil.rmtree(db_op_path)
 
 
 def fix_names(sdf_file: Path, index: int) -> int:
@@ -43,11 +66,13 @@ def fix_names(sdf_file: Path, index: int) -> int:
                 index = index+1
                 next_line = False 
             elif line.startswith("  Mrv"):
-                split_line = line.split("_")
-                if(len(split_line) > 1):
-                    tmp.write(" ".join(split_line[0:-1]) + "          ")
-                else:
-                   tmp.write(line) 
+                tmp.write(line + "\n")
+            #elif line.startswith("  Mrv"):
+            #    split_line = line.split("_")
+            #    if(len(split_line) > 1):
+            #        tmp.write(" ".join(split_line[0:-1]) + "          ")
+            #    else:
+            #       tmp.write(line)""" # this is to fix a previous mistake i did : )
             else:
                 tmp.write(line)
 
@@ -81,7 +106,7 @@ if __name__ == "__main__":
     # inputs
     sdf_db_path: Path = Path("/ihome/jdurrant/irh24/Projects/molport_cmpds").resolve()
     #sdf_db_path: Path = Path("F:\\FapC_VS\\study\\032-create-pharm-db\\data\\").resolve() # for testing
-    db_op_path: Path = (DIR_STUDY / "data").resolve()
+    db_op_path: Path = (DIR_STUDY / "data" / "DB").resolve()
 
     main(sdf_db_path, db_op_path)
 
