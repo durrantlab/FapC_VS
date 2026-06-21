@@ -19,9 +19,10 @@ def main(sdf_db_path: Path, db_op_path: Path):
     sdf_file_list: list[Path] = [item for item in sdf_db_path.iterdir() if item.is_file() and item.suffix == ".sdf"]
 
     # edit all files to have different names for each molecule
+    index = 0
     for sdf_file in sdf_file_list:
         print(f"fixing {sdf_file}")
-        fix_names(sdf_file)
+        index = fix_names(sdf_file, index)
     
     # create script to create db
     with open((DIR_SCRIPT / "create_db.sh"), "w") as f:
@@ -30,20 +31,32 @@ def main(sdf_db_path: Path, db_op_path: Path):
             f.write(f" -in {sdf_file}")
 
 
-def fix_names(sdf_file: Path):
-    index = 0
+def fix_names(sdf_file: Path, index: int) -> int:
+    next_line = True
     with open(sdf_file) as src, \
         tempfile.NamedTemporaryFile("w", delete=False, dir=sdf_file.parent.resolve(), newline="") as tmp:
         tmpname = tmp.name
         
         for line in src:                       
-            if line.startswith("  Mrv"):
-                tmp.write(f"  {'_'.join(line.strip().split(' '))}_i{index}\n")
+            if next_line:
+                tmp.write(f"mol_i{index:07d}\n")
                 index = index+1
+                next_line = False 
+            elif line.startswith("  Mrv"):
+                split_line = line.split("_")
+                if(len(split_line) > 1):
+                    tmp.write(" ".join(split_line[0:-1]) + "          ")
+                else:
+                   tmp.write(line) 
             else:
                 tmp.write(line)
+
+            if line.startswith("$$$$"):
+                next_line = True
         
-    os.replace(tmpname, sdf_file)            
+    os.replace(tmpname, sdf_file)    
+    
+    return index        
 
 
 
@@ -66,8 +79,8 @@ def fix_names_arch(sdf_file: Path):
 
 if __name__ == "__main__":
     # inputs
-    sdf_db_path: Path = Path("/ihome/jdurrant/irh24/Projects/molport_cmpds").resolve()
-    #sdf_test_path: Path = Path("F:\\FapC_VS\\study\\032-create-pharm-db\\data\\").resolve()
+    #sdf_db_path: Path = Path("/ihome/jdurrant/irh24/Projects/molport_cmpds").resolve()
+    sdf_db_path: Path = Path("F:\\FapC_VS\\study\\032-create-pharm-db\\data\\").resolve() # for testing
     db_op_path: Path = (DIR_STUDY / "data").resolve()
 
     main(sdf_db_path, db_op_path)
