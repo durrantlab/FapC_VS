@@ -54,6 +54,6 @@ if __name__ == "__main__":
     #sdf_test_path: Path = Path("F:\\FapC_VS\\study\\032-create-pharm-db\\data\\").resolve()
     db_op_path: Path = (DIR_STUDY / "data").resolve()
 
-    main(v, db_op_path)
+    main(sdf_db_path, db_op_path)
 
 
