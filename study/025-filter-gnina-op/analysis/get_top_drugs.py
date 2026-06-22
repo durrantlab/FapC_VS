@@ -55,7 +55,7 @@ def main(docked_dir: Path, csv_rank_file: Path, best_drugs_dir: Path, num_best: 
             sdf_path.mkdir(parents=True, exist_ok=True)
         for rank_num, drug in enumerate(best_drug):
             sdf_data: str = extract_molecule(drug, docked_dir)
-            specific_path: Path = Path(sdf_path / f"r{rank_num+1:02d}_{drug[4]}.sdf")
+            specific_path: Path = Path(sdf_path / f"r{rank_num:02d}_{drug[4]}.sdf")
             with open(specific_path, "w") as f:
                 f.write(sdf_data + "\n$$$$")
         concat_sdf_file: Path = Path(best_drugs_dir / f"{region}_concat.sdf").resolve()
