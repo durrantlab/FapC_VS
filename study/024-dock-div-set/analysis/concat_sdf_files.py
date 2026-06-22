@@ -8,7 +8,7 @@ DIR_STUDY: Path = Path(DIR_SCRIPT  / ".." / "..").resolve()
 def main(lig_inp_dir: Path, lig_op_dir: Path, n_sdf: int):
     """Will take in a list of ligands and combine into
     n_sdf number of sdf files. Number of SDF files should
-    be how many total jobs will be run
+    be how many total docking jobs will be run
 
     Args:
         lig_inp_dir (Path): Where ligands by themselves are found

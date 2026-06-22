@@ -22,15 +22,15 @@ def main(top_div_set_dir: Path, exp_set_file: Path, op_dir: Path):
     """
     # read in experimental set
     RDLogger.DisableLog('rdApp.warning')
-    suppl = Chem.SDMolSupplier(exp_set_file)
+    suppl = Chem.SDMolSupplier(str(exp_set_file))
     experimental_mols = [x for x in suppl]
 
     # read in the top div sets into one
-    suppl = Chem.SDMolSupplier(exp_set_file)
+    suppl = Chem.SDMolSupplier(str(exp_set_file))
     div_sdf_list: list[Path] = [item for item in top_div_set_dir.iterdir() if item.is_file() and item.suffix == ".sdf"]
-    div_mols = []
+    div_mols: list = []
     for div_sdf in div_sdf_list:
-        suppl = Chem.SDMolSupplier(div_sdf)
+        suppl = Chem.SDMolSupplier(str(div_sdf))
         div_mols.extend([x for x in suppl])
 
     # for each experimental molecule

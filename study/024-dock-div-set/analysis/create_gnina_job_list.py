@@ -6,8 +6,8 @@ DIR_SCRIPT: Path = Path(__file__).parent.resolve()
 DIR_STUDY: Path = Path(DIR_SCRIPT  / ".." / "..").resolve()
 
 def main(lig_inp_dir: Path, box_dirs: Path, pdb_dir: Path, output_dir: Path):
-    """Will take in (1) ligands to dock (2) boxes to dock in (3) pdb to dock to
-    (4) where to store docked residues / there scores (?)
+    """Will take in (1) ligands to dock (2) boxes to dock in (3) pdb to dock to.
+    And create gnina inputs to dock every ligand to every box.
 
     Args:
         lig_inp_dir (Path): dir that holds are the ligands
@@ -25,7 +25,7 @@ def main(lig_inp_dir: Path, box_dirs: Path, pdb_dir: Path, output_dir: Path):
     for box in box_list:
         for lig in lig_list:
             # --receptor $receptor --ligand $LIGAND_FILE --config $config --out $OUT
-            out: Path = Path(output_dir / f"{box.name.split(".")[0]}" / f"{lig.name.split(".")[0]}.sdf").resolve()
+            out: Path = Path(output_dir / f"{box.name.split('.')[0]}" / f"{lig.name.split('.')[0]}.sdf").resolve()
             gnina_inputs.append(f"--receptor {pdb_dir} --ligand {lig} --config {box} --out {out}")
             if not out.parent.is_dir():
                 out.parent.mkdir(parents=True, exist_ok=True)

@@ -42,7 +42,7 @@ def main(docked_dir: Path, csv_op_file: Path):
 
 
 
-def get_pose_data(docked_file_list: list[Path]) -> dict[str, list(dict[str, any])]:
+def get_pose_data(docked_file_list: list[Path]) -> dict[str, list[dict]]:
     """Will take in list of all SDFs, and organize them into a dict
 
     Args:
@@ -53,14 +53,14 @@ def get_pose_data(docked_file_list: list[Path]) -> dict[str, list(dict[str, any]
     in file
     """
     
-    pose_dict: dict[str, list(dict[str, any])] = {}
+    pose_dict: dict[str, list[dict]] = {}
     for docked_file in docked_file_list:
         with open(docked_file, "r", encoding='utf-8') as f:
             op_str: str = f.read()
             pose_list: list[str] = op_str.split("$$$$\n")
             for index, pose_str in enumerate(pose_list):
                 if(pose_str.startswith("F")):
-                    (molecule_name, cnn_vs) = extract_pose_data(pose_str)
+                    molecule_name, cnn_vs = extract_pose_data(pose_str)
                     temp_dict: dict = {"cnn_vs": cnn_vs,
                                     "directory": docked_file.parent.name,
                                     "file_name": docked_file.name,
@@ -71,7 +71,7 @@ def get_pose_data(docked_file_list: list[Path]) -> dict[str, list(dict[str, any]
     return pose_dict
 
 
-def extract_pose_data(pose: str) -> tuple[str | float]:
+def extract_pose_data(pose: str) -> tuple[str, float]:
     """Will take in a pose str and determine data stored in
 
     Args:
