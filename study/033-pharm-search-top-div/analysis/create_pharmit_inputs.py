@@ -40,9 +40,9 @@ def main(disabled_pharmit_dir: Path, db_dir: Path, pharmit_output_dir: Path, min
         if not output_sdf.parent.is_dir():
             output_sdf.parent.mkdir(parents=True, exist_ok=True)
         pharmit_inputs.append(f"-in {pharmit_json} -out {output_sdf} -out {output_txt} -max-hits {min_pharm}")
-        pharmit_inputs[-1] = pharmit_inputs[-1] + f" -dbdir {db_dir}"
-        #for db_path in all_db_paths:
-            #pharmit_inputs[-1] = pharmit_inputs[-1] + f" -dbdir {db_path}"
+        #pharmit_inputs[-1] = pharmit_inputs[-1] + f" -dbdir {db_dir}"
+        for db_path in all_db_paths:
+            pharmit_inputs[-1] = pharmit_inputs[-1] + f" -dbdir {db_path}"
 
     # write the job_list
     job_list_file: Path = (DIR_SCRIPT / "job_list.txt").resolve()
