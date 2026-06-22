@@ -4,9 +4,16 @@ import MDAnalysis as mda
 import json
 from rdkit import Chem
 from lib import *
+import logging
 
 DIR_SCRIPT: Path = Path(__file__).parent.resolve()
-DIR_STUDY: Path = Path(DIR_SCRIPT  / ".." / "..").resolve()
+DIR_STUDY: Path = (DIR_SCRIPT  / ".." / "..").resolve()
+FILE_LOG: Path = (DIR_SCRIPT / ".." / "logs" / f"{Path(__file__).name.split('.')[0]}.log").resolve()
+
+def make_log_dir():
+    if not FILE_LOG.parent.is_dir():
+        FILE_LOG.parent.mkdir(parents=True, exist_ok=True)
+make_log_dir()
 
 PROLIF_TO_PHARMACOPHORE = {
     "Hydrophobic": "Hydrophobic",
@@ -16,6 +23,13 @@ PROLIF_TO_PHARMACOPHORE = {
     "Cationic":    "PositiveIon",
     "Anionic":     "NegativeIon",
 }
+
+logging.basicConfig(
+    filename=f"{Path(__file__).name.split('.')[0]}.log",
+    level=logging.INFO,
+    format="%(asctime)s  %(levelname)s  %(message)s",
+)
+
 
 def main(interaction_csv_dir: Path, docked_SDFs: Path, 
         pharm_json_dir: Path, op_dir: Path):
@@ -28,7 +42,7 @@ def main(interaction_csv_dir: Path, docked_SDFs: Path,
         pharm_list (Path): list of the molecules pharmacophores
         op_dir (Path): where info on each molecule will be output
     """
-
+    logging.info("Starting script...")
     # read in interaction_csv_dir
     residues: dict[str, list[str]] = {}
     """The protein residues interacting for each region"""
@@ -67,6 +81,8 @@ def main(interaction_csv_dir: Path, docked_SDFs: Path,
             mol_if_interact: list[str | list] = if_interact[region_name][mol_index]
             valid_pharms: list[bool] = get_valid_pharms(mol_pharm, mol, reg_res_list, 
                                                         reg_inter_type, mol_if_interact)
+            # return number of pharms
+            log_pharms(region_name, mol_index, valid_pharms)
             # update pharmacophore based on validity
             new_pharm.append(update_pharm(mol_pharm, valid_pharms))
             pharms_enable_list.append(valid_pharms)
@@ -85,9 +101,14 @@ def main(interaction_csv_dir: Path, docked_SDFs: Path,
         with open(op_file, "w", newline="") as f:
             writer = csv.writer(f)
             writer.writerows(pharms_enable_list)
-        
+        logging.info("Done script...")
 
-
+def log_pharms(region_name: str, mol_index: int, valid_pharms: list[bool]):
+    bool_count = valid_pharms.count(True)
+    if bool_count > 3:
+        logging.info(f"Mol{mol_index} in {region_name} has {bool_count} pharms")
+    else:
+        logging.warning(f"Mol{mol_index} in {region_name} has {bool_count} pharms. Check manually")
 
 def update_pharm(mol_pharm: dict, valid_pharms: list[bool]) -> dict:
     """Will update the the pharm JSONs so that are enabled / disabled based
