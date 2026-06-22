@@ -50,13 +50,21 @@ def main(sdf_db_path: Path, db_main_path: Path, skip_file_format: bool = False):
     job_num = 0
     with open(job_list_path, "w") as f:
         for sdf_file in sdf_file_list:
-            # sub db path
+            # determine if its respective DB exists
             db_path: Path = (db_main_path / f"{sdf_file.name.split('.')[0]}").resolve()
+            if db_path.is_dir():
+                # determien if valid
+                if (db_path / "dbinfo.json").resolve().exists():
+                    print(f"{db_path.name} is already valid")
+                    continue
+                else:
+                    print(f"{db_path.name} is invalid. Deleting")
+                    #shutil.rmtree(db_path)
+            else:
+                print(f"{db_path.name} does not exist yet")
+            # if doesnt exist / was invalid (and deleted)
             f.write(f"-dbdir {db_path} -in {sdf_file}\n")
             job_num = job_num + 1
-            # delete sub db if it exists
-            if db_path.is_dir():
-                shutil.rmtree(db_path)
 
     # create bash to run db creator
     bash_path: Path = (DIR_SCRIPT / "create_db.sh").resolve()
@@ -76,8 +84,8 @@ def fix_names(sdf_file: Path, index: int) -> int:
                 tmp.write(f"mol_i{index:07d}\n")
                 index = index+1
                 next_line = False 
-            elif line.startswith("  Mrv"):
-                tmp.write(line + "\n")
+            #elif line.startswith("  Mrv"):
+            #    tmp.write(line + "\n")
             #elif line.startswith("  Mrv"):
             #    split_line = line.split("_")
             #    if(len(split_line) > 1):
