@@ -125,7 +125,8 @@ if __name__ == "__main__":
     # inputs
     sdf_db_path: Path = Path("/ihome/jdurrant/irh24/Projects/molport_cmpds").resolve()
     #sdf_db_path: Path = Path("F:\\FapC_VS\\study\\032-create-pharm-db\\data\\").resolve() # for testing
-    db_main_path: Path = (DIR_SCRIPT / ".." / "data" / "DB").resolve()
+    #db_main_path: Path = (DIR_SCRIPT / ".." / "data" / "DB").resolve()
+    db_main_path: Path = Path("/ix/jdurrant/durrantlab/irh24/FapC_VS/032-DB").resolve()
 
     main(sdf_db_path, db_main_path, True)
 
