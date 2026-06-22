@@ -12,4 +12,4 @@
 module purge
 module load pixi
 
-pixi run -e pharmit pharmit dbsearch -max-weight 750 -sort-rmsd -extra-info -in /ihome/jdurrant/irh24/Projects/FapC_VS/study/031-validate-pharm-top-div/data/region_3/mol9_input.json -out /ihome/jdurrant/irh24/Projects/FapC_VS/study/033-pharm-search-top-div/data/search_output/region_3/mol9_input.sdf -out /ihome/jdurrant/irh24/Projects/FapC_VS/study/033-pharm-search-top-div/data/search_output/region_3/mol9_input.txt -max-hits 2000 -dbdir /ihome/jdurrant/irh24/Projects/FapC_VS/study/032-create-pharm-db/data/DB/iis-006-000-000--006-499-999
+pixi run -e pharmit pharmit dbsearch -max-weight 750 -sort-rmsd -extra-info -in /ihome/jdurrant/irh24/Projects/FapC_VS/study/031-validate-pharm-top-div/data/region_3/mol9_input.json -out /ihome/jdurrant/irh24/Projects/FapC_VS/study/033-pharm-search-top-div/data/search_output/region_3/mol9_input.sdf -max-hits 2000 -dbdir /ihome/jdurrant/irh24/Projects/FapC_VS/study/032-create-pharm-db/data/DB/iis-006-000-000--006-499-999
