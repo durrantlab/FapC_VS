@@ -202,7 +202,7 @@ if __name__ == "__main__":
     #protein_dir: Path = (DIR_STUDY / "023-prep-protein-dock" / "data" / "9nqd_protonated.pdb").resolve()
     docked_SDFs: Path = (DIR_STUDY / "025-filter-gnina-op" / "data" / "best_drugs").resolve()
     pharm_list: Path = (DIR_STUDY / "028-pharms-top-div-set" / "data").resolve()
-    op_dir: Path = (DIR_SCRIPT / ".." / "data").resolve()
+    op_dir: Path = (DIR_SCRIPT / ".." / "data" / "script_output").resolve()
 
     main(interaction_csv_dir, docked_SDFs, pharm_list, op_dir)
 
