@@ -8,7 +8,7 @@ DIR_STUDY: Path = Path(DIR_SCRIPT  / ".." / "..").resolve()
 sys.path.insert(0, str((DIR_STUDY / "031-validate-pharm-top-div").resolve()))
 
 
-def main(disabled_pharmit_dir: Path, pharmit_output_dir: Path, min_pharm: int = 2000):
+def main(disabled_pharmit_dir: Path, db_dir: Path, pharmit_output_dir: Path, min_pharm: int = 2000):
     """Will take in pharmits input files and create a slurm to run pharmit with
     them
 
@@ -28,6 +28,9 @@ def main(disabled_pharmit_dir: Path, pharmit_output_dir: Path, min_pharm: int = 
         regions.append(region)
         pharmit_input_files.extend([item for item in pharmit_inp_dir.iterdir() if item.is_file() and item.suffix == ".json"])
 
+    # read in all the DBs
+    all_db_paths: list[Path] = [item for item in db_dir.iterdir() if item.is_dir()]
+
     # create the pharmit inputs
     pharmit_inputs: list[str] = []
     for pharmit_json in pharmit_input_files:
@@ -36,7 +39,10 @@ def main(disabled_pharmit_dir: Path, pharmit_output_dir: Path, min_pharm: int = 
         output_txt: Path = (pharmit_output_dir / pharmit_json.parent.name / f"{output_name}.txt")
         if not output_sdf.parent.is_dir():
             output_sdf.parent.mkdir(parents=True, exist_ok=True)
-        pharmit_inputs.append(f"-in {pharmit_json} -out {output_sdf} {output_txt} -max-hit {min_pharm}")
+        pharmit_inputs.append(f"-in {pharmit_json} -out {output_sdf} -out {output_txt} -max-hit {min_pharm}")
+        pharmit_inputs[-1] = pharmit_inputs[-1] + f" -dbdir {db_dir}"
+        #for db_path in all_db_paths:
+            #pharmit_inputs[-1] = pharmit_inputs[-1] + f" -dbdir {db_path}"
 
     # write the job_list
     job_list_file: Path = (DIR_SCRIPT / "job_list.txt").resolve()
@@ -57,8 +63,9 @@ def main(disabled_pharmit_dir: Path, pharmit_output_dir: Path, min_pharm: int = 
 if __name__ == "__main__":
     # inputs
     disabled_pharmit_dir: Path = (DIR_STUDY / "031-validate-pharm-top-div" / "data").resolve()
+    db_dir: Path = (DIR_STUDY / "032-create-pharm-db" / "data" / "DB")
     pharmit_output_dir: Path = (DIR_SCRIPT / ".." / "data" / "search_output").resolve()
     
-    main(disabled_pharmit_dir, pharmit_output_dir, 2000)
+    main(disabled_pharmit_dir, db_dir, pharmit_output_dir, 2000)
 
 
