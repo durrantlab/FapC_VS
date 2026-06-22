@@ -27,7 +27,7 @@ PROLIF_TO_PHARMACOPHORE = {
 logging.basicConfig(
     filename=FILE_LOG,
     level=logging.INFO,
-    format="%(asctime)s  %(levelname)s  %(message)s",
+    format="%(asctime)s  %(levelname)-8s  %(message)s",
 )
 
 
