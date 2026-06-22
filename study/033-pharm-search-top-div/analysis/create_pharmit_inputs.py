@@ -39,7 +39,7 @@ def main(disabled_pharmit_dir: Path, db_dir: Path, pharmit_output_dir: Path, min
         output_txt: Path = (pharmit_output_dir / pharmit_json.parent.name / f"{output_name}.txt")
         if not output_sdf.parent.is_dir():
             output_sdf.parent.mkdir(parents=True, exist_ok=True)
-        pharmit_inputs.append(f"-in {pharmit_json} -out {output_sdf} -out {output_txt} -max-hits {min_pharm}")
+        pharmit_inputs.append(f"-in {pharmit_json} -out {output_sdf} -max-hits {min_pharm}")
         #pharmit_inputs[-1] = pharmit_inputs[-1] + f" -dbdir {db_dir}"
         for db_path in all_db_paths:
             pharmit_inputs[-1] = pharmit_inputs[-1] + f" -dbdir {db_path}"

@@ -21,5 +21,5 @@ echo "Done!"
 
 
 echo "Running pharmit..."
-bash -c "pixi run -e pharmit pharmit dbsearch -max-weight 750 -sort-rmsd -dbdir ../data/DB -extra-info $ARGS" | tee "$LOG"
+bash -c "pixi run -e pharmit pharmit dbsearch -max-weight 750 -extra-info $ARGS -sort-rmsd" | tee "$LOG"
 echo "Done!"
