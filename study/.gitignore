@@ -12,3 +12,4 @@
 *run_gnina.sh
 *run_pharmit_search.sh
 *create_db.sh
+032-create-pharm-db/data/*
