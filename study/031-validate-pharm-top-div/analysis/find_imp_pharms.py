@@ -25,7 +25,7 @@ PROLIF_TO_PHARMACOPHORE = {
 }
 
 logging.basicConfig(
-    filename=f"{Path(__file__).name.split('.')[0]}.log",
+    filename=FILE_LOG,
     level=logging.INFO,
     format="%(asctime)s  %(levelname)s  %(message)s",
 )
@@ -101,7 +101,8 @@ def main(interaction_csv_dir: Path, docked_SDFs: Path,
         with open(op_file, "w", newline="") as f:
             writer = csv.writer(f)
             writer.writerows(pharms_enable_list)
-        logging.info("Done script...")
+        logging.info(f"Completed {region_name}.\n")
+    logging.info(f"Completed Script.")
 
 def log_pharms(region_name: str, mol_index: int, valid_pharms: list[bool]):
     bool_count = valid_pharms.count(True)
