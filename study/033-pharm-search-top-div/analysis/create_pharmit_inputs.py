@@ -63,7 +63,7 @@ def main(disabled_pharmit_dir: Path, db_dir: Path, pharmit_output_dir: Path, min
 if __name__ == "__main__":
     # inputs
     disabled_pharmit_dir: Path = (DIR_STUDY / "031-validate-pharm-top-div" / "data" / "visual_inspect").resolve()
-    db_dir: Path = (DIR_STUDY / "032-create-pharm-db" / "data" / "DB")
+    db_dir: Path = Path("/ix/jdurrant/durrantlab/irh24/FapC_VS/032-DB").resolve()
     pharmit_output_dir: Path = (DIR_SCRIPT / ".." / "data" / "search_output").resolve()
     
     main(disabled_pharmit_dir, db_dir, pharmit_output_dir, 2000)
