@@ -59,7 +59,7 @@ def main(sdf_db_path: Path, db_main_path: Path, skip_file_format: bool = False):
                     continue
                 else:
                     print(f"{db_path.name} is invalid. Deleting")
-                    #shutil.rmtree(db_path)
+                    shutil.rmtree(db_path)
             else:
                 print(f"{db_path.name} does not exist yet")
             # if doesnt exist / was invalid (and deleted)
