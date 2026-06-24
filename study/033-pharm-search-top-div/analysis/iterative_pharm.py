@@ -121,7 +121,7 @@ def run_pharmit(pharm_file: Path, pharm_db_dir: Path, pharmit_output_dir: Path,
         max_mol (int): max # of molecules that can be returned
     """
     # create command
-    cmd: list[str] = ["pixi","run","-e","pharmit","pharmit","dbsearch","-max-weight","750"
+    cmd: list[str] = ["pixi","run","-e","pharmit","pharmit","dbsearch","-max-weight","750",
                       "-extra-info","-sort-rmsd","-in",str(pharm_file),"-out",
                       str(pharmit_output_dir),"-max-hits",str(max_mol)]
     all_db_paths: list[Path] = [item for item in pharm_db_dir.iterdir() if item.is_dir()]
@@ -133,7 +133,7 @@ def run_pharmit(pharm_file: Path, pharm_db_dir: Path, pharmit_output_dir: Path,
     result = subprocess.run(cmd, capture_output=True, text=True)
     #return(str(cmd))
     if result.returncode != 0:
-        raise Exception(f"pharmit search failed to run. Code: {result.returncode} Err: {result.stderr}")
+        raise Exception(f"pharmit search failed to run. Code: {result.returncode} Err: {result.stderr}\n\n{' '.join(cmd)}")
     return result.stdout
 
 def fake_pharmit(cmd: list[str]):
