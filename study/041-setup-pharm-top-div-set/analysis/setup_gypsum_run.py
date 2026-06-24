@@ -40,6 +40,8 @@ def main(sdf_input_dir: Path, split_sdf_dir: Path, split_size: int, gypsum_sdf_d
             # setup gypsum input for each file
             for sdf_file in sdf_list:
                 mol_gypsum_sdf_file: Path = (gypsum_sdf_dir / input_region_dir.name / input_mol_dir.name / sdf_file.name).resolve()
+                if not mol_gypsum_sdf_file.parent.is_dir():
+                    mol_gypsum_sdf_file.parent.mkdir(parents=True, exist_ok=True)
                 args: str = f"-s {sdf_file} -o {mol_gypsum_sdf_file}"
                 args_list.append(args)
     # write the job_list
