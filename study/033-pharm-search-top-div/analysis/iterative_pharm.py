@@ -292,7 +292,7 @@ if __name__ == "__main__":
 
     temp_dir: str = str((DIR_SCRIPT / "temp" / "region_1" / "mol0").resolve())
     """where temporary files will be stored"""
-    parser.add_argument("def_temp_dir", default=temp_dir, 
+    parser.add_argument("temp_dir", default=temp_dir, 
                         help="where temporary files will be stored")
 
     max_mol: int = 2000
