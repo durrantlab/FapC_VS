@@ -84,7 +84,7 @@ def update_csv(pharm_op: Path, csv_file: Path, max_mol: int) -> int:
         pharm_op (Path): where the pharmit search op is
         csv_file (Path): where the csv file is
     """
-    file_name: str = pharm_op.root
+    file_name: str = pharm_op.stem
     with open(csv_file, "r") as f:
         csv: list[list[str]] = [[item2 for item2 in item.split(",")] for item in f.read().split("\n")]
     with open(pharm_op, "r") as f:
