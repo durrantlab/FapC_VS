@@ -84,22 +84,23 @@ def update_csv(pharm_op: Path, csv_file: Path, max_mol: int) -> int:
         pharm_op (Path): where the pharmit search op is
         csv_file (Path): where the csv file is
     """
+    file_name: str = pharm_op.root
     with open(csv_file, "r") as f:
         csv: list[list[str]] = [[item2 for item2 in item.split(",")] for item in f.read().split("\n")]
     with open(pharm_op, "r") as f:
         mol_list: list[list[str]] = [[item2 for item2 in item.strip().split("\n")] for item in f.read().split("$$$$")[:-1]]
     csv_body: list[list[str]] = []
     mol_num = int(csv[0][0]) + len(mol_list)
-    for mol in mol_list:
+    for mol_ind, mol in enumerate(mol_list):
         name: str = mol[0].strip()
         rmsd: str = mol[-1].strip()
-        csv_body.append(["0", name, str(rmsd)])
+        csv_body.append(["0", name, str(rmsd), file_name, str(mol_ind)])
     csv.extend(csv_body)
     if(mol_num >= max_mol):
         csv_head: list[str] = csv[0]
         csv_body: list[list[str]] = csv[1:]
         csv_body.sort(key= lambda x: float(x[2]))
-        for mol_ind in range(len(csv_body[1:])):
+        for mol_ind in range(len(csv_body)):
             csv_body[mol_ind][0] = str(mol_ind)
         csv = [csv_head] + csv_body
     csv[0][0] = str(mol_num)
