@@ -284,14 +284,16 @@ if __name__ == "__main__":
     parser.add_argument("pharm_db_dir", default=pharm_db_dir, 
                         help="where pharmit database is located")
     
-    def_temp_dir: str = str((DIR_SCRIPT / "temp" / "region_1" / "mol0").resolve())
-    """where temporary files will be stored"""
-
     pharmit_output_dir: str = str((DIR_SCRIPT / ".." / "data" / "search_output" 
                                   / "region_1" / "mol0").resolve())
     """where the pharmit search output will be stored"""
     parser.add_argument("pharmit_output_dir", default=pharmit_output_dir, 
                         help="where the pharmit search output will be stored")
+
+    def_temp_dir: str = str((DIR_SCRIPT / "temp" / "region_1" / "mol0").resolve())
+    """where temporary files will be stored"""
+    parser.add_argument("def_temp_dir", default=def_temp_dir, 
+                        help="where temporary files will be stored")
 
     max_mol: int = 2000
     """the max number of results for a molecule"""
