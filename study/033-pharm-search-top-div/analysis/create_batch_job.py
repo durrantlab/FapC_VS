@@ -48,7 +48,7 @@ def main(disabled_pharmit_dir: Path, db_dir: Path, pharmit_output_dir: Path, min
         temp_dir.mkdir(parents=True, exist_ok=True)
         if pharmit_output_file.is_dir():
             shutil.rmtree(pharmit_output_file)
-        pharmit_output_dir.mkdir(parents=True, exist_ok=True)
+        pharmit_output_file.mkdir(parents=True, exist_ok=True)
 
         # string
         input_str: str = f"{pharm_list_file} {pharm_db_dir} {pharmit_output_file} "
