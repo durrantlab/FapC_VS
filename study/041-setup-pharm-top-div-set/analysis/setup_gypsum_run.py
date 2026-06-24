@@ -34,6 +34,8 @@ def main(sdf_input_dir: Path, split_sdf_dir: Path, split_size: int, gypsum_sdf_d
         for input_mol_dir in input_mol_dirs:
             # split into chunks
             mol_split_sdf_dir: Path = (split_sdf_dir / input_region_dir.name / input_mol_dir.name).resolve()
+            if not mol_split_sdf_dir.is_dir():
+                mol_split_sdf_dir.mkdir(parents=True, exist_ok=True)
             sdf_list: list[Path] = sdf_set_size_split(input_mol_dir, mol_split_sdf_dir, split_size)
             # setup gypsum input for each file
             for sdf_file in sdf_list:
