@@ -4,6 +4,7 @@ import logging
 import json
 import subprocess
 import shutil
+import argparse
 
 DIR_SCRIPT: Path = Path(__file__).parent.resolve()
 DIR_STUDY: Path = Path(DIR_SCRIPT  / ".." / "..").resolve()
@@ -268,20 +269,37 @@ class iter_pharm():
 
 
 if __name__ == "__main__":
-    # inputs
-    pharm_list_file: Path = (DIR_STUDY / "031-validate-pharm-top-div" / 
-                             "data" / "visual_inspect" / "region_1" / "mol2_input.json").resolve()
+    parser = argparse.ArgumentParser(description="runs pharmit iteratively on a pharmacophore list")
+    
+    pharm_list_file: str = str((DIR_STUDY / "031-validate-pharm-top-div" / 
+                            "data" / "visual_inspect" / "region_1" / "mol0_input.json").resolve())
     """The location of the pharmit search input (pharmacophore list) that is
     being searched. Will be input via command line"""
-    pharm_db_dir: Path = Path("/ix/jdurrant/durrantlab/irh24/FapC_VS/032-DB").resolve()
+    parser.add_argument("pharm_list_file", default=pharm_list_file, 
+                        help="where pharmacophore json is located")
+    
     #pharm_db_dir: Path = Path(DIR_STUDY / "032-create-pharm-db" / "data" / "DB").resolve()
+    pharm_db_dir: str = str(Path("/ix/jdurrant/durrantlab/irh24/FapC_VS/032-DB").resolve())
     """where the pharmit database is stored"""
-    temp_dir: Path = (DIR_SCRIPT / "temp" / "region_1" / "mol2").resolve()
+    parser.add_argument("pharm_db_dir", default=pharm_db_dir, 
+                        help="where pharmit database is located")
+    
+    def_temp_dir: str = str((DIR_SCRIPT / "temp" / "region_1" / "mol0").resolve())
     """where temporary files will be stored"""
-    pharmit_output_dir: Path = (DIR_SCRIPT / ".." / "data" / "search_output" / "region_1" / "mol2").resolve()
+
+    pharmit_output_dir: str = str((DIR_SCRIPT / ".." / "data" / "search_output" 
+                                  / "region_1" / "mol0").resolve())
     """where the pharmit search output will be stored"""
-    max_mol = 2000
+    parser.add_argument("pharmit_output_dir", default=pharmit_output_dir, 
+                        help="where the pharmit search output will be stored")
+
+    max_mol: int = 2000
     """the max number of results for a molecule"""
-    main(pharm_list_file, pharm_db_dir, pharmit_output_dir, temp_dir, max_mol)
+    parser.add_argument("max_mol", default=max_mol, type=int,
+                        help="the max number of results for a molecule")
+ 
+    args = parser.parse_args()
+    main(Path(args.pharm_list_file), Path(args.pharm_db_dir), Path(args.pharmit_output_dir), 
+        Path(args.temp_dir), args.max_mol)
 
 

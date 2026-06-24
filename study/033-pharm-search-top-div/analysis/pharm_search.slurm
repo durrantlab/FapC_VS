@@ -4,8 +4,8 @@
 #SBATCH --partition=preempt             				 # Use preempt partion (free)
 #SBATCH --nodes=1                      					 # Number of nodes
 #SBATCH --ntasks=1                     	 				 # Number of tasks
-#SBATCH --cpus-per-task=32             	 				 # Number of CPU cores per task
-#SBATCH --mem=128G                     	 				 # Memory allocation
+#SBATCH --cpus-per-task=4             	 				 # Number of CPU cores per task
+#SBATCH --mem=4G                     	 				 # Memory allocation
 #SBATCH --time=12:00:00                    				 # Time limit (D-HH:MM:SS)
 #SBATCH --output=logs/%A_%a.out                          # Output log path
 #SBATCH --error=logs/%x_%A_%a.err                        # Error log path
@@ -21,5 +21,5 @@ echo "Done!"
 
 
 echo "Running pharmit..."
-bash -c "pixi run -e pharmit pharmit dbsearch -max-weight 750 -extra-info $ARGS -sort-rmsd" | tee "$LOG"
+bash -c "pixi run python iterative_pharm.py $ARGS" | tee "$LOG"
 echo "Done!"

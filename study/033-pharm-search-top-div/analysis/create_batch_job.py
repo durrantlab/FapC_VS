@@ -1,3 +1,4 @@
+import shutil
 from pathlib import Path
 import sys
 
@@ -28,21 +29,32 @@ def main(disabled_pharmit_dir: Path, db_dir: Path, pharmit_output_dir: Path, min
         regions.append(region)
         pharmit_input_files.extend([item for item in pharmit_inp_dir.iterdir() if item.is_file() and item.suffix == ".json"])
 
-    # read in all the DBs
-    all_db_paths: list[Path] = [item for item in db_dir.iterdir() if item.is_dir()]
-
-    # create the pharmit inputs
+    # create the python inputs
     pharmit_inputs: list[str] = []
     for pharmit_json in pharmit_input_files:
-        output_name: str = pharmit_json.name.split(".")[0]
-        output_sdf: Path = (pharmit_output_dir / pharmit_json.parent.name / f"{output_name}.sdf")
-        output_txt: Path = (pharmit_output_dir / pharmit_json.parent.name / f"{output_name}.txt")
-        if not output_sdf.parent.is_dir():
-            output_sdf.parent.mkdir(parents=True, exist_ok=True)
-        pharmit_inputs.append(f"-in {pharmit_json} -out {output_sdf} -max-hits {min_pharm}")
-        #pharmit_inputs[-1] = pharmit_inputs[-1] + f" -dbdir {db_dir}"
-        for db_path in all_db_paths:
-            pharmit_inputs[-1] = pharmit_inputs[-1] + f" -dbdir {db_path}"
+        # setup inputs
+        region: str = pharmit_json.parent.name
+        mol_name: str = pharmit_json.stem.split("_")[0]
+        
+        pharm_list_file: Path = pharmit_json
+        pharm_db_dir: Path = db_dir
+        pharmit_output_file: Path = (pharmit_output_dir / region / mol_name)        
+        temp_dir: Path = (DIR_SCRIPT / "temp" / region / mol_name)
+        max_mol: int = min_pharm
+
+        # create OP directories
+        if temp_dir.is_dir():
+            shutil.rmtree(temp_dir) # only works on linux
+        temp_dir.mkdir(parents=True, exist_ok=True)
+        if pharmit_output_file.is_dir():
+            shutil.rmtree(pharmit_output_file)
+        pharmit_output_dir.mkdir(parents=True, exist_ok=True)
+
+        # string
+        input_str: str = f"{pharm_list_file} {pharm_db_dir} {pharmit_output_file} "
+        input_str = input_str + f"{temp_dir} {max_mol}"
+        pharmit_inputs.append(input_str)
+
 
     # write the job_list
     job_list_file: Path = (DIR_SCRIPT / "job_list.txt").resolve()
