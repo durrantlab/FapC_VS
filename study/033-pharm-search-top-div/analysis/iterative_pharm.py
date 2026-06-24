@@ -269,7 +269,7 @@ class iter_pharm():
 if __name__ == "__main__":
     # inputs
     pharm_list_file: Path = (DIR_STUDY / "031-validate-pharm-top-div" / 
-                             "data" / "region_1" / "mol2_input.json").resolve()
+                             "data" / "visual_inspect" / "region_1" / "mol2_input.json").resolve()
     """The location of the pharmit search input (pharmacophore list) that is
     being searched. Will be input via command line"""
     pharm_db_dir: Path = Path("/ix/jdurrant/durrantlab/irh24/FapC_VS/032-DB").resolve()
