@@ -3,6 +3,7 @@ from pathlib import Path
 import logging
 import json
 import subprocess
+import shutil
 
 DIR_SCRIPT: Path = Path(__file__).parent.resolve()
 DIR_STUDY: Path = Path(DIR_SCRIPT  / ".." / "..").resolve()
@@ -35,32 +36,48 @@ def main(pharm_list_dir: Path, pharm_db_dir: Path, pharmit_output_dir: Path,
     # setup iterative pharm data structure
     pharm_obj: iter_pharm = iter_pharm(pharm_list_dir, temp_dir)
 
+    # create temp_dir / pharmit_output dir
+    if temp_dir.is_dir():
+        shutil.rmtree(temp_dir) # only works on linux
+        pass
+    temp_dir.mkdir(parents=True, exist_ok=True)
+    if pharmit_output_dir.is_dir():
+        shutil.rmtree(pharmit_output_dir)
+        pass
+    pharmit_output_dir.mkdir(parents=True, exist_ok=True)
+
     # setup up data csv. Stores info about all molecules present
-    csv_file: Path = csv_setup(temp_dir)
+    csv_file: Path = csv_setup(pharmit_output_dir)
     
     # while count of molecules stored less then < 2000, check more pharm combs
     total_mol = 0
+    first_run = True
     while total_mol < max_mol:
         # create input for pharmit. If invalid, break.
-        iter_name: str = pharm_obj.next_pharm()
-        if iter_name == 'invalid':
-            print("no more valid combinations left")
-            break
+        if first_run:
+            iter_name = 'all'
+            first_run = False
+        else:
+            iter_name: str = pharm_obj.next_pharm()
+            if iter_name == 'invalid':
+                print("no more valid combinations left")
+                break
         pharm_file: Path = pharm_obj.write_curr_json()
 
         # run pharmit.
-        op_file: Path = (pharmit_output_dir / f"op_{iter_name}.json").resolve()
-        run_pharmit(pharm_file, pharm_db_dir, op_file,
+        op_file: Path = (pharmit_output_dir / f"op_{iter_name}.sdf").resolve()
+        result: str = run_pharmit(pharm_file, pharm_db_dir, op_file,
                         max_mol-total_mol)
+        print(result)
         
         # determine total count and update csv
-        total_mol: int = update_csv(op_file, csv_file)
+        total_mol: int = update_csv(op_file, csv_file, max_mol)
 
     # give info about run. End
     print("Done!")
 
 
-def update_csv(pharm_op: Path, csv_file: Path) -> int:
+def update_csv(pharm_op: Path, csv_file: Path, max_mol: int) -> int:
     """Updates CSV based on the pharmit search
 
     Args:
@@ -70,15 +87,22 @@ def update_csv(pharm_op: Path, csv_file: Path) -> int:
     with open(csv_file, "r") as f:
         csv: list[list[str]] = [[item2 for item2 in item.split(",")] for item in f.read().split("\n")]
     with open(pharm_op, "r") as f:
-        mol_list: list[list[str]] = [[item2 for item2 in item.split("\n")] for item in f.read().split("$$$$")]
+        mol_list: list[list[str]] = [[item2 for item2 in item.strip().split("\n")] for item in f.read().split("$$$$")[:-1]]
+    csv_body: list[list[str]] = []
+    mol_num = int(csv[0][0]) + len(mol_list)
     for mol in mol_list:
-        mol_ind: int = 0
-        if(len(csv) != 1):
-            mol_ind = int(csv[-1][0]) + 1
-        name: str = mol[1].strip()
-        rmsd: str = mol[-2].strip()
-        csv.append([str(mol_ind), name, str(rmsd)])
-    csv[0][0] = str(int(csv[0][0]) + len(mol_list))
+        name: str = mol[0].strip()
+        rmsd: str = mol[-1].strip()
+        csv_body.append(["0", name, str(rmsd)])
+    csv.extend(csv_body)
+    if(mol_num >= max_mol):
+        csv_head: list[str] = csv[0]
+        csv_body: list[list[str]] = csv[1:]
+        csv_body.sort(key= lambda x: float(x[2]))
+        for mol_ind in range(len(csv_body[1:])):
+            csv_body[mol_ind][0] = str(mol_ind)
+        csv = [csv_head] + csv_body
+    csv[0][0] = str(mol_num)
     with open(csv_file, "w") as f:
         text: str = "\n".join([",".join(item) for item in csv])
         f.write(text)
@@ -105,11 +129,17 @@ def run_pharmit(pharm_file: Path, pharm_db_dir: Path, pharmit_output_dir: Path,
         cmd.append("-dbdir")
         cmd.append(str(db_path))
     # run command
+    #fake_pharmit(cmd)
     result = subprocess.run(cmd, capture_output=True, text=True)
+    #return(str(cmd))
     if result.returncode != 0:
         raise Exception(f"pharmit search failed to run. Code: {result.returncode} Err: {result.stderr}")
     return result.stdout
 
+def fake_pharmit(cmd: list[str]):
+    """Just meant to replicate what pharmit would do if I could run it"""
+    to_copy: Path = Path("D:\\FapC_VS\\study\\033-pharm-search-top-div\\data\\search_output\\op_all.sdf").resolve()
+    shutil.copy2(to_copy, Path(cmd[12]))
 
 
 def csv_setup(temp_dir: Path) -> Path:
@@ -161,7 +191,7 @@ class iter_pharm():
                                    (pharmacophore list) that is being searched.
             temp_dir (Path): where the pharmit search output will be stored
         """
-        with open(pharm_list_file, "w") as f:
+        with open(pharm_list_file, "r", encoding='utf-8') as f:
             self.base_json = json.loads(f.read())
         self.disable_list = []
         self.temp_dir = temp_dir
@@ -190,19 +220,23 @@ class iter_pharm():
         """Will go to next disable state in the
         'BFS'
         """
+        # if first next, setup so it disables 0 first
         if(len(self.disable_list) == 0):
-            self.disable_list.append(0)
-        self.disable_list[0] = self.disable_list[0] + 1
-        for ind in range(len(self.disable_list)):
-            if self.disable_list[ind] >= self.num_base_pharms:
-                self.disable_list[ind] = 0
-                if ind+1 >= len(self.disable_list):
-                    self.disable_list.append(0)
-                self.disable_list[ind+1] = self.disable_list[ind+1] + 1
-        if(len(self.disable_list) >= self.num_base_pharms - 3):
-            return 'invalid'
-        else:
-            return self.dis_list_to_str()
+            self.disable_list.append(-1)
+        # loop until no repeats in number list
+        while True:
+            self.disable_list[0] = self.disable_list[0] + 1
+            for ind in range(len(self.disable_list)):
+                if self.disable_list[ind] >= self.num_base_pharms:
+                    self.disable_list[ind] = 0
+                    if ind+1 >= len(self.disable_list):
+                        self.disable_list.append(0)
+                    self.disable_list[ind+1] = self.disable_list[ind+1] + 1
+            if(len(self.disable_list) > self.num_base_pharms - 3):
+                return 'invalid'
+            if len(self.disable_list) == len(set(self.disable_list)):
+                break
+        return self.dis_list_to_str()
     
     def write_curr_json(self) -> Path:
         """Takes in the current json and 
@@ -210,7 +244,10 @@ class iter_pharm():
         """
         curr_json: dict = self.get_curr_json()
         json_str: str = json.dumps(curr_json)
-        temp_file = Path(self.temp_dir / f"dis_{self.dis_list_to_str()}.json").resolve()
+        dis_name: str = self.dis_list_to_str()
+        if dis_name == '':
+            dis_name = 'all'
+        temp_file = Path(self.temp_dir / f"dis_{dis_name}.json").resolve()
         with open(temp_file, "w") as f:
             f.write(json_str)
         return temp_file
@@ -232,14 +269,15 @@ class iter_pharm():
 if __name__ == "__main__":
     # inputs
     pharm_list_file: Path = (DIR_STUDY / "031-validate-pharm-top-div" / 
-                             "data" / "region_1" / "mol0_input.json").resolve()
+                             "data" / "region_1" / "mol2_input.json").resolve()
     """The location of the pharmit search input (pharmacophore list) that is
     being searched. Will be input via command line"""
     pharm_db_dir: Path = Path("/ix/jdurrant/durrantlab/irh24/FapC_VS/032-DB").resolve()
+    #pharm_db_dir: Path = Path(DIR_STUDY / "032-create-pharm-db" / "data" / "DB").resolve()
     """where the pharmit database is stored"""
-    temp_dir: Path = (DIR_SCRIPT / "temp" / "region_1" / "mol0").resolve()
+    temp_dir: Path = (DIR_SCRIPT / "temp" / "region_1" / "mol2").resolve()
     """where temporary files will be stored"""
-    pharmit_output_dir: Path = (DIR_SCRIPT / ".." / "data" / "search_output" / "region_1" / "mol0").resolve()
+    pharmit_output_dir: Path = (DIR_SCRIPT / ".." / "data" / "search_output" / "region_1" / "mol2").resolve()
     """where the pharmit search output will be stored"""
     max_mol = 2000
     """the max number of results for a molecule"""
