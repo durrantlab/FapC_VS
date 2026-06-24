@@ -84,7 +84,7 @@ def sdf_set_size_split(input_mol_dir: Path, mol_split_sdf_dir: Path,
         end = start + split_size # end is not inclusive
         if end > num_mols:
             end = num_mols
-        new_sdf: str = "\n$$$$".join(all_molecules[start:end])
+        new_sdf: str = "\n$$$$\n".join(all_molecules[start:end]) +"\n$$$$"
         sdf_file: Path = Path(mol_split_sdf_dir / f"group_{sdf_ind}.sdf")
         with open(sdf_file, "w") as f:
             f.write(new_sdf)
