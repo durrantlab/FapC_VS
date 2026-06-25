@@ -55,7 +55,7 @@ def main(sdf_input_dir: Path, split_sdf_dir: Path, split_size: int, gypsum_sdf_d
     # create batch script to run slurm
     batch_script_file: Path = (DIR_SCRIPT / "run_gypsum.sh").resolve()
     with open(batch_script_file, "w") as f:
-        f.write(f"sbatch --array=0-{len(arg)-1} --export=ALL run_gypsum.slurm\n")
+        f.write(f"sbatch --array=0-{len(args_list)-1} --export=ALL run_gypsum.slurm\n")
 
 
 def sdf_set_size_split(input_mol_dir: Path, mol_split_sdf_dir: Path, 
