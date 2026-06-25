@@ -21,5 +21,5 @@ echo "Done!"
 
 
 echo "Running pharmit..."
-bash -c "pixi run gypsum-dl $ARGS --min_pH 6 --max_pH 7.4" | tee "$LOG"
+bash -c "pixi run run-gypsum-dl $ARGS --min_pH 6 --max_pH 7.4" | tee "$LOG"
 echo "Done!"
