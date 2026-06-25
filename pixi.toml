@@ -27,9 +27,13 @@ pharmit = { features = ["pharmit"], no-default-feature = true }
 
 [dependencies]
 python = "=3.12"
-loguru = ">=0.7.2,<0.8"
+loguru = ">=0.7.3,<0.8"
 prolif = ">=2.1.0,<3"
 rdkit = ">=2026.3.3,<2027"
+numpy = ">=2.5.0,<3"
+scipy = ">=1.18.0,<2"
+mpi4py = ">=4.1.2,<5"
+molvs = ">=0.1.1,<0.2"
 
 [feature.dev.dependencies]
 black = ">=23.10.0"
