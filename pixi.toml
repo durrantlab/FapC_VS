@@ -12,6 +12,7 @@ readme = "README.md"
 
 [pypi-dependencies]
 FapC_VS = { path = ".", editable = true }
+gypsum-dl = ">=1.2.7, <2"
 
 [system-requirements]
 linux = "3.10.0"
