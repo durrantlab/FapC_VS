@@ -153,7 +153,7 @@ def run_pharmit(pharm_file: Path, pharm_db_dir: Path, pharmit_output_dir: Path,
             f.write(result.stdout)
         if result.returncode != 0:
             raise Exception(f"pharmit search failed to run. Code: {result.returncode} Err: {result.stderr}\n\n{' '.join(cmd)}")
-        break
+        break #REMOVE
     # compile all results together
     all_mols: list[list] = []
     for temp_txt in all_temp_txts:
@@ -167,7 +167,7 @@ def run_pharmit(pharm_file: Path, pharm_db_dir: Path, pharmit_output_dir: Path,
     all_mol_sdfs: list[str] = []
     for mol_data in all_mols[0:2000]:
         with open(mol_data[3], "r") as f:
-            print(mol_data[2])
+            print(mol_data[3], mol_data[2])
             mol_sdf: str = [item.strip() for item in f.read().strip().split("$$$$") if item.strip().startswith(mol_data[2])][0]
             all_mol_sdfs.append(mol_sdf)
     with open(final_sdf, "w") as f:
