@@ -1,7 +1,1 @@
-["pixi","run","-e","pharmit","pharmit","dbsearch","-max-weight","750",
-                      "-extra-info","-sort-rmsd","-in",str(pharm_file),"-out",
-		                            str(pharmit_output_dir),"-max-hits",str(max_mol)]
-					        all_db_paths: list[Path] = [item for item in pharm_db_dir.iterdir() if item.is_dir()]
-						    for db_path in all_db_paths:
-							            cmd.append("-dbdir")
-								            cmd.append(str(db_path))
+pixi run -e pharmit pharmit dbsearch -max-weight 750 -extra-info -sort-rmsd -in reg_1_mol1_base_input.json -out reg_1_mol1_base_output.sdf -max-hits 2000 -dbdir /ix/jdurrant/durrantlab/irh24/FapC_VS/032-DB/iis-000-000-000--000-499-999
