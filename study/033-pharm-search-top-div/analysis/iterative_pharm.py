@@ -84,11 +84,13 @@ def update_csv(pharm_op: Path, csv_file: Path, max_mol: int) -> int:
         pharm_op (Path): where the pharmit search op is
         csv_file (Path): where the csv file is
     """
+    # open up files
     file_name: str = pharm_op.stem
     with open(csv_file, "r") as f:
         csv: list[list[str]] = [[item2 for item2 in item.split(",")] for item in f.read().split("\n")]
     with open(pharm_op, "r") as f:
         mol_list: list[list[str]] = [[item2 for item2 in item.strip().split("\n")] for item in f.read().split("$$$$")[:-1]]
+    # add the new molecules to body of csv
     csv_body: list[list[str]] = []
     mol_num = int(csv[0][0]) + len(mol_list)
     for mol_ind, mol in enumerate(mol_list):
@@ -96,6 +98,7 @@ def update_csv(pharm_op: Path, csv_file: Path, max_mol: int) -> int:
         rmsd: str = mol[-1].strip()
         csv_body.append(["0", name, str(rmsd), file_name, str(mol_ind)])
     csv.extend(csv_body)
+    # if reached max molecules, sort full list
     if(mol_num >= max_mol):
         csv_head: list[str] = csv[0]
         csv_body: list[list[str]] = csv[1:]
@@ -333,7 +336,7 @@ if __name__ == "__main__":
     parser.add_argument("temp_dir", default=temp_dir, 
                         nargs="?", help="where temporary files will be stored")
 
-    max_mol: int = 2000
+    max_mol: int = 10000
     """the max number of results for a molecule"""
     parser.add_argument("max_mol", default=max_mol, type=int,
                         nargs="?", help="the max number of results for a molecule")
