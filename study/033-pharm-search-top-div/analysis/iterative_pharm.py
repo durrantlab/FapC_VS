@@ -134,14 +134,14 @@ def run_pharmit(pharm_file: Path, pharm_db_dir: Path, pharmit_output_dir: Path,
     all_db_paths: list[Path] = [item for item in pharm_db_dir.iterdir() if item.is_dir()]
     all_temp_sdfs: list[Path] = []
     all_temp_txts: list[Path] = []
-    for db_path in all_db_paths:
+    for db_ind, db_path in enumerate(all_db_paths):
         # files
         db_name: str = "-".join(db_path.stem.split("-")[0:3])
         temp_sdf: Path = (temp_sdf_folder / f"{db_name}.sdf")
         temp_op_txt: Path = (temp_sdf_folder / f"{db_name}.txt")
         all_temp_sdfs.append(temp_sdf)
         all_temp_txts.append(temp_op_txt)
-        print(f" Searching on {db_name}")
+        print(f" Searching on {db_name}. ({db_ind+1}/{len(all_db_paths)})")
         # create command
         cmd: list[str] = ["pixi","run","-e","pharmit","pharmit","dbsearch","-max-weight","750",
                         "-extra-info","-sort-rmsd","-in",str(pharm_file),"-out",
@@ -166,7 +166,7 @@ def run_pharmit(pharm_file: Path, pharm_db_dir: Path, pharmit_output_dir: Path,
     all_mol_sdfs: list[str] = []
     for mol_data in all_mols[0:2000]:
         with open(mol_data[3], "r") as f:
-            mol_sdf: str = [item.strip() for item in f.read().strip().split("$$$$") if item.strip().startswith(mol_data[2])][0]
+            mol_sdf: str = [item.strip() for item in f.read().strip().split("\n$$$$\n") if item.strip().startswith(mol_data[2])][0]
             all_mol_sdfs.append(mol_sdf)
     with open(final_sdf, "w") as f:
         f.write("\n$$$$\n".join(all_mol_sdfs) + "\n$$$$")
