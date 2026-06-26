@@ -131,13 +131,13 @@ def run_pharmit(pharm_file: Path, pharm_db_dir: Path, pharmit_output_dir: Path,
     all_temp_sdfs: list[Path] = []
     all_temp_txts: list[Path] = []
     for db_path in all_db_paths:
-        print(f" Searching on {db_name}")
         # files
         db_name: str = "-".join(db_path.stem.split("-")[0:3])
         temp_sdf: Path = (temp_sdf_folder / f"{db_name}.sdf")
         temp_op_txt: Path = (temp_sdf_folder / f"{db_name}.txt")
         all_temp_sdfs.append(temp_sdf)
         all_temp_txts.append(temp_op_txt)
+        print(f" Searching on {db_name}")
         # create command
         cmd: list[str] = ["pixi","run","-e","pharmit","pharmit","dbsearch","-max-weight","750",
                         "-extra-info","-sort-rmsd","-in",str(pharm_file),"-out",
