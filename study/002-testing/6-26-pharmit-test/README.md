@@ -32,5 +32,9 @@ Conclusion: all DBs together do NOT work. Is it a specific database curropting? 
 query not a feature?
 
 
-## Test 3: Single Molecule in Current DB (All, but seperate)
-Put in a single pharamacophore list (region1, mol1, all) into DB search of each DB by itself. Look at results
+## Test 4: Single Molecule in Current DB (All, but seperate)
+Put in a single pharamacophore list (region1, mol1, all) into DB search of each DB by itself.
+
+Result: overall they looked good, even weird ones, were weird on the website too.
+
+Conclusion: all DBs seperate seem to work. Will do that from now on.

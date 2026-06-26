@@ -5,21 +5,6 @@ import shutil
 DIR_SCRIPT: Path = Path(__file__).parent.resolve()
 DIR_STUDY: Path = Path(DIR_SCRIPT  / ".." / "..").resolve()
 
-HEADER: str = """#!/bin/bash
-#SBATCH --job-name=create_db                	 		 # Job name
-#SBATCH --cluster=smp				   	 				 # Use cluster with GPU support
-#SBATCH --partition=preempt             				 # Use preempt partion (free)
-#SBATCH --nodes=1                      					 # Number of nodes
-#SBATCH --ntasks=1                     	 				 # Number of tasks
-#SBATCH --cpus-per-task=32             	 				 # Number of CPU cores per task
-#SBATCH --mem=32G                     	 				 # Memory allocation
-#SBATCH --time=12:00:00                    				 # Time limit (D-HH:MM:SS)
-#SBATCH --output=logs/batch.out                          # Output log path
-
-module purge
-module load pixi
-
-"""
 
 def main(sdf_db_path: Path, db_main_path: Path, skip_file_format: bool = False):
     """Takes in library of sdf molecules, edits files to be
@@ -74,49 +59,30 @@ def main(sdf_db_path: Path, db_main_path: Path, skip_file_format: bool = False):
 
 
 def fix_names(sdf_file: Path, index: int) -> int:
-    next_line = True
     with open(sdf_file) as src, \
         tempfile.NamedTemporaryFile("w", delete=False, dir=sdf_file.parent.resolve(), newline="") as tmp:
         tmpname = tmp.name
-        
-        for line in src:                       
-            if next_line:
-                tmp.write(f"mol_i{index:07d}\n")
-                index = index+1
-                next_line = False 
-            #elif line.startswith("  Mrv"):
-            #    tmp.write(line + "\n")
-            #elif line.startswith("  Mrv"):
-            #    split_line = line.split("_")
-            #    if(len(split_line) > 1):
-            #        tmp.write(" ".join(split_line[0:-1]) + "          ")
-            #    else:
-            #       tmp.write(line)""" # this is to fix a previous mistake i did : )
-            else:
-                tmp.write(line)
+        lines = []
+        no_name = True
 
-            if line.startswith("$$$$"):
-                next_line = True
+        for line in src:  
+            if no_name:
+                lines.append(line)   
+                if lines[-2].startswith(">  <PUBCHEM_EXT_SUBSTANCE_URL>"):
+                    lines[0] = lines[-1]
+                    for line_ in lines:
+                        tmp.write(line_)
+                    no_name = False
+            else:
+                if line.startswith("$$$$"):
+                    no_name = True
+                    lines = []
+                tmp.write(line)
         
     os.replace(tmpname, sdf_file)    
     
     return index        
 
-
-
-def fix_names_arch(sdf_file: Path):
-    # read in file
-    with open(sdf_file, "r") as f:
-        mole_list = [item.split("\n") for item in f.read().split("\n$$$$\n")]
-    # for each molecule edit the name
-    for molecule in mole_list:
-        if len(molecule) > 10:
-            name_ind = next((i for i, ln in enumerate(molecule) if "PUBCHEM_EXT_DATASOURCE_REGID" in ln), -1) + 1
-            name = molecule[name_ind].strip()
-            molecule[1] = f"  {name}"
-    # write out molecules
-    with open(sdf_file, "w") as f:
-        f.write("\n&&&&\n".join(["\n".join(item) for item in mole_list]))
 
 
 
@@ -128,6 +94,6 @@ if __name__ == "__main__":
     #db_main_path: Path = (DIR_SCRIPT / ".." / "data" / "DB").resolve()
     db_main_path: Path = Path("/ix/jdurrant/durrantlab/irh24/FapC_VS/032-DB").resolve()
 
-    main(sdf_db_path, db_main_path, True)
+    main(sdf_db_path, db_main_path, False)
 
 
