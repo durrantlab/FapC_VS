@@ -125,6 +125,10 @@ def run_pharmit(pharm_file: Path, pharm_db_dir: Path, pharmit_output_dir: Path,
     # folders
     final_sdf: Path = (pharmit_output_dir / f"{run_name}.sdf").resolve()
     temp_sdf_folder: Path = (pharmit_output_dir / f"{run_name}").resolve()
+    if temp_sdf_folder.is_dir():
+        shutil.rmtree(temp_dir) # only works on linux
+        pass
+    temp_sdf_folder.mkdir(parents=True, exist_ok=True)
 
     # go through each database
     all_db_paths: list[Path] = [item for item in pharm_db_dir.iterdir() if item.is_dir()]
