@@ -156,10 +156,10 @@ def run_pharmit(pharm_file: Path, pharm_db_dir: Path, pharmit_output_dir: Path,
         break #REMOVE
     # compile all results together
     all_mols: list[list] = []
-    for temp_txt in all_temp_txts:
+    for op_ind, temp_txt in enumerate(all_temp_txts):
         with open(temp_txt, "r") as f:
             text: list[list[str]] = [item.split(",") for item in f.read().split("\n") if len(item.split(",")) > 5]
-            text2: list = [[int(item[0]), float(item[1]), item[4], temp_txt] for item in text]
+            text2: list = [[int(item[0]), float(item[1]), item[4], all_temp_sdfs[op_ind]] for item in text]
             all_mols.extend(text2)
     # sort based on RMSD
     all_mols.sort(key=lambda x: x[1])
