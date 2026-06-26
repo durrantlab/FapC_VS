@@ -167,7 +167,7 @@ def run_pharmit(pharm_file: Path, pharm_db_dir: Path, pharmit_output_dir: Path,
     all_mols.sort(key=lambda x: x[1])
     # create sdf with all
     all_mol_sdfs: list[str] = []
-    for mol_data in all_mols[0:2000]:
+    for mol_data in all_mols[0:max_mol]:
         with open(mol_data[3], "r") as f:
             #print(mol_data[3], mol_data[2])
             mol_sdf: str = [item.strip() for item in f.read().strip().split("$$$$") if item.strip().startswith(mol_data[2])][0]
@@ -336,7 +336,7 @@ if __name__ == "__main__":
     parser.add_argument("temp_dir", default=temp_dir, 
                         nargs="?", help="where temporary files will be stored")
 
-    max_mol: int = 10000
+    max_mol: int = 2000
     """the max number of results for a molecule"""
     parser.add_argument("max_mol", default=max_mol, type=int,
                         nargs="?", help="the max number of results for a molecule")
