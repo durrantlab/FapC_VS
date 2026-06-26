@@ -12,4 +12,5 @@
 *run_gnina.sh
 *run_pharmit_search.sh
 *create_db.sh
+*run_gypsum.sh
 032-create-pharm-db/data/*

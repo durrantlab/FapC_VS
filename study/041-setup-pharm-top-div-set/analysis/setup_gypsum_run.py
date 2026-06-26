@@ -26,7 +26,7 @@ def main(sdf_input_dir: Path, split_sdf_dir: Path, split_size: int, gypsum_sdf_d
         split_size (Path): how many molecules are in each split
         gypsum_sdf_dir (Path): where final gypsum outputs are held
     """
-    # for each molecule:
+    # for each div set molecule:
     input_region_dirs: list[Path] = [item for item in sdf_input_dir.iterdir() if item.is_dir() and item.name.startswith("region")]
     args_list: list[str] = []
     for input_region_dir in input_region_dirs:
@@ -39,11 +39,13 @@ def main(sdf_input_dir: Path, split_sdf_dir: Path, split_size: int, gypsum_sdf_d
             sdf_list: list[Path] = sdf_set_size_split(input_mol_dir, mol_split_sdf_dir, split_size)
             # setup gypsum input for each file
             for sdf_file in sdf_list:
-                mol_gypsum_sdf_file: Path = (gypsum_sdf_dir / input_region_dir.name / input_mol_dir.name / sdf_file.name).resolve()
+                mol_gypsum_sdf_file: Path = (gypsum_sdf_dir / input_region_dir.name / input_mol_dir.name / sdf_file.stem).resolve()
                 if not mol_gypsum_sdf_file.parent.is_dir():
                     mol_gypsum_sdf_file.parent.mkdir(parents=True, exist_ok=True)
-                args: str = f"-s {sdf_file} -o {mol_gypsum_sdf_file}"
-                args_list.append(args)
+                # if gypsum output doesnt exist, add to args list
+                if not (mol_gypsum_sdf_file / "gypsum_dl_success.sdf").is_file():
+                    args: str = f"-s {sdf_file} -o {mol_gypsum_sdf_file}"
+                    args_list.append(args)
     # write the job_list
     job_list_file: Path = (DIR_SCRIPT / "job_list.txt").resolve()
     with open(job_list_file, "w") as f:
@@ -55,7 +57,7 @@ def main(sdf_input_dir: Path, split_sdf_dir: Path, split_size: int, gypsum_sdf_d
     # create batch script to run slurm
     batch_script_file: Path = (DIR_SCRIPT / "run_gypsum.sh").resolve()
     with open(batch_script_file, "w") as f:
-        f.write(f"sbatch --array=0-{len(arg)-1} --export=ALL run_gypsum.slurm\n")
+        f.write(f"sbatch --array=0-{len(args_list)-1} --export=ALL run_gypsum.slurm\n")
 
 
 def sdf_set_size_split(input_mol_dir: Path, mol_split_sdf_dir: Path, 
