@@ -68,7 +68,7 @@ def fix_names(sdf_file: Path, index: int) -> int:
         for line in src:  
             if no_name:
                 lines.append(line)   
-                if len(lines) > 2 and lines[-2].startswith(">  <PUBCHEM_EXT_SUBSTANCE_URL>"):
+                if len(lines) > 2 and lines[-2].startswith(">  <PUBCHEM_EXT_DATASOURCE_REGID>"):
                     lines[0] = lines[-1]
                     for line_ in lines:
                         tmp.write(line_)
