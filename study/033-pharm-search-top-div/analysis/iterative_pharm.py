@@ -309,29 +309,29 @@ if __name__ == "__main__":
     """The location of the pharmit search input (pharmacophore list) that is
     being searched. Will be input via command line"""
     parser.add_argument("pharm_list_file", default=pharm_list_file, 
-                        help="where pharmacophore json is located")
+                        nargs="?", help="where pharmacophore json is located")
     
     #pharm_db_dir: Path = Path(DIR_STUDY / "032-create-pharm-db" / "data" / "DB").resolve()
     pharm_db_dir: str = str(Path("/ix/jdurrant/durrantlab/irh24/FapC_VS/032-DB-old").resolve())
     """where the pharmit database is stored"""
     parser.add_argument("pharm_db_dir", default=pharm_db_dir, 
-                        help="where pharmit database is located")
+                        nargs="?", help="where pharmit database is located")
     
     pharmit_output_dir: str = str((DIR_SCRIPT / ".." / "data" / "search_output" 
                                   / "region_1" / "mol1").resolve())
     """where the pharmit search output will be stored"""
     parser.add_argument("pharmit_output_dir", default=pharmit_output_dir, 
-                        help="where the pharmit search output will be stored")
+                        nargs="?", help="where the pharmit search output will be stored")
 
     temp_dir: str = str((DIR_SCRIPT / "temp" / "region_1" / "mol1").resolve())
     """where temporary files will be stored"""
     parser.add_argument("temp_dir", default=temp_dir, 
-                        help="where temporary files will be stored")
+                        nargs="?", help="where temporary files will be stored")
 
     max_mol: int = 2000
     """the max number of results for a molecule"""
     parser.add_argument("max_mol", default=max_mol, type=int,
-                        help="the max number of results for a molecule")
+                        nargs="?", help="the max number of results for a molecule")
  
     args = parser.parse_args()
     main(Path(args.pharm_list_file), Path(args.pharm_db_dir), Path(args.pharmit_output_dir), 
