@@ -21,7 +21,7 @@ logging.basicConfig(
 
 
 
-def main(pharm_list_dir: Path, pharm_db_dir: Path, pharmit_output_dir: Path, 
+def main(pharm_list_file: Path, pharm_db_dir: Path, pharmit_output_dir: Path, 
          temp_dir: Path, max_mol: int):
     """Using pharmacophore list input will iteratively run pharmacophore searches
     with pharmit, removing pharmacophores in BFS style, until only 3 remain or 
@@ -35,7 +35,8 @@ def main(pharm_list_dir: Path, pharm_db_dir: Path, pharmit_output_dir: Path,
         temp_dir (Path): where the pharmit search output will be stored
     """
     # setup iterative pharm data structure
-    pharm_obj: iter_pharm = iter_pharm(pharm_list_dir, temp_dir)
+    print(f"ITERATIVE PHARM ON: {pharm_list_file}")
+    pharm_obj: iter_pharm = iter_pharm(pharm_list_file, temp_dir)
 
     # create temp_dir / pharmit_output dir
     if temp_dir.is_dir():
@@ -64,12 +65,10 @@ def main(pharm_list_dir: Path, pharm_db_dir: Path, pharmit_output_dir: Path,
                 print("no more valid combinations left")
                 break
         pharm_file: Path = pharm_obj.write_curr_json()
-
+        print(f"Searching with pharm config: {iter_name}")
         # run pharmit.
-        op_file: Path = (pharmit_output_dir / f"op_{iter_name}.sdf").resolve()
-        result: str = run_pharmit(pharm_file, pharm_db_dir, op_file,
-                        max_mol-total_mol)
-        print(result)
+        op_file: Path = run_pharmit(pharm_file, pharm_db_dir, pharmit_output_dir,
+                        f"op_{iter_name}", max_mol-total_mol)
         
         # determine total count and update csv
         total_mol: int = update_csv(op_file, csv_file, max_mol)
@@ -113,30 +112,64 @@ def update_csv(pharm_op: Path, csv_file: Path, max_mol: int) -> int:
 
 
 def run_pharmit(pharm_file: Path, pharm_db_dir: Path, pharmit_output_dir: Path,
-                max_mol: int) -> str:
+                run_name: str, max_mol: int) -> Path:
     """Takes in pharmit inputs, crafts the bash command and runs it
 
     Args:
         pharm_file (Path): where pharm input is located
         pharm_db_dir (Path): where db is located
-        pharmit_output_dir (Path): where output is placed
+        pharmit_output_dir (Path): where all output for this molecule is placed
+        run_name (str): name of the specific pharmacohpore iteration
         max_mol (int): max # of molecules that can be returned
     """
-    # create command
-    cmd: list[str] = ["pixi","run","-e","pharmit","pharmit","dbsearch","-max-weight","750",
-                      "-extra-info","-sort-rmsd","-in",str(pharm_file),"-out",
-                      str(pharmit_output_dir),"-max-hits",str(max_mol)]
+    # folders
+    final_sdf: Path = (pharmit_output_dir / f"{run_name}.sdf").resolve()
+    temp_sdf_folder: Path = (pharmit_output_dir / f"{run_name}").resolve()
+
+    # go through each database
     all_db_paths: list[Path] = [item for item in pharm_db_dir.iterdir() if item.is_dir()]
+    all_temp_sdfs: list[Path] = []
+    all_temp_txts: list[Path] = []
     for db_path in all_db_paths:
-        cmd.append("-dbdir")
-        cmd.append(str(db_path))
-    # run command
-    #fake_pharmit(cmd)
-    result = subprocess.run(cmd, capture_output=True, text=True)
-    #return(str(cmd))
-    if result.returncode != 0:
-        raise Exception(f"pharmit search failed to run. Code: {result.returncode} Err: {result.stderr}\n\n{' '.join(cmd)}")
-    return result.stdout
+        print(f" Searching on {db_name}")
+        # files
+        db_name: str = "-".join(db_path.stem.split("-")[0:3])
+        temp_sdf: Path = (temp_sdf_folder / f"{db_name}.sdf")
+        temp_op_txt: Path = (temp_sdf_folder / f"{db_name}.txt")
+        all_temp_sdfs.append(temp_sdf)
+        all_temp_txts.append(temp_op_txt)
+        # create command
+        cmd: list[str] = ["pixi","run","-e","pharmit","pharmit","dbsearch","-max-weight","750",
+                        "-extra-info","-sort-rmsd","-in",str(pharm_file),"-out",
+                        str(temp_sdf),"-max-hits",str(max_mol),"-dbdir",str(db_path)]
+        # run command
+        result = subprocess.run(cmd, capture_output=True, text=True)
+        # write out the console output
+        with open(temp_op_txt, "w") as f:
+            f.write(result.stdout)
+        if result.returncode != 0:
+            raise Exception(f"pharmit search failed to run. Code: {result.returncode} Err: {result.stderr}\n\n{' '.join(cmd)}")
+    # compile all results together
+    all_mols: list[list] = []
+    for temp_txt in all_temp_txts:
+        with open(temp_txt, "r") as f:
+            text: list[list[str]] = [item.split(",") for item in f.read().split("\n") if len(item.split(",")) > 5]
+            text2: list = [[int(item[0]), float(item[1]), item[4], temp_txt] for item in text]
+            all_mols.extend(text2)
+    # sort based on RMSD
+    all_mols.sort(key=lambda x: x[1])
+    # create sdf with all
+    all_mol_sdfs: list[str] = []
+    for mol_data in all_mols[0:2000]:
+        with open(mol_data[3], "r") as f:
+            mol_sdf: str = [item.strip() for item in f.read().strip().split("$$$$") if item.strip().startswith(mol_data[2])][0]
+            all_mol_sdfs.append(mol_sdf)
+    with open(final_sdf, "w") as f:
+        f.write("\n$$$$\n".join(all_mol_sdfs) + "\n$$$$")
+    shutil.rmtree(temp_sdf_folder)
+    return final_sdf
+
+
 
 def fake_pharmit(cmd: list[str]):
     """Just meant to replicate what pharmit would do if I could run it"""
@@ -272,25 +305,25 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="runs pharmit iteratively on a pharmacophore list")
     
     pharm_list_file: str = str((DIR_STUDY / "031-validate-pharm-top-div" / 
-                            "data" / "visual_inspect" / "region_1" / "mol0_input.json").resolve())
+                            "data" / "visual_inspect" / "region_1" / "mol1_input.json").resolve())
     """The location of the pharmit search input (pharmacophore list) that is
     being searched. Will be input via command line"""
     parser.add_argument("pharm_list_file", default=pharm_list_file, 
                         help="where pharmacophore json is located")
     
     #pharm_db_dir: Path = Path(DIR_STUDY / "032-create-pharm-db" / "data" / "DB").resolve()
-    pharm_db_dir: str = str(Path("/ix/jdurrant/durrantlab/irh24/FapC_VS/032-DB").resolve())
+    pharm_db_dir: str = str(Path("/ix/jdurrant/durrantlab/irh24/FapC_VS/032-DB-old").resolve())
     """where the pharmit database is stored"""
     parser.add_argument("pharm_db_dir", default=pharm_db_dir, 
                         help="where pharmit database is located")
     
     pharmit_output_dir: str = str((DIR_SCRIPT / ".." / "data" / "search_output" 
-                                  / "region_1" / "mol0").resolve())
+                                  / "region_1" / "mol1").resolve())
     """where the pharmit search output will be stored"""
     parser.add_argument("pharmit_output_dir", default=pharmit_output_dir, 
                         help="where the pharmit search output will be stored")
 
-    temp_dir: str = str((DIR_SCRIPT / "temp" / "region_1" / "mol0").resolve())
+    temp_dir: str = str((DIR_SCRIPT / "temp" / "region_1" / "mol1").resolve())
     """where temporary files will be stored"""
     parser.add_argument("temp_dir", default=temp_dir, 
                         help="where temporary files will be stored")
