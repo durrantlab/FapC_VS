@@ -25,3 +25,12 @@ Conclusion: 000-500 DB is working/ searching with 2 DB might be working
 ## Test 3: Single Molecule in Current DB (All)
 Put in a single pharamacophore list (region1, mol1, all) into DB search of just 000-000 DB and 000-500
 
+Result: top molecule name / RMSD is still the same: 0,0.12539689,520,13,mol_i0534473,448150,29369892865
+however, the molecule in SDF is now cursed again
+
+Conclusion: all DBs together do NOT work. Is it a specific database curropting? Or is multiple databases in one
+query not a feature?
+
+
+## Test 3: Single Molecule in Current DB (All, but seperate)
+Put in a single pharamacophore list (region1, mol1, all) into DB search of each DB by itself. Look at results
