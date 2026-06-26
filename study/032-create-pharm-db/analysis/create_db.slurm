@@ -5,7 +5,7 @@
 #SBATCH --nodes=1                      					 # Number of nodes
 #SBATCH --ntasks=1                     	 				 # Number of tasks
 #SBATCH --cpus-per-task=16             	 				 # Number of CPU cores per task
-#SBATCH --mem=16G                     	 				 # Memory allocation
+#SBATCH --mem=32G                     	 				 # Memory allocation
 #SBATCH --time=24:00:00                    				 # Time limit (D-HH:MM:SS)
 #SBATCH --output=logs/%A_%a.out                          # Output log path
 #SBATCH --error=logs/%x_%A_%a.err                        # Error log path

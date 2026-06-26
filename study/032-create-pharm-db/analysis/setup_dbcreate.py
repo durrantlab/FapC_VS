@@ -94,6 +94,6 @@ if __name__ == "__main__":
     #db_main_path: Path = (DIR_SCRIPT / ".." / "data" / "DB").resolve()
     db_main_path: Path = Path("/ix/jdurrant/durrantlab/irh24/FapC_VS/032-DB").resolve()
 
-    main(sdf_db_path, db_main_path, False)
+    main(sdf_db_path, db_main_path, True)
 
 
