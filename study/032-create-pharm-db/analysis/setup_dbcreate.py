@@ -6,7 +6,7 @@ DIR_SCRIPT: Path = Path(__file__).parent.resolve()
 DIR_STUDY: Path = Path(DIR_SCRIPT  / ".." / "..").resolve()
 
 
-def main(sdf_db_path: Path, db_main_path: Path, skip_file_format: bool = False):
+def main(sdf_db_path: Path, db_main_path: Path, skip_file_format: bool = False, DIR_SCRIPT: Path = DIR_SCRIPT):
     """Takes in library of sdf molecules, edits files to be
     correct format and creates a script that (when run)
     will setup the database
