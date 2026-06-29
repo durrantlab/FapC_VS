@@ -5,6 +5,8 @@ DIR_STUDY: Path = Path(DIR_SCRIPT  / ".." / "..").resolve()
 
 from rdkit import Chem
 from rdkit.Chem import AllChem
+from rdkit import RDLogger
+RDLogger.DisableLog("rdApp.warning")
 
 
 def main(curr_db_dir: Path, fixed_db_dir: Path):
