@@ -134,7 +134,8 @@ def run_pharmit(pharm_file: Path, pharm_db_dir: Path, pharmit_output_dir: Path,
     temp_sdf_folder.mkdir(parents=True, exist_ok=True)
 
     # go through each database
-    all_db_paths: list[Path] = [item for item in pharm_db_dir.iterdir() if item.is_dir()]
+    all_db_paths: list[Path] = [item for item in pharm_db_dir.iterdir() if item.is_dir() 
+                                and (item / "dbinfo.json").resolve().exists()]
     all_temp_sdfs: list[Path] = []
     all_temp_txts: list[Path] = []
     for db_ind, db_path in enumerate(all_db_paths):
