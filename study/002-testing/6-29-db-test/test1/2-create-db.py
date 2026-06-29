@@ -19,7 +19,7 @@ def main(sdf_db_path: Path, db_main_path: Path, skip_file_format: bool = False):
 
 if __name__ == "__main__":
     # inputs
-    sdf_db_path: Path = Path(DIR_SCRIPT / "db_mols").resolve()
+    sdf_db_path: Path = Path(DIR_SCRIPT / "db_mols_fixed").resolve()
     #sdf_db_path: Path = Path("F:\\FapC_VS\\study\\032-create-pharm-db\\data\\").resolve() # for testing
     #db_main_path: Path = (DIR_SCRIPT / ".." / "data" / "DB").resolve()
     db_main_path: Path = Path(DIR_SCRIPT / "DB").resolve()

@@ -20,7 +20,7 @@ if __name__ == "__main__":
     """The location of the pharmit search input (pharmacophore list) that is
     being searched. Will be input via command line"""
     
-    pharm_db_dir: Path = Path(DIR_SCRIPT / "db_mols_fixed").resolve()
+    pharm_db_dir: Path = Path(DIR_SCRIPT / "DB").resolve()
     """where the pharmit database is stored"""
     
     pharmit_output_dir: Path = (DIR_SCRIPT / "output").resolve()
