@@ -96,7 +96,7 @@ def update_csv(pharm_op: Path, csv_file: Path, max_mol: int) -> int:
     for mol_ind, mol in enumerate(mol_list):
         name: str = mol[0].strip()
         rmsd: str = mol[-1].strip()
-        if(not if_already_inside(csv, name)):
+        if(not already_inside_csv(csv, name)):
             csv_body.append(["0", name, str(rmsd), file_name, str(mol_ind)])
     csv.extend(csv_body)
     # if reached max molecules, sort full list
@@ -114,7 +114,7 @@ def update_csv(pharm_op: Path, csv_file: Path, max_mol: int) -> int:
     return int(csv[0][0])
 
 
-def if_already_inside(csv: list[list[str]], name: str):
+def already_inside_csv(csv: list[list[str]], name: str):
     for line in csv[1:]:
         if line[1] == name:
             return True
@@ -172,6 +172,7 @@ def run_pharmit(pharm_file: Path, pharm_db_dir: Path, pharmit_output_dir: Path,
             text: list[list[str]] = [item.split(",") for item in f.read().split("\n") if len(item.split(",")) > 5]
             text2: list = [[int(item[0]), float(item[1]), item[4], all_temp_sdfs[op_ind]] for item in text]
             all_mols.extend(text2)
+            # ONLY ADD IF IT DOESNT ALREADY EXIST IN LIST
     # sort based on RMSD
     all_mols.sort(key=lambda x: x[1])
     # create sdf with all
@@ -189,6 +190,11 @@ def run_pharmit(pharm_file: Path, pharm_db_dir: Path, pharmit_output_dir: Path,
     shutil.rmtree(temp_sdf_folder)
     return final_sdf
 
+def already_inside_txt(txt: list[list[str]], name: str):
+    for line in txt:
+        if line[1] == name:
+            return True
+    return False 
 
 
 def fake_pharmit(cmd: list[str]):
