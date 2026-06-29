@@ -174,7 +174,7 @@ def run_pharmit(pharm_file: Path, pharm_db_dir: Path, pharmit_output_dir: Path,
             mol_sdf: str = [item.strip() for item in f.read().strip().split("$$$$") if item.strip().startswith(mol_data[2])][0]
             all_mol_sdfs.append(mol_sdf)
     with open(final_sdf, "w") as f:
-        f.write("\n$$$$\n".join(all_mol_sdfs) + "\n$$$$")
+        f.write("\n\n$$$$\n".join(all_mol_sdfs) + "\n$$$$")
     shutil.rmtree(temp_sdf_folder)
     return final_sdf
 
