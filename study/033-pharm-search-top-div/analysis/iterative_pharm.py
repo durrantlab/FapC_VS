@@ -96,7 +96,8 @@ def update_csv(pharm_op: Path, csv_file: Path, max_mol: int) -> int:
     for mol_ind, mol in enumerate(mol_list):
         name: str = mol[0].strip()
         rmsd: str = mol[-1].strip()
-        csv_body.append(["0", name, str(rmsd), file_name, str(mol_ind)])
+        if(not if_already_inside(csv, name)):
+            csv_body.append(["0", name, str(rmsd), file_name, str(mol_ind)])
     csv.extend(csv_body)
     # if reached max molecules, sort full list
     if(mol_num >= max_mol):
@@ -111,6 +112,13 @@ def update_csv(pharm_op: Path, csv_file: Path, max_mol: int) -> int:
         text: str = "\n".join([",".join(item) for item in csv])
         f.write(text)
     return int(csv[0][0])
+
+
+def if_already_inside(csv: list[list[str]], name: str):
+    for line in csv[1:]:
+        if line[1] == name:
+            return True
+    return False 
 
 
 
