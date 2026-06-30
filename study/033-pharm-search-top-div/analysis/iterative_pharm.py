@@ -6,6 +6,8 @@ import subprocess
 import shutil
 import argparse
 
+import pharmit_server_query
+
 DIR_SCRIPT: Path = Path(__file__).parent.resolve()
 DIR_STUDY: Path = Path(DIR_SCRIPT  / ".." / "..").resolve()
 FILE_LOG: Path = (DIR_SCRIPT / ".." / "logs" / f"{Path(__file__).name.split('.')[0]}.log").resolve()
@@ -150,29 +152,19 @@ def run_pharmit(pharm_file: Path, pharm_db_dir: Path, pharmit_output_dir: Path,
         # files
         db_name: str = "-".join(db_path.stem.split("-")[0:3])
         temp_sdf: Path = (temp_sdf_folder / f"{db_name}.sdf")
-        temp_op_txt: Path = (temp_sdf_folder / f"{db_name}.txt")
+        temp_op_csv: Path = (temp_sdf_folder / f"{db_name}.csv")
         all_temp_sdfs.append(temp_sdf)
-        all_temp_txts.append(temp_op_txt)
+        all_temp_txts.append(temp_op_csv)
         print(f" Searching on {db_name}. ({db_ind+1}/{len(all_db_paths)})")
-        # create command
-        cmd: list[str] = ["pixi","run","-e","pharmit","pharmit","dbsearch","-max-weight","750",
-                        "-extra-info","-sort-rmsd","-in",str(pharm_file),"-out",
-                        str(temp_sdf),"-max-hits",str(max_mol),"-dbdir",str(db_path)]
-        # run command
-        result = subprocess.run(cmd, capture_output=True, text=True)
-        # write out the console output
-        with open(temp_op_txt, "w") as f:
-            f.write(result.stdout)
-        if result.returncode != 0:
-            raise Exception(f"pharmit search failed to run. Code: {result.returncode} Err: {result.stderr}\n\n{' '.join(cmd)}")
+        # query pharmit
+        pharmit_server_query.run(pharm_file, temp_sdf, 16, 500, temp_op_csv)
     # compile all results together
     all_mols: list[list] = []
     for op_ind, temp_txt in enumerate(all_temp_txts):
         with open(temp_txt, "r") as f:
             text: list[list[str]] = [item.split(",") for item in f.read().split("\n") if len(item.split(",")) > 5]
-            text2: list = [[int(item[0]), float(item[1]), item[4], all_temp_sdfs[op_ind]] for item in text]
+            text2: list = [[float(item[1]), item[0], all_temp_sdfs[op_ind]] for item in text if already_inside_csv(all_mols, item[0])]
             all_mols.extend(text2)
-            # ONLY ADD IF IT DOESNT ALREADY EXIST IN LIST
     # sort based on RMSD
     all_mols.sort(key=lambda x: x[1])
     # create sdf with all
@@ -190,7 +182,13 @@ def run_pharmit(pharm_file: Path, pharm_db_dir: Path, pharmit_output_dir: Path,
     shutil.rmtree(temp_sdf_folder)
     return final_sdf
 
-def already_inside_txt(txt: list[list[str]], name: str):
+def already_inside_csv(csv: list[list], name: str) -> bool:
+    for line in csv:
+        if name in [item[1] for item in line]:
+            return True
+    return False
+
+def already_inside_txt(txt: list[list[str]], name: str) -> bool:
     for line in txt:
         if line[1] == name:
             return True
