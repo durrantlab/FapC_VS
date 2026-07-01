@@ -6,7 +6,6 @@ from pathlib import Path
 import csv
 
 import requests
-from loguru import logger
 SERVER = "https://pharmit.csb.pitt.edu/fcgi-bin/pharmitserv.fcgi"
 
 DIR_SCRIPT: Path = Path(__file__).parent.resolve()
@@ -26,19 +25,22 @@ def run(query_path: Path, out_path: Path, interval: float,
     Args:
         query_path (Path): location of pharmacophore list
         out_path (Path): location where SDF will be placed
+                        make sure file does not already exist before running
         interval (float): how often to check server when waiing for response
         timeout (float): how long before saying server is timed out
         csv_path (Path): location where the csv of molecule ranking is placed
+                        make sure file does not already exist before running
         max_mol (int): max number of molecules to return
     """
     if csv_path is None:
         csv_path = out_path.with_suffix(".csv")
+    if csv_path.is_file() or out_path.is_file():
+        print(" WARNING: PHARMIT OUTPUT FILE(S) ALREADY EXIST. OVERWRITING")
     
     # read in the pharmacophore file
     query = json.loads(query_path.read_text())
     n_enabled = sum(1 for p in query.get("points", []) if p.get("enabled"))
-    logger.info("loaded query: {} points ({} enabled)",
-                len(query.get("points", [])), n_enabled)
+    print(f" loaded query: {len(query.get('points', []))} points ({n_enabled} enabled)")
 
     # add filters to search
     apply_search_filters(query, max_mol)
@@ -55,7 +57,7 @@ def run(query_path: Path, out_path: Path, interval: float,
                 save_results(session, qid, out_path)
                 save_rmsd_csv(session, qid, csv_path, total)
             else:
-                logger.warning("no hits; skipping saveres")
+                print(" no hits; skipping saveres")
         finally:
             cancel(session, qid)
 
@@ -81,8 +83,7 @@ def apply_search_filters(query: dict, max_mol: int) -> dict:
     query["reduceConfs"] = 1
 
 
-    logger.info("applied filters: max-hits={}, max molecular weight={} Da, dataset={}",
-                query["max-hits"], query["maxMolWeight"], query["subset"])
+    print(f" applied filters: max-hits={query['max-hits']}, max molecular weight={query['maxMolWeight']} Da, dataset={query['subset']}")
     return query
 
 
@@ -111,11 +112,8 @@ def start_query(session: requests.Session, query: dict, old_qid: int | None = No
     data = resp.json()
     if not data.get("status"):
         raise PharmitError(f"startquery rejected: {data.get('msg', 'unknown error')}")
-    logger.info(
-        "query accepted qid={} searching {} mols / {} confs",
-        data["qid"],
-        data.get("numMols", "?"),
-        data.get("numConfs", "?"),
+    print(
+        f" query accepted qid={data['qid']} searching {data.get('numMols', '?')} mols / {data.get('numConfs', '?')} confs"
     )
     return data
 
@@ -160,11 +158,11 @@ def poll(session: requests.Session, qid: int, interval: float = 1.0, timeout: fl
         # once complete, return search is complete
         total = data.get("recordsTotal", 0)
         if data.get("finished"):
-            logger.success("search finished: {} hits", total)
+            print(f" search finished: {total} hits")
             return total
         
         # print info in last server response
-        logger.debug("still searching... {} hits so far", total)
+        print(f" still searching... {total} hits so far")
         if time.monotonic() > deadline:
             raise PharmitError(f"poll timed out after {timeout}s (qid={qid})")
         time.sleep(interval)
@@ -187,7 +185,7 @@ def save_results(session: requests.Session, qid: int, out_path: Path) -> Path:
     resp.raise_for_status()
     # write out the SDF file
     out_path.write_bytes(resp.content)
-    logger.success("wrote {} bytes -> {}", len(resp.content), out_path)
+    print(f" wrote {len(resp.content)} bytes -> {out_path}")
     return out_path
 
 
@@ -232,7 +230,7 @@ def fetch_all_rows(session: requests.Session, qid: int, total: int,
         start += len(chunk)
         draw += 1
 
-    logger.info("fetched {} of {} result rows", len(rows), total)
+    print(f" fetched {len(rows)} of {total} result rows")
     return rows
 
 
@@ -267,7 +265,7 @@ def save_rmsd_csv(session: requests.Session, qid: int, csv_path: Path,
             except Exception:
                 pass
 
-    logger.success("wrote {} rows -> {}", len(rows), csv_path)
+    print(f" wrote {len(rows)} rows -> {csv_path}")
     return csv_path
 
 
@@ -276,7 +274,7 @@ def cancel(session: requests.Session, qid: int) -> None:
     """Free a running/finished query server-side."""
     try:
         session.post(SERVER, data={"cmd": "cancelquery", "oldqid": qid}, timeout=30)
-        logger.info("session canceled {}", qid)
+        print(f" session canceled {qid}")
     except requests.RequestException:
         pass  # best effort
 

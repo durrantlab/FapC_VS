@@ -17,14 +17,19 @@ def main(pharm_list_file: Path, sdf_file: Path, csv_file: Path,
     with pharmit, removing pharmacophores in BFS style, until only 3 remain or 
     max_mol compounds are found.
 
-    Will place all data in a single sdf and sorted csv file in pharmit_output
+    Will place all data in a single sorted sdf and sorted csv, specified in input
 
     Args:
         pharm_list_file (Path): The location of the pharmit search input 
-                               (pharmacophore list) that is being searched.
-        sdf_file (Path): where SDF file output of pharmit will be stored
-        csv_file (Path): Where CSV file output of pharmit will be stored
+            (pharmacophore list) that is being searched.
+        sdf_file (Path): where SDF file output of pharmit will be stored (sorted, only 1 made)
+            Has format of typical concatenated SDF file
+        csv_file (Path): Where CSV file output of pharmit will be stored (sorted, only 1 made)
+            Header is [# of mols],name,rmsd. Each row is a different molecule,
+            storing it's index, name and RMSD
         temp_dir (Path): where temporary files will be stored
+            This is deleted before and after. Make sure it does not overlap with
+            other parallel runs. Holds temp sdf, csv outputs and inputs to pharmit
         max_mol (Path): max molecules to find
     """
     # setup iterative pharm data structure. Allows going through different
@@ -34,6 +39,7 @@ def main(pharm_list_file: Path, sdf_file: Path, csv_file: Path,
 
     # create temp_dir / pharmit_output dir
     if temp_dir.is_dir():
+        print("WARNING: TEMP DIR IS ALREADY PRESENT. DELETING.")
         shutil.rmtree(temp_dir) # only works on linux
         pass
     temp_dir.mkdir(parents=True, exist_ok=True)
@@ -52,7 +58,7 @@ def main(pharm_list_file: Path, sdf_file: Path, csv_file: Path,
     while total_mol < max_mol:
         # create input for pharmit. If invalid, break.
         if first_run:
-            iter_name = 'all'
+            iter_name = 'none'
             first_run = False
         else:
             iter_name: str = pharm_obj.next_pharm()
@@ -60,17 +66,17 @@ def main(pharm_list_file: Path, sdf_file: Path, csv_file: Path,
                 print("no more valid combinations left")
                 break
         pharm_file: Path = pharm_obj.write_curr_json()
-        print(f"Searching with pharm config: {iter_name}")
+        print(f"\nSearching with pharm config: disabled {iter_name}")
         # run pharmit with pharm file
         op_sdf_file, op_csv_file = run_pharmit(pharm_file, temp_dir,
-                        f"op_{iter_name}", max_mol-total_mol)
+                        f"op_{iter_name}", max_mol-total_mol+(max_mol//4))
         sdf_files.append(op_sdf_file)
         
         # determine total count and update csv
-        total_mol: int = update_csv(op_csv_file, csv_file)
+        total_mol: int = update_csv(op_csv_file, csv_file, max_mol)
 
     # sort csv and concat sdfs
-    print("Sorting csv file")
+    print("\nSorting csv file")
     sort_csv(csv_file)
     concat_sdfs(sdf_files, sdf_file, csv_file)
     shutil.rmtree(temp_dir)
@@ -131,12 +137,13 @@ def sort_csv(csv_path: Path):
 
 
 
-def update_csv(pharm_csv_op: Path, csv_file: Path) -> int:
+def update_csv(pharm_csv_op: Path, csv_file: Path, max_num: int) -> int:
     """Updates CSV based on the pharmit search
 
     Args:
         pharm_op (Path): where the pharmit search op is
         csv_file (Path): where the csv file is
+        max_num (int): max number of molecules to return
     """
     # open up files
     file_name: str = pharm_csv_op.stem
@@ -153,6 +160,8 @@ def update_csv(pharm_csv_op: Path, csv_file: Path) -> int:
         if(not already_inside_csv(csv_final, name)):
             csv_final.append(["0", name, str(rmsd), file_name])
             mol_num = mol_num + 1
+        if mol_num == max_num:
+            break
     csv_final[0][0] = str(mol_num)
     # write out csv
     with open(csv_file, "w") as f:
@@ -181,7 +190,10 @@ def run_pharmit(pharm_file: Path, pharmit_output_dir: Path,
     Args:
         pharm_file (Path): where pharm input is located
         pharmit_output_dir (Path): where all output for this molecule is placed
-        run_name (str): name of the specific pharmacohpore iteration
+                                Name based on pharm file path / name
+                                Creates a CSV and SDF in this directory
+        run_name (str): name of the specific pharmacohpore iteration. Refers to
+                        which pharmacophores are disabled
         max_mol (int): max # of molecules that can be returned
     """
     # create output files
@@ -220,7 +232,7 @@ def csv_setup(csv_file: Path) -> Path:
     """
 
     with open(csv_file, "w") as f:
-        f.write("0,name,rmsd")
+        f.write("0,name,rmsd,search_iteration")
     return csv_file
 
 
@@ -313,7 +325,7 @@ class iter_pharm():
         json_str: str = json.dumps(curr_json)
         dis_name: str = self.dis_list_to_str()
         if dis_name == '':
-            dis_name = 'all'
+            dis_name = 'none'
         temp_file = Path(self.temp_dir / f"dis_{dis_name}.json").resolve()
         with open(temp_file, "w") as f:
             f.write(json_str)

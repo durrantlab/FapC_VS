@@ -10,8 +10,7 @@ sys.path.insert(0, str((DIR_STUDY / "031-validate-pharm-top-div").resolve()))
 
 
 def main(main_disabled_pharmit_dir: Path, main_pharmit_output_dir: Path, max_ret_mol: int = 2000, DIR_SCRIPT: Path = DIR_SCRIPT):
-    """Will take in pharmits input files and create a slurm to run pharmit with
-    them
+    """Will take in pharmits input files and create a slurm to run the iterative pharm script
 
     Args:
         disabled_pharmit_dir (Path): where the inputs with disabled pharms based
