@@ -52,7 +52,7 @@ def main(main_disabled_pharmit_dir: Path, main_pharmit_output_dir: Path, max_ret
         sdf_file.parent.mkdir(parents=True, exist_ok=True)
 
         # string
-        input_str: str = f"{pharm_list_file} {sdf_file} {csv_file}"
+        input_str: str = f"{pharm_list_file} {sdf_file} {csv_file} "
         input_str = input_str + f"{temp_dir} {max_mol}"
         pharmit_inputs.append(input_str)
 
