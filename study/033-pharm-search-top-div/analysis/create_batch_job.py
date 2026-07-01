@@ -9,7 +9,7 @@ DIR_STUDY: Path = Path(DIR_SCRIPT  / ".." / "..").resolve()
 sys.path.insert(0, str((DIR_STUDY / "031-validate-pharm-top-div").resolve()))
 
 
-def main(disabled_pharmit_dir: Path, db_dir: Path, pharmit_output_dir: Path, min_pharm: int = 2000):
+def main(disabled_pharmit_dir: Path, pharmit_output_dir: Path, max_ret_mol: int = 2000, DIR_SCRIPT: Path = DIR_SCRIPT):
     """Will take in pharmits input files and create a slurm to run pharmit with
     them
 
@@ -18,6 +18,7 @@ def main(disabled_pharmit_dir: Path, db_dir: Path, pharmit_output_dir: Path, min
             on prolif are stored
         pharmit_output_dir (Path): where final pharmit search inputs will be stored
             All inputs for 1 region will be in a file together
+        max_ret_mol (int): max number of molecules to be returned per molecule
     """
     
     # read in disabled pharmits
@@ -37,10 +38,9 @@ def main(disabled_pharmit_dir: Path, db_dir: Path, pharmit_output_dir: Path, min
         mol_name: str = pharmit_json.stem.split("_")[0]
         
         pharm_list_file: Path = pharmit_json
-        pharm_db_dir: Path = db_dir
         pharmit_output_file: Path = (pharmit_output_dir / region / mol_name)        
         temp_dir: Path = (DIR_SCRIPT / "temp" / region / mol_name)
-        max_mol: int = min_pharm
+        max_mol: int = max_ret_mol
 
         # create OP directories
         if temp_dir.is_dir():
@@ -51,7 +51,7 @@ def main(disabled_pharmit_dir: Path, db_dir: Path, pharmit_output_dir: Path, min
         pharmit_output_file.mkdir(parents=True, exist_ok=True)
 
         # string
-        input_str: str = f"{pharm_list_file} {pharm_db_dir} {pharmit_output_file} "
+        input_str: str = f"{pharm_list_file} {pharmit_output_file} "
         input_str = input_str + f"{temp_dir} {max_mol}"
         pharmit_inputs.append(input_str)
 
@@ -78,6 +78,6 @@ if __name__ == "__main__":
     db_dir: Path = Path("/ix/jdurrant/durrantlab/irh24/FapC_VS/032-DB").resolve()
     pharmit_output_dir: Path = (DIR_SCRIPT / ".." / "data" / "search_output").resolve()
     
-    main(disabled_pharmit_dir, db_dir, pharmit_output_dir, 2000)
+    main(disabled_pharmit_dir, db_dir, 2000)
 
 

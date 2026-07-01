@@ -36,8 +36,8 @@ def run(query_path: Path, out_path: Path, interval: float,
     # read in the pharmacophore file
     query = json.loads(query_path.read_text())
     n_enabled = sum(1 for p in query.get("points", []) if p.get("enabled"))
-    logger.info("loaded query: {} points ({} enabled), subset={}",
-                len(query.get("points", [])), n_enabled, query.get("subset", "?"))
+    logger.info("loaded query: {} points ({} enabled)",
+                len(query.get("points", [])), n_enabled)
 
     # add filters to search
     apply_search_filters(query)
@@ -240,6 +240,9 @@ def save_rmsd_csv(session: requests.Session, qid: int, csv_path: Path,
                   total: int) -> Path:
     """Write a CSV of molecule name and RMSD for every hit in the search.
 
+    Format: first row is name, rmsd always. Each row is each different
+    molecule's full name and best RMSD. Invalid rows should be fully deleted
+
     Args:
         session (Session): the website querying session
         qid (int): server session id
@@ -255,9 +258,13 @@ def save_rmsd_csv(session: requests.Session, qid: int, csv_path: Path,
         writer = csv.writer(fh)
         writer.writerow(["name", "rmsd"])
         for row in rows:
-            name = row[0] if len(row) > 0 else ""
-            rmsd = row[1] if len(row) > 1 else ""
-            writer.writerow([name, rmsd])
+            try:
+                if len(row) > 1 and isinstance(row[1], float):
+                    name = row[0]
+                    rmsd = row[1]
+                    writer.writerow([name, rmsd])
+            except Exception:
+                pass
 
     logger.success("wrote {} rows -> {}", len(rows), csv_path)
     return csv_path
@@ -268,7 +275,7 @@ def cancel(session: requests.Session, qid: int) -> None:
     """Free a running/finished query server-side."""
     try:
         session.post(SERVER, data={"cmd": "cancelquery", "oldqid": qid}, timeout=30)
-        logger.debug("Session canceled {}", qid)
+        logger.info("session canceled {}", qid)
     except requests.RequestException:
         pass  # best effort
 

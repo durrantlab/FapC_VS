@@ -1,8 +1,6 @@
 from copy import copy, deepcopy
 from pathlib import Path
-import logging
 import json
-import subprocess
 import shutil
 import argparse
 
@@ -12,31 +10,25 @@ DIR_SCRIPT: Path = Path(__file__).parent.resolve()
 DIR_STUDY: Path = Path(DIR_SCRIPT  / ".." / "..").resolve()
 FILE_LOG: Path = (DIR_SCRIPT / ".." / "logs" / f"{Path(__file__).name.split('.')[0]}.log").resolve()
 
-if not FILE_LOG.parent.is_dir():
-    FILE_LOG.parent.mkdir(parents=True, exist_ok=True)
 
-logging.basicConfig(
-    filename=FILE_LOG,
-    level=logging.INFO,
-    format="%(asctime)s  %(levelname)-8s  %(message)s",
-)
-
-
-
-def main(pharm_list_file: Path, pharm_db_dir: Path, pharmit_output_dir: Path, 
+def main(pharm_list_file: Path, sdf_file: Path, csv_file: Path,
          temp_dir: Path, max_mol: int):
-    """Using pharmacophore list input will iteratively run pharmacophore searches
+    """Using 1 pharmacophore list input will iteratively run pharmacophore searches
     with pharmit, removing pharmacophores in BFS style, until only 3 remain or 
-    2000 compounds are found
+    max_mol compounds are found.
+
+    Will place all data in a single sdf and sorted csv file in pharmit_output
 
     Args:
-        pharm_list_dir (Path): The location of the pharmit search input 
+        pharm_list_file (Path): The location of the pharmit search input 
                                (pharmacophore list) that is being searched.
-        pharm_db_dir (Path): where the pharmit database is stored
-        pharmit_output_dir (Path): where temporary files will be stored
-        temp_dir (Path): where the pharmit search output will be stored
+        sdf_file (Path): where SDF file output of pharmit will be stored
+        csv_file (Path): Where CSV file output of pharmit will be stored
+        temp_dir (Path): where temporary files will be stored
+        max_mol (Path): max molecules to find
     """
-    # setup iterative pharm data structure
+    # setup iterative pharm data structure. Allows going through different
+    # combinations of pharmacophore lists
     print(f"ITERATIVE PHARM ON: {pharm_list_file}")
     pharm_obj: iter_pharm = iter_pharm(pharm_list_file, temp_dir)
 
@@ -45,13 +37,14 @@ def main(pharm_list_file: Path, pharm_db_dir: Path, pharmit_output_dir: Path,
         shutil.rmtree(temp_dir) # only works on linux
         pass
     temp_dir.mkdir(parents=True, exist_ok=True)
-    if pharmit_output_dir.is_dir():
-        shutil.rmtree(pharmit_output_dir)
-        pass
-    pharmit_output_dir.mkdir(parents=True, exist_ok=True)
+    if not sdf_file.parent.is_dir():
+        sdf_file.parent.mkdir(parents=True, exist_ok=True)
+    if not csv_file.parent.is_dir():
+        csv_file.parent.mkdir(parents=True, exist_ok=True)
 
     # setup up data csv. Stores info about all molecules present
-    csv_file: Path = csv_setup(pharmit_output_dir)
+    csv_file: Path = csv_setup(csv_file)
+    sdf_files: list[Path] = []
     
     # while count of molecules stored less then < 2000, check more pharm combs
     total_mol = 0
@@ -68,18 +61,77 @@ def main(pharm_list_file: Path, pharm_db_dir: Path, pharmit_output_dir: Path,
                 break
         pharm_file: Path = pharm_obj.write_curr_json()
         print(f"Searching with pharm config: {iter_name}")
-        # run pharmit.
-        op_file: Path = run_pharmit(pharm_file, pharm_db_dir, pharmit_output_dir,
+        # run pharmit with pharm file
+        op_sdf_file, op_csv_file = run_pharmit(pharm_file, temp_dir,
                         f"op_{iter_name}", max_mol-total_mol)
+        sdf_files.append(op_sdf_file)
         
         # determine total count and update csv
-        total_mol: int = update_csv(op_file, csv_file, max_mol)
+        total_mol: int = update_csv(op_csv_file, csv_file, max_mol)
 
-    # give info about run. End
+    # sort csv and concat sdfs
+    print("Sorting csv file")
+    sort_csv(csv_file)
+    concat_sdfs(sdf_files, sdf_file, csv_file)
+    shutil.rmtree(temp_dir)
     print("Done!")
 
 
-def update_csv(pharm_op: Path, csv_file: Path, max_mol: int) -> int:
+
+def concat_sdfs(sdf_files: list[Path], sdf_file: Path, csv_file: Path):
+    """Takes in all SDF files output (in temp dir) and
+    brings them together into a single sorted sdf_file. No
+    duplicates
+
+    Args:
+        sdf_files (list[Path]): where all SDFs output from
+            pharmit are stored
+        sdf_file (Path): the final SDF file where all molecules
+            are stored in sorted format. No duplicates.
+    """
+    with open(csv_file) as f:
+        csv: list[list[str]] = [[item2 for item2 in item.strip().split(",")] for item in f.read().strip().split("\n")]
+    # read in all current sdfs
+    mols: list[list[str]] = []
+    for pharm_sdf in sdf_files:
+        with open(pharm_sdf, "r") as f2:
+            mols.extend([mol.strip().split("\n") for mol in f2.read().strip().split("$$$$")])
+    # write out the concat, sorted SDF file
+    with open(sdf_file, "w") as f:
+        f.write("")
+    with open(sdf_file, "a") as f1:
+        # go through each line in csv, then find that molecule in all SDF files
+        for line in csv:
+            for mol in mols:
+                if mol[0] == line[1]:
+                    f1.write("\n".join(mol) + "\n\n$$$$\n")
+                    break                             
+
+def sort_csv(csv_path: Path):
+    """Takes in a csv file and sorts it based rmsd (col2)
+
+    Args:
+        csv_path (Path): where the csv file is currently placed
+    """
+    # read in csv file
+    with open(csv_path) as f:
+        csv: list[list[str]] = [[item2 for item2 in item.strip().split(",")] for item in f.read().strip().split("\n")]
+    csv_head: list[str] = csv[0]
+    # sort body of csv
+    csv_body: list[list[str]] = csv[1:]
+    csv_body.sort(key= lambda x: float(x[2]))
+    # add in indicies
+    for mol_ind in range(len(csv_body)):
+        csv_body[mol_ind][0] = str(mol_ind)
+    # write out csv
+    csv = [csv_head] + csv_body
+    with open(csv_path, "w") as f:
+        text: str = "\n".join([",".join(item) for item in csv])
+        f.write(text)
+
+
+
+def update_csv(pharm_csv_op: Path, csv_file: Path, max_mol: int) -> int:
     """Updates CSV based on the pharmit search
 
     Args:
@@ -87,33 +139,25 @@ def update_csv(pharm_op: Path, csv_file: Path, max_mol: int) -> int:
         csv_file (Path): where the csv file is
     """
     # open up files
-    file_name: str = pharm_op.stem
+    file_name: str = pharm_csv_op.stem
+    with open(pharm_csv_op, "r") as f:
+        csv_pharm: list[list[str]] = [[item2 for item2 in item.strip().split(",")] for item in f.read().strip().split("\n")][1:]
     with open(csv_file, "r") as f:
-        csv: list[list[str]] = [[item2 for item2 in item.split(",")] for item in f.read().split("\n")]
-    with open(pharm_op, "r") as f:
-        mol_list: list[list[str]] = [[item2 for item2 in item.strip().split("\n")] for item in f.read().split("$$$$")[:-1]]
-    # add the new molecules to body of csv
-    csv_body: list[list[str]] = []
-    mol_num = int(csv[0][0]) + len(mol_list)
-    for mol_ind, mol in enumerate(mol_list):
-        name: str = mol[0].strip()
-        rmsd: str = mol[-1].strip()
-        if(not already_inside_csv(csv, name)):
-            csv_body.append(["0", name, str(rmsd), file_name, str(mol_ind)])
-    csv.extend(csv_body)
-    # if reached max molecules, sort full list
-    if(mol_num >= max_mol):
-        csv_head: list[str] = csv[0]
-        csv_body: list[list[str]] = csv[1:]
-        csv_body.sort(key= lambda x: float(x[2]))
-        for mol_ind in range(len(csv_body)):
-            csv_body[mol_ind][0] = str(mol_ind)
-        csv = [csv_head] + csv_body
-    csv[0][0] = str(mol_num)
+        csv_final: list[list[str]] = [[item2 for item2 in item.strip().split(",")] for item in f.read().strip().split("\n")]
+    # calculate number of total molecules
+    mol_num = int(csv_final[0][0]) + len(csv_pharm)
+    csv_final[0][0] = str(mol_num)
+    # add each molecule, if not already inside
+    for mol in csv_pharm:
+        name: str = mol[0]
+        rmsd: str = mol[1]
+        if(not already_inside_csv(csv_final, name)):
+            csv_final.append(["0", name, str(rmsd), file_name])
+    # write out csv
     with open(csv_file, "w") as f:
-        text: str = "\n".join([",".join(item) for item in csv])
+        text: str = "\n".join([",".join(item) for item in csv_final])
         f.write(text)
-    return int(csv[0][0])
+    return mol_num
 
 
 def already_inside_csv(csv: list[list[str]], name: str):
@@ -124,75 +168,39 @@ def already_inside_csv(csv: list[list[str]], name: str):
 
 
 
-def run_pharmit(pharm_file: Path, pharm_db_dir: Path, pharmit_output_dir: Path,
-                run_name: str, max_mol: int) -> Path:
-    """Takes in pharmit inputs, crafts the bash command and runs it
+def run_pharmit(pharm_file: Path, pharmit_output_dir: Path,
+                run_name: str, max_mol: int) -> tuple[Path, Path]:
+    """Takes in pharmit inputs, and sends it to the server. Creates
+    an SDF with all hits of out order, and csv with each molecule's
+    RMSD and name. 
+    
+    CSV's 1st row is 'name,rmsd', past that is each different molecules
+    name / rmsd. Ends with a \n
 
     Args:
         pharm_file (Path): where pharm input is located
-        pharm_db_dir (Path): where db is located
         pharmit_output_dir (Path): where all output for this molecule is placed
         run_name (str): name of the specific pharmacohpore iteration
         max_mol (int): max # of molecules that can be returned
     """
-    # folders
+    # create output files
     final_sdf: Path = (pharmit_output_dir / f"{run_name}.sdf").resolve()
-    temp_sdf_folder: Path = (pharmit_output_dir / f"{run_name}").resolve()
-    if temp_sdf_folder.is_dir():
-        shutil.rmtree(temp_dir) # only works on linux
-        pass
-    temp_sdf_folder.mkdir(parents=True, exist_ok=True)
+    """Where SDF outputs of search are held. Random order, not based on RMSD."""
+    final_csv: Path = (pharmit_output_dir / f"{run_name}.csv").resolve()
+    """Where SDF outputs of search are held. Form of name, RMSD"""
 
-    # go through each database
-    all_db_paths: list[Path] = [item for item in pharm_db_dir.iterdir() if item.is_dir() 
-                                and (item / "dbinfo.json").resolve().exists()]
-    all_temp_sdfs: list[Path] = []
-    all_temp_txts: list[Path] = []
-    for db_ind, db_path in enumerate(all_db_paths):
-        # files
-        db_name: str = "-".join(db_path.stem.split("-")[0:3])
-        temp_sdf: Path = (temp_sdf_folder / f"{db_name}.sdf")
-        temp_op_csv: Path = (temp_sdf_folder / f"{db_name}.csv")
-        all_temp_sdfs.append(temp_sdf)
-        all_temp_txts.append(temp_op_csv)
-        print(f" Searching on {db_name}. ({db_ind+1}/{len(all_db_paths)})")
-        # query pharmit
-        pharmit_server_query.run(pharm_file, temp_sdf, 16, 500, temp_op_csv)
-    # compile all results together
-    all_mols: list[list] = []
-    for op_ind, temp_txt in enumerate(all_temp_txts):
-        with open(temp_txt, "r") as f:
-            text: list[list[str]] = [item.split(",") for item in f.read().split("\n") if len(item.split(",")) > 5]
-            text2: list = [[float(item[1]), item[0], all_temp_sdfs[op_ind]] for item in text if already_inside_csv(all_mols, item[0])]
-            all_mols.extend(text2)
-    # sort based on RMSD
-    all_mols.sort(key=lambda x: x[1])
-    # create sdf with all
-    all_mol_sdfs: list[str] = []
-    for mol_data in all_mols[0:max_mol]:
-        with open(mol_data[3], "r") as f:
-            #print(mol_data[3], mol_data[2])
-            mol_sdf: str = [item.strip() for item in f.read().strip().split("$$$$") if item.strip().startswith(mol_data[2])][0]
-            all_mol_sdfs.append(mol_sdf)
-    with open(final_sdf, "w") as f:
-        if(len(all_mol_sdfs) > 0):
-            f.write("\n\n$$$$\n".join(all_mol_sdfs) + "\n$$$$")
-        else:
-            f.write("")
-    shutil.rmtree(temp_sdf_folder)
-    return final_sdf
+    # run pharmit
+    pharmit_server_query.run(pharm_file, final_sdf, 16, 500, final_csv)
+    
+    return final_sdf, final_csv
+
+
 
 def already_inside_csv(csv: list[list], name: str) -> bool:
-    for line in csv:
-        if name in [item[1] for item in line]:
-            return True
+    if name in [line[1] for line in csv]:
+        return True
     return False
 
-def already_inside_txt(txt: list[list[str]], name: str) -> bool:
-    for line in txt:
-        if line[1] == name:
-            return True
-    return False 
 
 
 def fake_pharmit(cmd: list[str]):
@@ -201,15 +209,14 @@ def fake_pharmit(cmd: list[str]):
     shutil.copy2(to_copy, Path(cmd[12]))
 
 
-def csv_setup(temp_dir: Path) -> Path:
+def csv_setup(csv_file: Path) -> Path:
     """Create a csv that stores data about run.
     Header: total_count
     Body: rank, molecule name, rmsd
 
     Args:
-        temp_dir (Path): where the csv file will be placed
+        csv_file (Path): the csv file path
     """
-    csv_file: Path = (temp_dir / "data.csv").resolve()
 
     with open(csv_file, "w") as f:
         f.write("0,name,rmsd")
@@ -328,29 +335,33 @@ class iter_pharm():
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="runs pharmit iteratively on a pharmacophore list")
     
-    pharm_list_file: str = str((DIR_STUDY / "031-validate-pharm-top-div" / 
-                            "data" / "visual_inspect" / "region_1" / "mol1_input.json").resolve())
+    # default params
+    region: str = "region_2"
+    mol_num: str = "4"
+    
+    pharm_list_file: Path = (DIR_STUDY / "031-validate-pharm-top-div" / "data" / 
+                        region / f"mol{mol_num}_input.json").resolve()
     """The location of the pharmit search input (pharmacophore list) that is
     being searched. Will be input via command line"""
     parser.add_argument("pharm_list_file", default=pharm_list_file, 
                         nargs="?", help="where pharmacophore json is located")
-    
-    #pharm_db_dir: Path = Path(DIR_STUDY / "032-create-pharm-db" / "data" / "DB").resolve()
-    pharm_db_dir: str = str(Path("/ix/jdurrant/durrantlab/irh24/FapC_VS/032-DB-old").resolve())
-    """where the pharmit database is stored"""
-    parser.add_argument("pharm_db_dir", default=pharm_db_dir, 
-                        nargs="?", help="where pharmit database is located")
-    
-    pharmit_output_dir: str = str((DIR_SCRIPT / ".." / "data" / "search_output" 
-                                  / "region_1" / "mol1").resolve())
-    """where the pharmit search output will be stored"""
-    parser.add_argument("pharmit_output_dir", default=pharmit_output_dir, 
-                        nargs="?", help="where the pharmit search output will be stored")
+        
+    sdf_file: str = str((DIR_SCRIPT / ".." / "data" / "search_output" 
+                                  / region / f"mol{mol_num}.sdf").resolve())
+    """where the SDF file from pharmit search will be stored"""
+    parser.add_argument("sdf_file", default=sdf_file, 
+                        nargs="?", help="where the SDF file from pharmit search will be stored")
 
-    temp_dir: str = str((DIR_SCRIPT / "temp" / "region_1" / "mol1").resolve())
-    """where temporary files will be stored"""
+    csv_file: str = str((DIR_SCRIPT / ".." / "data" / "search_output" 
+                                  / region / f"mol{mol_num}.csv").resolve())
+    """where the CSV file from pharmit search will be stored"""
+    parser.add_argument("csv_file", default=csv_file, 
+                        nargs="?", help="where the CSV file from pharmit search will be stored")
+
+    temp_dir: str = str((DIR_SCRIPT / "temp" / region / f"mol{mol_num}").resolve())
+    """where temporary files will be stored. Each parallel run should be unique"""
     parser.add_argument("temp_dir", default=temp_dir, 
-                        nargs="?", help="where temporary files will be stored")
+                        nargs="?", help="where temporary files will be stored. Each parallel run should be unique")
 
     max_mol: int = 2000
     """the max number of results for a molecule"""
@@ -358,7 +369,7 @@ if __name__ == "__main__":
                         nargs="?", help="the max number of results for a molecule")
  
     args = parser.parse_args()
-    main(Path(args.pharm_list_file), Path(args.pharm_db_dir), Path(args.pharmit_output_dir), 
+    main(Path(args.pharm_list_file), Path(args.sdf_file), Path(args.csv_file),
         Path(args.temp_dir), args.max_mol)
 
 
