@@ -9,7 +9,7 @@ DIR_STUDY: Path = Path(DIR_SCRIPT  / ".." / "..").resolve()
 sys.path.insert(0, str((DIR_STUDY / "031-validate-pharm-top-div").resolve()))
 
 
-def main(disabled_pharmit_dir: Path, pharmit_output_dir: Path, max_ret_mol: int = 2000, DIR_SCRIPT: Path = DIR_SCRIPT):
+def main(main_disabled_pharmit_dir: Path, main_pharmit_output_dir: Path, max_ret_mol: int = 2000, DIR_SCRIPT: Path = DIR_SCRIPT):
     """Will take in pharmits input files and create a slurm to run pharmit with
     them
 
@@ -22,7 +22,7 @@ def main(disabled_pharmit_dir: Path, pharmit_output_dir: Path, max_ret_mol: int 
     """
     
     # read in disabled pharmits
-    pharmit_inp_region_dirs: list[Path] = [item for item in disabled_pharmit_dir.iterdir() if item.is_dir() and item.name.startswith("region")]
+    pharmit_inp_region_dirs: list[Path] = [item for item in main_disabled_pharmit_dir.iterdir() if item.is_dir() and item.name.startswith("region")]
     regions: list[str] = []
     pharmit_input_files = []
     for pharmit_inp_dir in pharmit_inp_region_dirs:
@@ -38,7 +38,8 @@ def main(disabled_pharmit_dir: Path, pharmit_output_dir: Path, max_ret_mol: int 
         mol_name: str = pharmit_json.stem.split("_")[0]
         
         pharm_list_file: Path = pharmit_json
-        pharmit_output_file: Path = (pharmit_output_dir / region / mol_name)        
+        sdf_file: Path = (main_pharmit_output_dir / region / f"{mol_name}.sdf").resolve()
+        csv_file: Path = (main_pharmit_output_dir / region / f"{mol_name}.csv").resolve()
         temp_dir: Path = (DIR_SCRIPT / "temp" / region / mol_name)
         max_mol: int = max_ret_mol
 
@@ -46,12 +47,12 @@ def main(disabled_pharmit_dir: Path, pharmit_output_dir: Path, max_ret_mol: int 
         if temp_dir.is_dir():
             shutil.rmtree(temp_dir) # only works on linux
         temp_dir.mkdir(parents=True, exist_ok=True)
-        if pharmit_output_file.is_dir():
-            shutil.rmtree(pharmit_output_file)
-        pharmit_output_file.mkdir(parents=True, exist_ok=True)
+        if sdf_file.parent.is_dir():
+            shutil.rmtree(sdf_file.parent)
+        sdf_file.parent.mkdir(parents=True, exist_ok=True)
 
         # string
-        input_str: str = f"{pharm_list_file} {pharmit_output_file} "
+        input_str: str = f"{pharm_list_file} {sdf_file} {csv_file}"
         input_str = input_str + f"{temp_dir} {max_mol}"
         pharmit_inputs.append(input_str)
 
@@ -75,9 +76,8 @@ def main(disabled_pharmit_dir: Path, pharmit_output_dir: Path, max_ret_mol: int 
 if __name__ == "__main__":
     # inputs
     disabled_pharmit_dir: Path = (DIR_STUDY / "031-validate-pharm-top-div" / "data" / "visual_inspect").resolve()
-    db_dir: Path = Path("/ix/jdurrant/durrantlab/irh24/FapC_VS/032-DB").resolve()
     pharmit_output_dir: Path = (DIR_SCRIPT / ".." / "data" / "search_output").resolve()
     
-    main(disabled_pharmit_dir, db_dir, 2000)
+    main(disabled_pharmit_dir, pharmit_output_dir, 2000)
 
 
