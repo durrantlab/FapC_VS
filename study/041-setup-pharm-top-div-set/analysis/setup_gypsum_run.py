@@ -21,25 +21,28 @@ def main(sdf_input_dir: Path, split_sdf_dir: Path, split_size: int, gypsum_sdf_d
     gypsum inputs to be run
 
     Args:
-        sdf_input_dir (Path): where SDF inputs are held (organized region_#/mol#)
+        sdf_input_dir (Path): where SDF inputs are held (organized region_#/mol#.sdf)
         split_sdf_dir (Path): where SDFs split into specific size are held
+            Directory created if not already present
         split_size (Path): how many molecules are in each split
         gypsum_sdf_dir (Path): where final gypsum outputs are held
+            Directory created if not already present
     """
-    # for each div set molecule:
+    # for each region
     input_region_dirs: list[Path] = [item for item in sdf_input_dir.iterdir() if item.is_dir() and item.name.startswith("region")]
     args_list: list[str] = []
     for input_region_dir in input_region_dirs:
-        input_mol_dirs = [item for item in input_region_dir.iterdir() if item.is_dir() and item.name.startswith("mol")]
-        for input_mol_dir in input_mol_dirs:
+        # for each diversity set molecule
+        input_mol_files = [item for item in input_region_dir.iterdir() if item.is_file() and item.suffix == ".sdf"]
+        for input_mol_file in input_mol_files:
             # split into chunks
-            mol_split_sdf_dir: Path = (split_sdf_dir / input_region_dir.name / input_mol_dir.name).resolve()
+            mol_split_sdf_dir: Path = (split_sdf_dir / input_region_dir.name / input_mol_file.stem).resolve()
             if not mol_split_sdf_dir.is_dir():
                 mol_split_sdf_dir.mkdir(parents=True, exist_ok=True)
-            sdf_list: list[Path] = sdf_set_size_split(input_mol_dir, mol_split_sdf_dir, split_size)
+            sdf_list: list[Path] = sdf_set_size_split(input_mol_file, mol_split_sdf_dir, split_size)
             # setup gypsum input for each file
             for sdf_file in sdf_list:
-                mol_gypsum_sdf_file: Path = (gypsum_sdf_dir / input_region_dir.name / input_mol_dir.name / sdf_file.stem).resolve()
+                mol_gypsum_sdf_file: Path = (gypsum_sdf_dir / input_region_dir.name / input_mol_file.stem / sdf_file.stem).resolve()
                 if not mol_gypsum_sdf_file.parent.is_dir():
                     mol_gypsum_sdf_file.parent.mkdir(parents=True, exist_ok=True)
                 # if gypsum output doesnt exist, add to args list
@@ -60,13 +63,13 @@ def main(sdf_input_dir: Path, split_sdf_dir: Path, split_size: int, gypsum_sdf_d
         f.write(f"sbatch --array=0-{len(args_list)-1} --export=ALL run_gypsum.slurm\n")
 
 
-def sdf_set_size_split(input_mol_dir: Path, mol_split_sdf_dir: Path, 
+def sdf_set_size_split(input_mol_file: Path, mol_split_sdf_dir: Path, 
                        split_size: int) -> list[Path]:
     """Will take in a directory with SDFs and split them into new SDF files with
     exactly 'split_size' number of molecules in each. Last may be less.
 
     Args:
-        input_mol_dir (Path): directory where molecules are held
+        input_mol_file (Path): molecuel being split up
         mol_split_sdf_dir (Path): directory where split molecules are put
         split_size (int): how many should be in each file
     
@@ -75,12 +78,8 @@ def sdf_set_size_split(input_mol_dir: Path, mol_split_sdf_dir: Path,
     """
 
     # read in all the SDFs
-    input_sdfs: list[Path] = [item for item in input_mol_dir.iterdir() if item.is_file() and item.name.endswith(".sdf")]
-    all_molecules: list[str] = []
-    for input_sdf in input_sdfs:
-        with open(input_sdf, "r") as f:
-            file_mols: list[str] = [item.strip() for item in f.read().strip().split("$$$$")[:-1]]
-            all_molecules.extend(file_mols)
+    with open(input_mol_file, "r") as f:
+        all_molecules: list[str] = [item.strip() for item in f.read().strip().split("$$$$")[:-1]]
     # write out into chunks of split_size
     num_mols: int = len(all_molecules)
     all_sdfs: list[Path] = []
@@ -88,7 +87,7 @@ def sdf_set_size_split(input_mol_dir: Path, mol_split_sdf_dir: Path,
         end = start + split_size # end is not inclusive
         if end > num_mols:
             end = num_mols
-        new_sdf: str = "\n$$$$\n".join(all_molecules[start:end]) +"\n$$$$"
+        new_sdf: str = "\n\n$$$$\n".join(all_molecules[start:end]) +"\n\n$$$$"
         sdf_file: Path = Path(mol_split_sdf_dir / f"group_{sdf_ind}.sdf")
         with open(sdf_file, "w") as f:
             f.write(new_sdf)
