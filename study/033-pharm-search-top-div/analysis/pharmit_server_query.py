@@ -18,7 +18,7 @@ class PharmitError(RuntimeError):
 
 
 def run(query_path: Path, out_path: Path, interval: float, 
-        timeout: float, csv_path: Path | None = None, max_mol: int = 2000):
+        timeout: float, csv_path: Path | None = None, max_mol: int = 2000) -> bool:
     """Overall, takes in pharmacophore list, calls the server, then returns the SDF
     
 
@@ -31,6 +31,9 @@ def run(query_path: Path, out_path: Path, interval: float,
         csv_path (Path): location where the csv of molecule ranking is placed
                         make sure file does not already exist before running
         max_mol (int): max number of molecules to return
+    
+    Returns:
+        Boolean if the search successfully found molecules or not
     """
     if csv_path is None:
         csv_path = out_path.with_suffix(".csv")
@@ -46,6 +49,7 @@ def run(query_path: Path, out_path: Path, interval: float,
     apply_search_filters(query, max_mol)
 
     # access the pharmit server
+    success = False
     with requests.Session() as session:
         # setup the pharmacophores, molecular library, and search parameters
         started = start_query(session, query)
@@ -56,14 +60,16 @@ def run(query_path: Path, out_path: Path, interval: float,
             if total > 0:
                 save_results(session, qid, out_path)
                 save_rmsd_csv(session, qid, csv_path, total)
+                success = True
             else:
                 print(" no hits; skipping saveres")
         finally:
             cancel(session, qid)
-
+    return success
 
 
 def apply_search_filters(query: dict, max_mol: int) -> dict:
+
     """Add extra search filters / parameters to query dictionary
 
     Args:

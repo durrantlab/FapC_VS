@@ -68,12 +68,12 @@ def main(pharm_list_file: Path, sdf_file: Path, csv_file: Path,
         pharm_file: Path = pharm_obj.write_curr_json()
         print(f"\nSearching with pharm config: disabled {iter_name}")
         # run pharmit with pharm file
-        op_sdf_file, op_csv_file = run_pharmit(pharm_file, temp_dir,
+        success, op_sdf_file, op_csv_file = run_pharmit(pharm_file, temp_dir,
                         f"op_{iter_name}", max_mol-total_mol+(max_mol//4))
-        sdf_files.append(op_sdf_file)
-        
-        # determine total count and update csv
-        total_mol: int = update_csv(op_csv_file, csv_file, max_mol)
+        # update list of SDF / csv if pharmit found molecules
+        if success:
+            sdf_files.append(op_sdf_file)
+            total_mol: int = update_csv(op_csv_file, csv_file, max_mol)
 
     # sort csv and concat sdfs
     print("\nSorting csv file")
@@ -179,7 +179,7 @@ def already_inside_csv(csv: list[list[str]], name: str):
 
 
 def run_pharmit(pharm_file: Path, pharmit_output_dir: Path,
-                run_name: str, max_mol: int) -> tuple[Path, Path]:
+                run_name: str, max_mol: int) -> tuple[bool, Path, Path]:
     """Takes in pharmit inputs, and sends it to the server. Creates
     an SDF with all hits of out order, and csv with each molecule's
     RMSD and name. 
@@ -195,6 +195,11 @@ def run_pharmit(pharm_file: Path, pharmit_output_dir: Path,
         run_name (str): name of the specific pharmacohpore iteration. Refers to
                         which pharmacophores are disabled
         max_mol (int): max # of molecules that can be returned
+    
+    Returns:
+        Bool: if pharmit found molecules succesfully
+        Path1: SDF file where molecules were placed
+        Path2: CSV file where molecules are listed
     """
     # create output files
     final_sdf: Path = (pharmit_output_dir / f"{run_name}.sdf").resolve()
@@ -203,9 +208,9 @@ def run_pharmit(pharm_file: Path, pharmit_output_dir: Path,
     """Where SDF outputs of search are held. Form of name, RMSD"""
 
     # run pharmit
-    pharmit_server_query.run(pharm_file, final_sdf, 16, 500, final_csv, max_mol)
+    success = pharmit_server_query.run(pharm_file, final_sdf, 16, 500, final_csv, max_mol)
     
-    return final_sdf, final_csv
+    return success, final_sdf, final_csv
 
 
 
