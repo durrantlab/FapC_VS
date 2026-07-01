@@ -10,13 +10,18 @@ sys.path.insert(0, str((DIR_STUDY / "031-validate-pharm-top-div").resolve()))
 
 
 def main(main_disabled_pharmit_dir: Path, main_pharmit_output_dir: Path, max_ret_mol: int = 2000, DIR_SCRIPT: Path = DIR_SCRIPT):
-    """Will take in pharmits input files and create a slurm to run the iterative pharm script
+    """Will take in pharmits input files and create a slurm to run the iterative pharm script.
+
+    On running pharmit, for each molecule in each region, will find up to 2000 similar molecules, store them in
+    a csv (name is [region_name]/[molecule name].csv) and in an sdf as well (same name, but .sdf)
 
     Args:
         disabled_pharmit_dir (Path): where the inputs with disabled pharms based
-            on prolif are stored
+            on prolif are stored. Should have sub-dir based on each region, then jsons for
+            each molecule inside that
         pharmit_output_dir (Path): where final pharmit search inputs will be stored
-            All inputs for 1 region will be in a file together
+            will be placed into folders named after region and name of csv/sdf
+            will be named after molecule
         max_ret_mol (int): max number of molecules to be returned per molecule
     """
     
