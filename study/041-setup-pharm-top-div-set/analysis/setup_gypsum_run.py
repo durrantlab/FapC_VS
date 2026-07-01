@@ -25,6 +25,7 @@ def main(sdf_input_dir: Path, split_sdf_dir: Path, split_size: int, gypsum_sdf_d
         split_sdf_dir (Path): where SDFs split into specific size are held
             Directory created if not already present.
             Will add region_#/mol_#/ directories to it
+            If directories already exist, will skip splitting
         split_size (Path): how many molecules are in each split
         gypsum_sdf_dir (Path): where final gypsum outputs are held
             Directory created if not already present
@@ -42,6 +43,8 @@ def main(sdf_input_dir: Path, split_sdf_dir: Path, split_size: int, gypsum_sdf_d
             if not mol_split_sdf_dir.is_dir():
                 mol_split_sdf_dir.mkdir(parents=True, exist_ok=True)
                 sdf_list: list[Path] = sdf_set_size_split(input_mol_file, mol_split_sdf_dir, split_size)
+            else:
+                sdf_list: list[Path] = [item for item in mol_split_sdf_dir.iterdir() if item.is_file() and item.suffix == ".sdf"]
             # setup gypsum input for each file
             for sdf_file in sdf_list:
                 mol_gypsum_sdf_dir: Path = (gypsum_sdf_dir / input_region_dir.name / input_mol_file.stem / sdf_file.stem).resolve()
