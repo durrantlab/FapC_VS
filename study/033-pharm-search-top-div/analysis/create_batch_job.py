@@ -47,13 +47,7 @@ def main(main_disabled_pharmit_dir: Path, main_pharmit_output_dir: Path, max_ret
         temp_dir: Path = (DIR_SCRIPT / "temp" / region / mol_name)
         max_mol: int = max_ret_mol
 
-        # create OP directories
-        if temp_dir.is_dir():
-            shutil.rmtree(temp_dir) # only works on linux
-        temp_dir.mkdir(parents=True, exist_ok=True)
-        if sdf_file.parent.is_dir():
-            shutil.rmtree(sdf_file.parent)
-        sdf_file.parent.mkdir(parents=True, exist_ok=True)
+        # OP directories are automatically created by iterative_pharmit, so not made here
 
         # string
         input_str: str = f"{pharm_list_file} {sdf_file} {csv_file} "

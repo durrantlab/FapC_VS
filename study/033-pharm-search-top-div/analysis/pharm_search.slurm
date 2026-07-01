@@ -21,5 +21,5 @@ echo "Done!"
 
 
 echo "Running pharmit..."
-bash -c "pixi run python iterative_pharm.py $ARGS" | tee "$LOG"
+bash -c "pixi run python -u iterative_pharm.py $ARGS" | tee "$LOG"
 echo "Done!"

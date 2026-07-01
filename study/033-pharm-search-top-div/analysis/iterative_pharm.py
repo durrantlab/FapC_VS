@@ -24,12 +24,15 @@ def main(pharm_list_file: Path, sdf_file: Path, csv_file: Path,
             (pharmacophore list) that is being searched.
         sdf_file (Path): where SDF file output of pharmit will be stored (sorted, only 1 made)
             Has format of typical concatenated SDF file
+            Will create directory path if not present
         csv_file (Path): Where CSV file output of pharmit will be stored (sorted, only 1 made)
             Header is [# of mols],name,rmsd. Each row is a different molecule,
             storing it's index, name and RMSD
+            Will create directory path if not present
         temp_dir (Path): where temporary files will be stored
             This is deleted before and after. Make sure it does not overlap with
             other parallel runs. Holds temp sdf, csv outputs and inputs to pharmit
+            Will create directory path. Should not be present before hand.
         max_mol (Path): max molecules to find
     """
     # setup iterative pharm data structure. Allows going through different
