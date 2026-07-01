@@ -42,12 +42,12 @@ def main(sdf_input_dir: Path, split_sdf_dir: Path, split_size: int, gypsum_sdf_d
             sdf_list: list[Path] = sdf_set_size_split(input_mol_file, mol_split_sdf_dir, split_size)
             # setup gypsum input for each file
             for sdf_file in sdf_list:
-                mol_gypsum_sdf_file: Path = (gypsum_sdf_dir / input_region_dir.name / input_mol_file.stem / sdf_file.stem).resolve()
-                if not mol_gypsum_sdf_file.parent.is_dir():
-                    mol_gypsum_sdf_file.parent.mkdir(parents=True, exist_ok=True)
+                mol_gypsum_sdf_dir: Path = (gypsum_sdf_dir / input_region_dir.name / input_mol_file.stem / sdf_file.stem).resolve()
+                if not mol_gypsum_sdf_dir.is_dir():
+                    mol_gypsum_sdf_dir.mkdir(parents=True, exist_ok=True)
                 # if gypsum output doesnt exist, add to args list
-                if not (mol_gypsum_sdf_file / "gypsum_dl_success.sdf").is_file():
-                    args: str = f"-s {sdf_file} -o {mol_gypsum_sdf_file}"
+                if not (mol_gypsum_sdf_dir / "gypsum_dl_success.sdf").is_file():
+                    args: str = f"-s {sdf_file} -o {mol_gypsum_sdf_dir}"
                     args_list.append(args)
     # write the job_list
     job_list_file: Path = (DIR_SCRIPT / "job_list.txt").resolve()
