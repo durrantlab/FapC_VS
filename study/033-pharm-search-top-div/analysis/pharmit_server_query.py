@@ -19,7 +19,7 @@ class PharmitError(RuntimeError):
 
 
 def run(query_path: Path, out_path: Path, interval: float, 
-        timeout: float, csv_path: Path | None = None):
+        timeout: float, csv_path: Path | None = None, max_mol: int = 2000):
     """Overall, takes in pharmacophore list, calls the server, then returns the SDF
     
 
@@ -29,6 +29,7 @@ def run(query_path: Path, out_path: Path, interval: float,
         interval (float): how often to check server when waiing for response
         timeout (float): how long before saying server is timed out
         csv_path (Path): location where the csv of molecule ranking is placed
+        max_mol (int): max number of molecules to return
     """
     if csv_path is None:
         csv_path = out_path.with_suffix(".csv")
@@ -40,7 +41,7 @@ def run(query_path: Path, out_path: Path, interval: float,
                 len(query.get("points", [])), n_enabled)
 
     # add filters to search
-    apply_search_filters(query)
+    apply_search_filters(query, max_mol)
 
     # access the pharmit server
     with requests.Session() as session:
@@ -60,7 +61,7 @@ def run(query_path: Path, out_path: Path, interval: float,
 
 
 
-def apply_search_filters(query: dict) -> dict:
+def apply_search_filters(query: dict, max_mol: int) -> dict:
     """Add extra search filters / parameters to query dictionary
 
     Args:
@@ -70,7 +71,7 @@ def apply_search_filters(query: dict) -> dict:
         dict: the same query dict, with the filter keys set
     """
     # cap the total number of returned hits
-    query["max-hits"] = 2000
+    query["max-hits"] = max_mol
     # cap max weight
     query["maxMolWeight"] = 750
     # set to molport dataset

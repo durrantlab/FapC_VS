@@ -67,7 +67,7 @@ def main(pharm_list_file: Path, sdf_file: Path, csv_file: Path,
         sdf_files.append(op_sdf_file)
         
         # determine total count and update csv
-        total_mol: int = update_csv(op_csv_file, csv_file, max_mol)
+        total_mol: int = update_csv(op_csv_file, csv_file)
 
     # sort csv and concat sdfs
     print("Sorting csv file")
@@ -131,7 +131,7 @@ def sort_csv(csv_path: Path):
 
 
 
-def update_csv(pharm_csv_op: Path, csv_file: Path, max_mol: int) -> int:
+def update_csv(pharm_csv_op: Path, csv_file: Path) -> int:
     """Updates CSV based on the pharmit search
 
     Args:
@@ -145,14 +145,15 @@ def update_csv(pharm_csv_op: Path, csv_file: Path, max_mol: int) -> int:
     with open(csv_file, "r") as f:
         csv_final: list[list[str]] = [[item2 for item2 in item.strip().split(",")] for item in f.read().strip().split("\n")]
     # calculate number of total molecules
-    mol_num = int(csv_final[0][0]) + len(csv_pharm)
-    csv_final[0][0] = str(mol_num)
+    mol_num = int(csv_final[0][0])
     # add each molecule, if not already inside
     for mol in csv_pharm:
         name: str = mol[0]
         rmsd: str = mol[1]
         if(not already_inside_csv(csv_final, name)):
             csv_final.append(["0", name, str(rmsd), file_name])
+            mol_num = mol_num + 1
+    csv_final[0][0] = str(mol_num)
     # write out csv
     with open(csv_file, "w") as f:
         text: str = "\n".join([",".join(item) for item in csv_final])
@@ -190,7 +191,7 @@ def run_pharmit(pharm_file: Path, pharmit_output_dir: Path,
     """Where SDF outputs of search are held. Form of name, RMSD"""
 
     # run pharmit
-    pharmit_server_query.run(pharm_file, final_sdf, 16, 500, final_csv)
+    pharmit_server_query.run(pharm_file, final_sdf, 16, 500, final_csv, max_mol)
     
     return final_sdf, final_csv
 
@@ -336,12 +337,12 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="runs pharmit iteratively on a pharmacophore list")
     
     # default params
-    region: str = "region_2"
-    mol_num: str = "4"
+    region: str = "region_1"
+    mol_num: str = "8"
     
     pharm_list_file: Path = (DIR_STUDY / "031-validate-pharm-top-div" / "data" / 
                         region / f"mol{mol_num}_input.json").resolve()
-    """The location of the pharmit search input (pharmacophore list) that is
+    """The location of the pharmit sesquarch input (pharmacophore list) that is
     being searched. Will be input via command line"""
     parser.add_argument("pharm_list_file", default=pharm_list_file, 
                         nargs="?", help="where pharmacophore json is located")
