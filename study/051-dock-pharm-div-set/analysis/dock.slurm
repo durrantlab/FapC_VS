@@ -12,7 +12,7 @@
 
 
 module purge
-module load cuda/11.7.0
+module load cuda/11.7.1
 module load python/3.7.0
 module load gnina
 
