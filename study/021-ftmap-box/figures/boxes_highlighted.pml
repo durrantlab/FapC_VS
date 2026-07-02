@@ -5,7 +5,7 @@ set cartoon_discrete_colours, on
 set antialias, 4
 
 delete all
-load D:\\FapC_VS\\study\\021-ftmap-box\\data\\9nqd.fftmap.cleared.pdb
+load F:\\FapC_VS\\study\\021-ftmap-box\\data\\9nqd.fftmap.cleared.pdb
 dss
 
 select entire, all
@@ -15,12 +15,17 @@ show cartoon
 color gray, entire
 
 
-# ---- define a reusable box-drawing helper -------------------------
 python
 from pymol import cmd
 from pymol.cgo import LINEWIDTH, BEGIN, LINES, COLOR, VERTEX, END
 
 def draw_box(name, cx, cy, cz, sx, sy, sz, r=1.0, g=1.0, b=1.0, linewidth=2.0):
+    # PyMOL passes command-line arguments as strings, so cast to float
+    cx, cy, cz = float(cx), float(cy), float(cz)
+    sx, sy, sz = float(sx), float(sy), float(sz)
+    r, g, b = float(r), float(g), float(b)
+    linewidth = float(linewidth)
+
     x0, x1 = cx - sx / 2.0, cx + sx / 2.0
     y0, y1 = cy - sy / 2.0, cy + sy / 2.0
     z0, z1 = cz - sz / 2.0, cz + sz / 2.0
@@ -55,10 +60,15 @@ draw_box box_region_2, 107, 91.5, 42, 30, 15, 30, 0.2, 1.0, 0.2
 # ---- region_3: blue -------------------------------------------------
 draw_box box_region_3, 95, 110, 25, 30, 30, 15, 0.2, 0.4, 1.0
 
-zoom all
 print "Drew boxes: box_region_1, box_region_2, box_region_3"
 
-
+set_view (\
+     0.236147180,   -0.043538526,   -0.970740795,\
+    -0.971699178,   -0.004417891,   -0.236181945,\
+     0.005993601,    0.999041975,   -0.043349702,\
+     0.000000000,    0.000000000, -245.405136108,\
+   100.925071716,  106.901550293,   41.934860229,\
+   193.479278564,  297.330993652,  -20.000000000 )
 ray
-png fapc_fibril_stick.png
+png boxes_highlighted.png
 
