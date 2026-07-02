@@ -5,13 +5,16 @@ from pathlib import Path
 DIR_SCRIPT: Path = Path(__file__).parent.resolve()
 DIR_STUDY: Path = Path(DIR_SCRIPT  / ".." / "..").resolve()
 
-def main(lig_inp_dir: Path, box_dirs: Path, pdb_dir: Path, output_dir: Path):
+def main(lig_inp_dir: Path, box_dirs: Path, pdb_dir: Path, cleaned_dir: Path, output_dir: Path):
     """Will take in (1) ligands to dock (2) boxes to dock in (3) pdb to dock to.
     And create gnina inputs to dock every ligand to every box.
 
     Lig folder should have structure of: /region_#/mol#/group_#/output.sdf
     Boxes folder should have structure of: /box_#.txt
     PDB should just point to that file
+    Cleaned folder has structure of: /region_#/mol#/group_#.sdf
+        Will create the cleaned_dir if it does not exist
+        Just removes empty settings molecule at top
     Output folder has structure of: /region_#/mol#/group_#.sdf
         Will create the output_dir if it does not exist
 
@@ -19,6 +22,7 @@ def main(lig_inp_dir: Path, box_dirs: Path, pdb_dir: Path, output_dir: Path):
         lig_inp_dir (Path): dir that holds are the ligands
         box_dirs (list[Path]): dir that holds all the boxes
         pdb_dir (Path): path of protein
+        cleaned_dir (Path): dir to store output of gypsum op cleaning
         output_dir (Path): dir to store all outputs
     """
     
@@ -37,11 +41,22 @@ def main(lig_inp_dir: Path, box_dirs: Path, pdb_dir: Path, output_dir: Path):
             mol_name: str = mol_dir.stem
             # extract all setup molecules inside
             for sdf_file in mol_dir.rglob("gypsum_dl_success.sdf"):
+                # clean up SDFs and write them out
+                clean_sdf_file: Path = (cleaned_dir / region_name / mol_name / f"{sdf_file.parent.stem}.sdf").resolve()
+                if not clean_sdf_file.exists():
+                    if not clean_sdf_file.parent.is_dir():
+                        clean_sdf_file.parent.mkdir(parents=True, exist_ok=True)
+                    settings: str = clean_up_sdf(sdf_file, clean_sdf_file)
+                    settings_file: Path = (cleaned_dir / "gypsum_settings.sdf").resolve()
+                    if not settings_file.exists():
+                        with open(settings_file, "w") as f:
+                            f.write(settings)
+
                 # create output file. Format output_dir/region_#/mol#/group_#.sdf
                 output_file: Path = (output_dir / region_name / mol_name / f"{sdf_file.parent.stem}.sdf").resolve()
                 if not output_file.parent.is_dir():
                     output_file.parent.mkdir(parents=True, exist_ok=True)
-                gnina_inputs.append(f"--receptor {pdb_dir} --ligand {sdf_file} --config {box_file} --out {output_file}")
+                gnina_inputs.append(f"--receptor {pdb_dir} --ligand {clean_sdf_file} --config {box_file} --out {output_file}")
 
     # write into file
     job_text: Path = Path(DIR_SCRIPT / "job_list.txt").resolve()
@@ -54,6 +69,16 @@ def main(lig_inp_dir: Path, box_dirs: Path, pdb_dir: Path, output_dir: Path):
         f.write(f"sbatch --array=0-{len(gnina_inputs)-1} --export=ALL dock.slurm\n")
 
 
+
+def clean_up_sdf(sdf_file: Path, op_file: Path) -> str:
+    with open(sdf_file, "r") as f:
+        mols: list[str] = [item.strip() for item in f.read().strip().split("$$$$")]
+    with open(sdf_file, "w") as f:
+        f.write("\n\n$$$$\n".join(mols[1:]) + "\n\n$$$$")
+    return mols[0]
+
+
+
 if __name__ == "__main__":
     # imports
     lig_inp_dir = Path(DIR_STUDY / "041-setup-pharm-top-div-set" / "data" / "output_sdf").resolve()
@@ -64,10 +89,12 @@ if __name__ == "__main__":
     in a .txt file."""
     pdb_dir = Path(DIR_STUDY / "023-prep-protein-dock" / "data" / "9nqd_protonated.pdb").resolve()
     """where the PDB is held"""
+    cleaned_dir = Path(DIR_STUDY / "051-dock-pharm-div-set" / "data" / "cleaned_compounds").resolve()
+    """Where the cleaned compounds will be stored. WIll create files if they do not exist."""
     output_dir = Path(DIR_STUDY / "051-dock-pharm-div-set" / "data" / "docked_compounds").resolve()
     """Where the docked compounds will be stored. WIll create files if they do not exist."""
 
-    main(lig_inp_dir, box_dirs, pdb_dir, output_dir)
+    main(lig_inp_dir, box_dirs, pdb_dir, cleaned_dir, output_dir)
 
 
 
