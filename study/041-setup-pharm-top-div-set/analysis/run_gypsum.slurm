@@ -21,5 +21,5 @@ echo "Done!"
 
 
 echo "Running pharmit..."
-bash -c "pixi run run-gypsum-dl $ARGS --min_ph 6 --max_ph 7.4" | tee "$LOG"
+bash -c "pixi run run-gypsum-dl $ARGS --min_ph 6 --max_ph 7.4 --use_durrant_lab_filters --max_variants_per_compound 5" | tee "$LOG"
 echo "Done!"
