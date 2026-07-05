@@ -22,8 +22,9 @@ def main(gnina_input_dir: Path, gnina_output_dir: Path):
                 mol_names_op_set: set[str] = set(mol_names_op)
 
             for mol in mol_names_inp:
-                if not mol in mol_names_op:
+                if not mol in mol_names_op_set:
                     print(f"{str(lower_path)} is missing {mol}")
+                    mol_names_op_set.add(mol)
 
         else:
             print(f"{str(lower_path)} was not created")
