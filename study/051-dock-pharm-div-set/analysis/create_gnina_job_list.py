@@ -15,8 +15,10 @@ def main(lig_inp_dir: Path, box_dirs: Path, pdb_dir: Path, cleaned_dir: Path, ou
     Cleaned folder has structure of: /region_#/mol#/group_#.sdf
         Will create the cleaned_dir if it does not exist
         Just removes empty settings molecule at top
+        Only creates if cleaned .sdf does not exist
     Output folder has structure of: /region_#/mol#/group_#.sdf
         Will create the output_dir if it does not exist
+        Only creates if gnina OP .sdf does not exist
 
     Args:
         lig_inp_dir (Path): dir that holds are the ligands
@@ -52,11 +54,12 @@ def main(lig_inp_dir: Path, box_dirs: Path, pdb_dir: Path, cleaned_dir: Path, ou
                         with open(settings_file, "w") as f:
                             f.write(settings)
 
-                # create output file. Format output_dir/region_#/mol#/group_#.sdf
+                # create output file. Format output_dir/region_#/mol#/group_#.sdf. Will NOT run if sdf already exists. make sure to clear before
                 output_file: Path = (output_dir / region_name / mol_name / f"{sdf_file.parent.stem}.sdf").resolve()
-                if not output_file.parent.is_dir():
-                    output_file.parent.mkdir(parents=True, exist_ok=True)
-                gnina_inputs.append(f"--receptor {pdb_dir} --ligand {clean_sdf_file} --config {box_file} --out {output_file}")
+                if not output_file.exists():
+                    if not output_file.parent.is_dir():
+                        output_file.parent.mkdir(parents=True, exist_ok=True)
+                    gnina_inputs.append(f"--receptor {pdb_dir} --ligand {clean_sdf_file} --config {box_file} --out {output_file}")
 
     # write into file
     job_text: Path = Path(DIR_SCRIPT / "job_list.txt").resolve()
