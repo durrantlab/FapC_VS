@@ -9,9 +9,9 @@ DIR_SCRIPT: Path = Path(__file__).parent.resolve()
 DIR_STUDY: Path = (DIR_SCRIPT  / ".." / "..").resolve()
 FILE_LOG: Path = (DIR_SCRIPT / ".." / "logs" / f"{Path(__file__).name.split('.')[0]}.log").resolve()
 
-def make_log_dir():
-    if not FILE_LOG.parent.is_dir():
-        FILE_LOG.parent.mkdir(parents=True, exist_ok=True)
+def make_log_dir(file_log: Path = FILE_LOG):
+    if not file_log.parent.is_dir():
+        file_log.parent.mkdir(parents=True, exist_ok=True)
 
 PROLIF_TO_PHARMACOPHORE = {
     "Hydrophobic": "Hydrophobic",
@@ -56,8 +56,7 @@ def main(sdf_path: Path, csv_path: Path, pharm_json_path: Path, op_pharm_dir: Pa
         level=logging.INFO,
         format="%(asctime)s  %(levelname)-8s  %(message)s",
     )
-    make_log_dir()
-
+    make_log_dir(file_log)
 
     # read in the csv
     logging.info("Reading in csv...")
