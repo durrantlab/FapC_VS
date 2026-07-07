@@ -1,3 +1,4 @@
+from locale import str
 from pathlib import Path
 import csv
 
@@ -6,19 +7,21 @@ DIR_STUDY: Path = Path(DIR_SCRIPT  / ".." / "..").resolve()
 
 
 def main(docked_dir: Path, csv_op_file: Path):
-    """Will take in all docked molecules, determine the best pose
-    for each and store the score. Will then order on score.
+    """Will take in all docked molecules (recursively) in a directory, determine the best pose
+    for each and store the score. Will then order on score. Places order in a csv
 
     Args:
         docked_dir (Path): Where all the docked molecules are stored
+            Can be in subdirectory
         csv_op_file (Path): Where the ranks will be output
+            Will create file if doesnt exist
     """
 
     # create list of all files in all box folders
     docked_file_list: list[Path] = [item for item in docked_dir.rglob("*") if item.is_file() and item.suffix == ".sdf"]
 
     # go through each instance, extract data and store in dictionary for that
-    pose_dict = get_pose_data(docked_file_list)
+    pose_dict = get_pose_data(docked_dir, docked_file_list)
 
     # for each molecule, add the best to new list
     best_for_each: list[dict] = []
@@ -33,6 +36,8 @@ def main(docked_dir: Path, csv_op_file: Path):
 
     # print sorted best
     headers = sorted_best[0].keys()
+    if not csv_op_file.parent.is_dir():
+        csv_op_file.parent.mkdir(parents=True, exist_ok=True)
     with open(csv_op_file, mode="w", newline="") as file:
         writer = csv.DictWriter(file, fieldnames=headers)
         
@@ -42,7 +47,7 @@ def main(docked_dir: Path, csv_op_file: Path):
 
 
 
-def get_pose_data(docked_file_list: list[Path]) -> dict[str, list[dict]]:
+def get_pose_data(docked_dir: Path, docked_file_list: list[Path]) -> dict[str, list[dict]]:
     """Will take in list of all SDFs, and organize them into a dict
 
     Args:
@@ -62,7 +67,7 @@ def get_pose_data(docked_file_list: list[Path]) -> dict[str, list[dict]]:
                 if(pose_str.startswith("F")):
                     molecule_name, cnn_vs = extract_pose_data(pose_str)
                     temp_dict: dict = {"cnn_vs": cnn_vs,
-                                    "directory": docked_file.parent.name,
+                                    "directory": docked_file.relative_to(docked_dir).parent,
                                     "file_name": docked_file.name,
                                     "pose_ind": index}
                     if not molecule_name in pose_dict.keys():
