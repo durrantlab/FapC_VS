@@ -1,6 +1,5 @@
 from pathlib import Path
 import csv
-import MDAnalysis as mda
 import json
 from rdkit import Chem
 from lib import *
@@ -13,7 +12,6 @@ FILE_LOG: Path = (DIR_SCRIPT / ".." / "logs" / f"{Path(__file__).name.split('.')
 def make_log_dir():
     if not FILE_LOG.parent.is_dir():
         FILE_LOG.parent.mkdir(parents=True, exist_ok=True)
-make_log_dir()
 
 PROLIF_TO_PHARMACOPHORE = {
     "Hydrophobic": "Hydrophobic",
@@ -24,186 +22,124 @@ PROLIF_TO_PHARMACOPHORE = {
     "Anionic":     "NegativeIon",
 }
 
-logging.basicConfig(
-    filename=FILE_LOG,
-    level=logging.INFO,
-    format="%(asctime)s  %(levelname)-8s  %(message)s",
-)
 
 
-def main(interaction_csv_dir: Path, docked_SDFs: Path, 
-        pharm_json_dir: Path, op_dir: Path):
-    """Will take in pharmacophores for each sdf and its
-    list of interactions to determine key pharmacophores
+
+
+def main(sdf_path: Path, csv_path: Path, pharm_json_path: Path, op_pharm_dir: Path, op_csv_path: Path, file_log: Path = FILE_LOG):
+    """ALL IN CONTEXT OF A SINGLE CONCATED SDF FILE. Requires running of pharmit on that 
+    and interaction determination script on it.
+
+    Will take in concated SDF, a csv that lists each molecules interactions (in that sdf), and
+    concat json that lists each molecules pharmacophores (in that sdf). The indexing of each molecule
+    should be same in each (1st in sdf = 1st of pharm = 1st in csv)
+    
+    With that, will determine which pharmacophores to disable and enable. Stores csv of which pharms are
+    enable / disable for each molecule (index in csv = index in sdf = etc). Also exports all updated
+    pharmacophore lists, though each molecule has a seperate file
 
     Args:
-        interaction_csv_dir (Path): each molecules interactions
-        docked_SDFs (Path): the top molecules
-        pharm_list (Path): list of the molecules pharmacophores
-        op_dir (Path): where info on each molecule will be output
+        sdf_path (Path): where sdf with molecules is stored
+        csv_path (Path): where the csv of molecular interactions are stored
+        pharm_json_path (Path): where concat json with all pharmacophores are stored
+        op_pharm_dir (Path): where the updated jsons, 1 for each molecule, will be stored
+            Note: no longer concat, each molecule has a seperate file
+            Index of file = index of molecule in sdf
+            Creates directory path if DNE
+        op_csv_path (Path): where the csv holding which pharms are enabled / disabled is stored
+            Index in csv = index of molecule in sdf
+            Creates directory path if DNE
     """
-    logging.info("Starting script...")
-    # read in interaction_csv_dir
-    residues: dict[str, list[str]] = {}
-    """The protein residues interacting for each region"""
-    inter_type: dict[str, list[str]] = {}
+    # set up logging
+    logging.basicConfig(
+        filename=file_log,
+        level=logging.INFO,
+        format="%(asctime)s  %(levelname)-8s  %(message)s",
+    )
+    make_log_dir()
+
+
+    # read in the csv
+    logging.info("Reading in csv...")
+    residues: list[str] = []
+    """The protein residues interacting"""
+    inter_type: list[str] = []
     """The type of interaction of those protein residues. Index aligns with above""" 
-    if_interact: dict[str, list[list[str | list[int]]]] = {}
-    """D1: region D2: each different molecule D3: each protein res interaction (index aligns above)
-    D4: the ligand atoms it interacts with"""
-    residues, inter_type, if_interact = read_in_csv(interaction_csv_dir)
+    if_interact: list[list[str | list[int]]] = []
+    """D1: each different molecule D2: each protein res interaction (index aligns above)"""
+    residues, inter_type, if_interact = read_in_csv(csv_path)
 
-    # read in the pharmacophores
-    pharm_list: list[Path] = [item for item in pharm_json_dir.iterdir() if item.is_file() and item.suffix == ".json"]
-    pharm_dict: dict[str, list] = {}
-    """List of pharmacophores for each molecule in each region"""
-    regions: list[str] = []
-    for pharm_json in pharm_list:
-        region: str = "_".join(pharm_json.name.split(".")[0].split("_")[0:2])
-        regions.append(region)
-        with open(pharm_json) as f:
-            pharm_dict[region] = load_concatenated_json(pharm_json)
+    # read in the pharmacophores concat json
+    logging.info("Reading in pharmacophores...")
+    pharm_list: list[dict] = []
+    """List of pharmacophores for each molecule"""
+    pharm_list = load_in_pharm_json(pharm_json_path)
+
+    # modify pharmacophores
+    logging.info("Modifying pharmacophores...")
+    supplier = Chem.SDMolSupplier(str(sdf_path), sanitize=True, removeHs=False,
+                                strictParsing=True)
+    new_pharm: list[dict] = []
+    """New pharmacophores JSON for each molecule"""
+    pharms_enable_list: list[list[bool]] = []
+    """If pharms are enabled / disabled for each molecule"""
+    for mol_index, pharm in enumerate(pharm_list):
+        valid_pharms: list[bool] = get_valid_pharms(pharm, supplier[mol_index], residues, 
+                                                    inter_type, if_interact[mol_index])
+        pharms_enable_list.append(valid_pharms)
+        """Boolean list, if a pharmacophore is valid or not"""
+        log_pharms(mol_index, valid_pharms)
+        new_pharm.append(update_pharm(pharm, valid_pharms))
+
+    # write out the new pharmacophores
+    logging.info("Writing pharmacophores...")
+    if not op_pharm_dir.is_dir():
+        op_pharm_dir.mkdir(parents=True, exist_ok=True)
+    for ind, pharm in enumerate(new_pharm):
+        op_pharm_file: Path = (op_pharm_dir / f"mol{ind}_input.json")
+        with open(op_pharm_file, "w") as f:
+            json.dump(pharm, f, indent=2)
+
+    # write out csv of disale / enabled pharms
+    logging.info("Writing csv...")
+    if not op_csv_path.parent.is_dir():
+        op_csv_path.parent.mkdir(parents=True, exist_ok=True)
+    with open(op_csv_path, "w", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerows(pharms_enable_list)
     
-    # through each region and it's molecules
-    for region_name, mol_list in pharm_dict.items():
-        # read in the region
-        region_file: Path = (docked_SDFs / f"{region_name}_concat.sdf").resolve()
-        supplier = Chem.SDMolSupplier(str(region_file), sanitize=True, removeHs=False,
-                                      strictParsing=True)
-        new_pharm: list[dict] = []
-        pharms_enable_list: list[list[bool]] = []
-        for mol_index, mol_pharm in enumerate(mol_list):
-            # extract molecule
-            mol = supplier[mol_index]
-            # determine if pharmacophore is valid
-            reg_res_list: list[str] = residues[region_name]
-            reg_inter_type: list[str] = inter_type[region_name]
-            mol_if_interact: list[str | list] = if_interact[region_name][mol_index]
-            valid_pharms: list[bool] = get_valid_pharms(mol_pharm, mol, reg_res_list, 
-                                                        reg_inter_type, mol_if_interact)
-            # return number of pharms
-            log_pharms(region_name, mol_index, valid_pharms)
-            # update pharmacophore based on validity
-            new_pharm.append(update_pharm(mol_pharm, valid_pharms))
-            pharms_enable_list.append(valid_pharms)
-        # write out the new pharmacophores
-        op_file: Path = (op_dir / region_name).resolve()
-        if not op_file.is_dir():
-            op_file.mkdir(parents=True, exist_ok=True)
-        for ind, pharm in enumerate(new_pharm):
-            op_pharm_file: Path = (op_file / f"mol{ind}_input.json")
-            with open(op_pharm_file, "w") as f:
-                json.dump(pharm, f, indent=2)
-        # write out each pharmit input based on with new enable / disable data
-        op_file: Path = (op_dir / "pharm_enable_lists" / f"{region_name}.csv").resolve()
-        if not op_file.parent.is_dir():
-            op_file.parent.mkdir(parents=True, exist_ok=True)
-        with open(op_file, "w", newline="") as f:
-            writer = csv.writer(f)
-            writer.writerows(pharms_enable_list)
-        logging.info(f"Completed {region_name}.\n")
-    logging.info(f"Completed Script.")
+    logging.info(f"Completed\n")
 
-def log_pharms(region_name: str, mol_index: int, valid_pharms: list[bool]):
+
+def log_pharms(mol_index: int, valid_pharms: list[bool]):
     bool_count = valid_pharms.count(True)
     if bool_count > 3:
-        logging.info(f"Mol{mol_index} in {region_name} has {bool_count} pharms")
+        logging.info(f"Mol{mol_index} has {bool_count} pharms")
     else:
-        logging.warning(f"Mol{mol_index} in {region_name} has {bool_count} pharms. Check manually")
-
-def update_pharm(mol_pharm: dict, valid_pharms: list[bool]) -> dict:
-    """Will update the the pharm JSONs so that are enabled / disabled based
-    on valid pharm list
-
-    Args:
-        mol_pharm (list[json]): list of all pharms for this mol
-        valid_pharms (list[bool]): which pharms should be enabled / disabled
-
-    Returns:
-        list[json]: pharms now enabled / disabled correctly
-    """
-
-    for index in range(len(mol_pharm["points"])):
-        if not valid_pharms[index]:
-            mol_pharm["points"][index]["enabled"] = False
-    
-    return mol_pharm
-
-
-def get_valid_pharms(mol_pharm, mol, res_list: list[str], 
-                     inter_type_list: list[str], if_interact_list: list[str | list[int]]) -> list[bool]:
-    """take the location of pharmacophore and check if it close enough to one of the
-    molecules with same type of interaction. If it is, adds its index to the return
-    list
-
-    Args:
-        mol_pharm (json): list of pharmacophores for molecule
-        u (Universe): protein
-        res_list (list[str]): list of all interaction residues in this region
-        inter_type_list (list[str]): type o finteraction for each residue
-        if_interact_list (list[bool]): if that interaciton is happening
-
-    Returns:
-        list[int]: list of pharmacophores for this molecule that are valid
-    """
-    if_pharm: list[bool] = []
-    for pharm in mol_pharm["points"]:
-        # get data about pharmacophore
-        pharm_loc = [pharm["x"],pharm["y"],pharm["z"]]
-        pharm_type = pharm["name"]
-        # go through each interacting residue
-        if_any_inside: bool = False
-        for res_index, res_name in enumerate(res_list):
-            # if interacting in this molecule + correct type
-            atoms_interact = if_interact_list[res_index]
-            prolif_inter_type = PROLIF_TO_PHARMACOPHORE[inter_type_list[res_index]]
-            if atoms_interact != "False" and pharm_type == prolif_inter_type:
-                # go through each atom
-                for atom in atoms_interact:
-                    conf = mol.GetConformer()
-                    atom_pos = list(conf.GetAtomPosition(int(atom)-1))
-                    # determine distance and if valid
-                    dist: float = eucl_dist(atom_pos, pharm_loc)
-                    if_any_inside = if_inside_pharm(dist, prolif_inter_type)
-                    if if_any_inside:
-                        break 
-            if if_any_inside:
-                break
-        if if_any_inside:
-            if_pharm.append(True)
-        else:
-            if_pharm.append(False)
-
-    return if_pharm
-
-
-
-def if_inside_pharm(dist, inter_type) -> bool:
-    if inter_type == "Hydrophobic" or inter_type == "Aromatic":
-        if dist < 2:
-            return True
-    if inter_type == "HydrogenDonor" or inter_type == "HydrogenAcceptor":
-        if dist < 2:
-            return True 
-    if inter_type == "Cationic" or inter_type == "Anionic":
-        if dist < 2:
-            return True 
-    return False
-
-
-
-
-
+        logging.warning(f"Mol{mol_index} has {bool_count} pharms. Check manually")
 
 
 if __name__ == "__main__":
-    # inputs
+    # base files
     interaction_csv_dir: Path = (DIR_STUDY / "027-key-top-div-inter" / "data").resolve()
-    #protein_dir: Path = (DIR_STUDY / "023-prep-protein-dock" / "data" / "9nqd_protonated.pdb").resolve()
-    docked_SDFs: Path = (DIR_STUDY / "025-filter-gnina-op" / "data" / "best_drugs").resolve()
-    pharm_list: Path = (DIR_STUDY / "028-pharms-top-div-set" / "data").resolve()
-    op_dir: Path = (DIR_SCRIPT / ".." / "data" / "script_output").resolve()
+    docked_sdfs: Path = (DIR_STUDY / "025-filter-gnina-op" / "data" / "best_drugs").resolve()
+    pharm_json_dir: Path = (DIR_STUDY / "028-pharms-top-div-set" / "data").resolve()
+    op_dir: Path = (DIR_SCRIPT / ".." / "data").resolve()
 
-    main(interaction_csv_dir, docked_SDFs, pharm_list, op_dir)
-
+    # extract regions
+    regions: list[str] = []
+    pharm_list: list[Path] = [item for item in pharm_json_dir.iterdir() if item.is_file() and item.suffix == ".json"]
+    for pharm_json in pharm_list:
+        region: str = "_".join(pharm_json.name.split(".")[0].split("_")[0:2])
+        regions.append(region)
+    
+    # for each region
+    for region in regions:
+        sdf_path: Path = (docked_sdfs / f"{region}_concat.sdf").resolve()
+        csv_path: Path = (interaction_csv_dir / f"{region}_interacts.csv").resolve()
+        pharm_json_path: Path = (pharm_json_dir / f"{region}_concat.json").resolve()
+        op_pharm_dir: Path = (op_dir / "script_output" / region).resolve()
+        op_csv_path: Path = (op_dir / "pharm_enabled" / f"{region}.csv").resolve()
+        
+        main(sdf_path, csv_path, pharm_json_path, op_pharm_dir, op_csv_path)
 
