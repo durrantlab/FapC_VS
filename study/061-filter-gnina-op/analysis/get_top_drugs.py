@@ -22,9 +22,9 @@ def main(docked_dir: Path, csv_rank_file: Path, best_drugs_dir: Path, num_best: 
 
     # read in the csv
     with open(csv_rank_file, "r") as f:
-        headers: list[str] = f.read().split("\n")[0].split(",")
-    with open(csv_rank_file, "r") as f:
-        ranking: list[list] = [item.split(",") for item in f.read().strip().split("\n")[1:] if len(item) > 5]
+        text: list[str] = f.read().strip().split("\n")
+        headers: list[str] = text[0].split(",")
+        ranking: list[list] = [item.split(",") for item in text[1:] if len(item) > 5]
     
     best_drugs: list[list] = []
 
@@ -108,6 +108,6 @@ if __name__ == "__main__":
     csv_rank_file: Path = Path(DIR_STUDY / "061-filter-gnina-op" / "data" / "ranked_docked_mols.csv")
     best_drugs: Path = Path(DIR_STUDY / "061-filter-gnina-op" / "data" / "best_drugs")
     
-    main(docked_dir, csv_rank_file, best_drugs, 10)
+    main(docked_dir, csv_rank_file, best_drugs, 100)
 
 
