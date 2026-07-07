@@ -74,7 +74,7 @@ def main(docked_ligands_dir: Path, protein_file: Path, op_dir: Path):
                                 inter_name == df_list[0][inter_indx][2]:
                             df_list[act_indx][inter_indx] = ".".join([str(item) for item in atoms])
 
-        csv_op: Path = (op_dir / f"{'_'.join(div_sdf.name.split('_')[0:2])}_interacts.csv").resolve()
+        csv_op: Path = (op_dir / f"{'_'.join(div_sdf.stem.split('_')[0:2])}_interacts.csv").resolve()
         with open(csv_op, "w") as f:
             # add in headers
             headers: list[list[Any]] = [list(row) for row in zip(*df_list[0])]
