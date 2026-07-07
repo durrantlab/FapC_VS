@@ -14,3 +14,4 @@
 *create_db.sh
 *run_gypsum.sh
 032-create-pharm-db/data/*
+066-pharm-search-exp-set/analysis/pharm_search.slurm
