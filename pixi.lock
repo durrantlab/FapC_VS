@@ -126,7 +126,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/linux-64/mdanalysis-2.10.0-py312hf79963d_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/mmtf-python-1.1.3-pyhd8ed1ab_0.tar.bz2
       - conda: https://conda.anaconda.org/conda-forge/noarch/molvs-0.1.1-py_0.tar.bz2
-      - conda: https://conda.anaconda.org/conda-forge/noarch/mordred-1.2.0-py_1.tar.bz2
+      - conda: https://conda.anaconda.org/conda-forge/noarch/mordredcommunity-2.0.7-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/mpi-1.0-impi.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/mpi4py-4.1.2-py312h18f78f0_100.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/mrcfile-1.5.4-pyhd8ed1ab_0.conda
@@ -313,7 +313,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/osx-64/mdanalysis-2.10.0-py312h86abcb1_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/mmtf-python-1.1.3-pyhd8ed1ab_0.tar.bz2
       - conda: https://conda.anaconda.org/conda-forge/noarch/molvs-0.1.1-py_0.tar.bz2
-      - conda: https://conda.anaconda.org/conda-forge/noarch/mordred-1.2.0-py_1.tar.bz2
+      - conda: https://conda.anaconda.org/conda-forge/noarch/mordredcommunity-2.0.7-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/mpi-1.0.1-mpich.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-64/mpi4py-4.1.2-py312h19307d9_100.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-64/mpich-5.0.1-hb6e3567_0.conda
@@ -487,7 +487,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/win-64/mkl-2026.0.0-hac47afa_908.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/mmtf-python-1.1.3-pyhd8ed1ab_0.tar.bz2
       - conda: https://conda.anaconda.org/conda-forge/noarch/molvs-0.1.1-py_0.tar.bz2
-      - conda: https://conda.anaconda.org/conda-forge/noarch/mordred-1.2.0-py_1.tar.bz2
+      - conda: https://conda.anaconda.org/conda-forge/noarch/mordredcommunity-2.0.7-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/win-64/mpi-1.0-impi.conda
       - conda: https://conda.anaconda.org/conda-forge/win-64/mpi4py-4.1.2-py312hb3fd564_100.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/mrcfile-1.5.4-pyhd8ed1ab_0.conda
@@ -700,7 +700,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/linux-64/mdanalysis-2.10.0-py312hf79963d_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/mmtf-python-1.1.3-pyhd8ed1ab_0.tar.bz2
       - conda: https://conda.anaconda.org/conda-forge/noarch/molvs-0.1.1-py_0.tar.bz2
-      - conda: https://conda.anaconda.org/conda-forge/noarch/mordred-1.2.0-py_1.tar.bz2
+      - conda: https://conda.anaconda.org/conda-forge/noarch/mordredcommunity-2.0.7-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/mpi-1.0-impi.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/mpi4py-4.1.2-py312h18f78f0_100.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/mrcfile-1.5.4-pyhd8ed1ab_0.conda
@@ -914,7 +914,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/osx-64/mdanalysis-2.10.0-py312h86abcb1_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/mmtf-python-1.1.3-pyhd8ed1ab_0.tar.bz2
       - conda: https://conda.anaconda.org/conda-forge/noarch/molvs-0.1.1-py_0.tar.bz2
-      - conda: https://conda.anaconda.org/conda-forge/noarch/mordred-1.2.0-py_1.tar.bz2
+      - conda: https://conda.anaconda.org/conda-forge/noarch/mordredcommunity-2.0.7-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/mpi-1.0.1-mpich.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-64/mpi4py-4.1.2-py312h19307d9_100.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-64/mpich-5.0.1-hb6e3567_0.conda
@@ -1114,7 +1114,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/win-64/mkl-2026.0.0-hac47afa_908.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/mmtf-python-1.1.3-pyhd8ed1ab_0.tar.bz2
       - conda: https://conda.anaconda.org/conda-forge/noarch/molvs-0.1.1-py_0.tar.bz2
-      - conda: https://conda.anaconda.org/conda-forge/noarch/mordred-1.2.0-py_1.tar.bz2
+      - conda: https://conda.anaconda.org/conda-forge/noarch/mordredcommunity-2.0.7-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/win-64/mpi-1.0-impi.conda
       - conda: https://conda.anaconda.org/conda-forge/win-64/mpi4py-4.1.2-py312hb3fd564_100.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/mrcfile-1.5.4-pyhd8ed1ab_0.conda
@@ -1383,7 +1383,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/mkdocstrings-python-1.13.0-pyhff2d567_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/mmtf-python-1.1.3-pyhd8ed1ab_0.tar.bz2
       - conda: https://conda.anaconda.org/conda-forge/noarch/molvs-0.1.1-py_0.tar.bz2
-      - conda: https://conda.anaconda.org/conda-forge/noarch/mordred-1.2.0-py_1.tar.bz2
+      - conda: https://conda.anaconda.org/conda-forge/noarch/mordredcommunity-2.0.7-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/mpi-1.0-impi.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/mpi4py-4.1.2-py312h18f78f0_100.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/mrcfile-1.5.4-pyhd8ed1ab_0.conda
@@ -1676,7 +1676,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/mkdocstrings-python-1.13.0-pyhff2d567_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/mmtf-python-1.1.3-pyhd8ed1ab_0.tar.bz2
       - conda: https://conda.anaconda.org/conda-forge/noarch/molvs-0.1.1-py_0.tar.bz2
-      - conda: https://conda.anaconda.org/conda-forge/noarch/mordred-1.2.0-py_1.tar.bz2
+      - conda: https://conda.anaconda.org/conda-forge/noarch/mordredcommunity-2.0.7-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/mpi-1.0.1-mpich.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-64/mpi4py-4.1.2-py312h19307d9_100.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-64/mpich-5.0.1-hb6e3567_0.conda
@@ -1954,7 +1954,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/win-64/mkl-2026.0.0-hac47afa_908.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/mmtf-python-1.1.3-pyhd8ed1ab_0.tar.bz2
       - conda: https://conda.anaconda.org/conda-forge/noarch/molvs-0.1.1-py_0.tar.bz2
-      - conda: https://conda.anaconda.org/conda-forge/noarch/mordred-1.2.0-py_1.tar.bz2
+      - conda: https://conda.anaconda.org/conda-forge/noarch/mordredcommunity-2.0.7-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/win-64/mpi-1.0-impi.conda
       - conda: https://conda.anaconda.org/conda-forge/win-64/mpi4py-4.1.2-py312hb3fd564_100.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/mrcfile-1.5.4-pyhd8ed1ab_0.conda
@@ -7757,22 +7757,23 @@ packages:
   - pkg:pypi/molvs?source=hash-mapping
   size: 25927
   timestamp: 1524078885049
-- conda: https://conda.anaconda.org/conda-forge/noarch/mordred-1.2.0-py_1.tar.bz2
-  sha256: edd3ced26cc280af58585562ac6e17b92279187e8fa841041f538a8c6ae7c675
-  md5: d7e222ababd2587dfee1fb7194b9a4e9
+- conda: https://conda.anaconda.org/conda-forge/noarch/mordredcommunity-2.0.7-pyhd8ed1ab_0.conda
+  sha256: f12c872932dda390327c9c0d316d9f2b073a827d870db2f693a3f8ef14afb562
+  md5: 7cf2b58f63cdf92df087894ab423a688
   depends:
   - networkx
   - numpy
-  - python
+  - packaging
+  - pandas
+  - python >=3.9
   - rdkit
   - six
-  - tqdm 4.*
   license: BSD-3-Clause
   license_family: BSD
   purls:
-  - pkg:pypi/mordred?source=hash-mapping
-  size: 126877
-  timestamp: 1581612633584
+  - pkg:pypi/mordredcommunity?source=hash-mapping
+  size: 133159
+  timestamp: 1769280529199
 - conda: https://conda.anaconda.org/conda-forge/linux-64/mpi-1.0-impi.conda
   sha256: c01194d779d9053dd3748e7b4e5337382df8656b587ebc291bee9f3a5316f8dc
   md5: 39f492b9ff8543bc991c543484a8bb93
