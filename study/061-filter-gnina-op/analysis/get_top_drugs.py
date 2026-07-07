@@ -37,26 +37,24 @@ def main(docked_dir: Path, csv_rank_file: Path, best_drugs_dir: Path, num_best: 
         best_drugs_dir.mkdir(parents=True, exist_ok=True)
 
     # write the best drugs
-    for best_drug in best_drugs:
-        csv_op_file: Path = Path(best_drugs_dir / f"overall_best.csv").resolve()
-        with open(csv_op_file, mode="w", newline="") as file:
-            writer = csv.writer(file)
-            
-            writer.writerow(headers)
-            writer.writerows(best_drug)
+    csv_op_file: Path = Path(best_drugs_dir / f"overall_best.csv").resolve()
+    with open(csv_op_file, mode="w", newline="") as file:
+        writer = csv.writer(file)
+        
+        writer.writerow(headers)
+        writer.writerows(best_drugs)
 
     # extract the best SDFs as singular SDFs for each region and place them
-    for best_drug in best_drugs:
-        sdf_path: Path = Path(best_drugs_dir / "singles").resolve()
-        if not sdf_path.is_dir():
-            sdf_path.mkdir(parents=True, exist_ok=True)
-        for rank_num, drug in enumerate(best_drug):
-            sdf_data: str = extract_molecule(drug, docked_dir)
-            specific_path: Path = Path(sdf_path / f"r{rank_num:02d}_{drug[4]}.sdf")
-            with open(specific_path, "w") as f:
-                f.write(sdf_data + "\n\n$$$$")
+    sdf_path: Path = Path(best_drugs_dir / "singles").resolve()
+    if not sdf_path.is_dir():
+        sdf_path.mkdir(parents=True, exist_ok=True)
+    for rank_num, best_drug in enumerate(best_drugs):
+        sdf_data: str = extract_molecule(best_drug, docked_dir)
+        specific_path: Path = Path(sdf_path / f"r{rank_num:02d}_{best_drug[4]}.sdf")
+        with open(specific_path, "w") as f:
+            f.write(sdf_data + "\n\n$$$$")
         concat_sdf_file: Path = Path(best_drugs_dir / f"overall_concat.sdf").resolve()
-        concat_sdfs(sdf_path, concat_sdf_file)
+    concat_sdfs(sdf_path, concat_sdf_file)
 
 
 def concat_sdfs(lig_inp_dir: Path, lig_op_file: Path):
@@ -71,7 +69,6 @@ def concat_sdfs(lig_inp_dir: Path, lig_op_file: Path):
     """
     lig_list: list[Path] = [item for item in lig_inp_dir.iterdir() if item.is_file()]
     lig_list.sort()
-    print(lig_list)
 
     towrite = ""
     for lig in lig_list:
@@ -80,7 +77,7 @@ def concat_sdfs(lig_inp_dir: Path, lig_op_file: Path):
             towrite = towrite + toadd + "\n"
 
         with open(lig_op_file, "w") as f:
-            f.write(towrite)
+            f.write(towrite.strip())
 
 
 
@@ -107,7 +104,7 @@ def extract_molecule(drug: list, docked_dir: Path) -> str:
 
 if __name__ == "__main__":
     # inputs
-    docked_dir: Path = Path(DIR_STUDY / "051-dock-div-set" / "data" / "docked_compounds")
+    docked_dir: Path = Path(DIR_STUDY / "051-dock-pharm-div-set" / "data" / "docked_compounds")
     csv_rank_file: Path = Path(DIR_STUDY / "061-filter-gnina-op" / "data" / "ranked_docked_mols.csv")
     best_drugs: Path = Path(DIR_STUDY / "061-filter-gnina-op" / "data" / "best_drugs")
     
