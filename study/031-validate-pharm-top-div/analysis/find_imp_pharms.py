@@ -51,12 +51,12 @@ def main(sdf_path: Path, csv_path: Path, pharm_json_path: Path, op_pharm_dir: Pa
             Creates directory path if DNE
     """
     # set up logging
+    make_log_dir(file_log)
     logging.basicConfig(
         filename=file_log,
         level=logging.INFO,
         format="%(asctime)s  %(levelname)-8s  %(message)s",
     )
-    make_log_dir(file_log)
 
     # read in the csv
     logging.info("Reading in csv...")
