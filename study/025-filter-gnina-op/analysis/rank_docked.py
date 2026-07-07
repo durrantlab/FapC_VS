@@ -62,17 +62,16 @@ def get_pose_data(docked_dir: Path, docked_file_list: list[Path]) -> dict[str, l
     for docked_file in docked_file_list:
         with open(docked_file, "r", encoding='utf-8') as f:
             op_str: str = f.read()
-            pose_list: list[str] = op_str.split("$$$$\n")
+            pose_list: list[str] = [item.strip() for item in op_str.strip().split("$$$$")][:-1]
             for index, pose_str in enumerate(pose_list):
-                if(pose_str.startswith("F")):
-                    molecule_name, cnn_vs = extract_pose_data(pose_str)
-                    temp_dict: dict = {"cnn_vs": cnn_vs,
-                                    "directory": docked_file.relative_to(docked_dir).parent,
-                                    "file_name": docked_file.name,
-                                    "pose_ind": index}
-                    if not molecule_name in pose_dict.keys():
-                        pose_dict[molecule_name] = []
-                    pose_dict[molecule_name].append(temp_dict)
+                molecule_name, cnn_vs = extract_pose_data(pose_str)
+                temp_dict: dict = {"cnn_vs": cnn_vs,
+                                "directory": docked_file.relative_to(docked_dir).parent,
+                                "file_name": docked_file.name,
+                                "pose_ind": index}
+                if not molecule_name in pose_dict.keys():
+                    pose_dict[molecule_name] = []
+                pose_dict[molecule_name].append(temp_dict)
     return pose_dict
 
 
