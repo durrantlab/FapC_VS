@@ -78,6 +78,29 @@ def apply_search_filters(query: dict, max_mol: int) -> dict:
     Returns:
         dict: the same query dict, with the filter keys set
     """
+    # random settings
+    temp = {"ShapeModeSelect": "filter",
+    "inselect": "none",
+    "intolerance": 1,
+    "inshapestyle": "inshapestyle-solid",
+    "exselect": "none",
+    "extolerance": 1,
+    "exshapestyle": "exshapestyle-solid",
+    "minMolWeight": "",
+    "minrotbonds": "",
+    "maxrotbonds": "",
+    "minlogp": "",
+    "maxlogp": "",
+    "minpsa": "",
+    "maxpsa": "",
+    "minaromatics": "",
+    "maxaromatics": "",
+    "minhba": "",
+    "maxhba": "",
+    "minhbd": "",
+    "maxhbd": ""}
+    query.update(temp)
+    
     # cap the total number of returned hits
     query["max-hits"] = max_mol
     # cap max weight
