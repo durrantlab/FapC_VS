@@ -9,6 +9,7 @@
 *.pse
 *.json
 *.zip
+*.smi
 
 *run_gnina.sh
 *run_pharmit_search.sh
