@@ -8,6 +8,7 @@
 *.err
 *.pse
 *.json
+*.zip
 
 *run_gnina.sh
 *run_pharmit_search.sh
