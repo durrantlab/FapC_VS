@@ -125,7 +125,7 @@ def main(sdf_file: Path, csv_rank_file: Path, models_dir: Path, csv_file: Path):
 if __name__ == "__main__":
     # inputs
     sdf_file: Path = (DIR_STUDY / "061-filter-gnina-op" / "data" / "best_drugs" / "overall_concat.sdf").resolve()
-    csv_rank_file: Path = (DIR_STUDY / "061-filter-gnina-op" / "data" / "best_drugs" / "ranked_docked_mols.csv").resolve()
+    csv_rank_file: Path = (DIR_STUDY / "061-filter-gnina-op" / "data" / "best_drugs" / "overall_best.csv").resolve()
     models_dir: Path = (DIR_SCRIPT / "models")
     csv_file: Path = (DIR_SCRIPT / ".." / "data" / "top_dock_stats.csv").resolve()
     main(sdf_file, csv_rank_file, models_dir, csv_file)
