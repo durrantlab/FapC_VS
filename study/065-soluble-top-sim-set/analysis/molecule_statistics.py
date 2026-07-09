@@ -34,7 +34,7 @@ def build_pains_catalog():
 
 
 
-def calculate_logS(mol, models_dir: Path) -> float:
+def calculate_logS(molecules, models_dir: Path) -> list[float]:
     """Takes in an RDKIT molecule and returns
     its LogS
 
@@ -45,20 +45,19 @@ def calculate_logS(mol, models_dir: Path) -> float:
     Returns:
         float: the LogS of that molecule
     """
-
-    generated_descriptors = predefined_models.generate(mol)
+    all_generated_descriptors = [predefined_models.generate(mol) for mol in molecules]
 
     # Import pretrained models
     mlp_model_import = pickle.load(open((models_dir / "aqsolpred_mlp_model.pkl"), "rb"))
     xgboost_model_import = pickle.load(open((models_dir / "aqsolpred_xgb_model.pkl"), "rb"))
 
     # predict test data (MLP,XGB,RF)
-    pred_mlp = mlp_model_import.predict(generated_descriptors)
-    pred_xgb = xgboost_model_import.predict(generated_descriptors)
+    pred_mlp = mlp_model_import.predict(all_generated_descriptors)
+    pred_xgb = xgboost_model_import.predict(all_generated_descriptors)
     # calculate consensus
     pred_consensus = (pred_mlp + pred_xgb) / 2
 
-    return round(pred_consensus, 3)
+    return pred_consensus
 
 
 
@@ -78,14 +77,16 @@ def main(sdf_file: Path, models_dir: Path, csv_file: Path):
     # read in the molecules
     molecules = Chem.SDMolSupplier(str(sdf_file), sanitize=True, removeHs=False,
                             strictParsing=True)
+    # calculate LogS
+    logs_list: list[float] = calculate_logS(molecules, models_dir)
     pains_catalog = build_pains_catalog()
     data: list[list] = [["Name","LogS","Molar Mass","Heavy Atoms","PAINS Flags","SMILES"]]
-    for mol in molecules:
+    for ind, mol in enumerate(molecules):
         temp_data: list = []
         # get name
         temp_data.append(mol.GetProp("_Name").strip())
         # get LogS of molecules
-        temp_data.append(calculate_logS(mol, models_dir))
+        temp_data.append(logs_list[ind])
         # Get CNN score
         # get CNN Affinity
         # get region/mol/group
