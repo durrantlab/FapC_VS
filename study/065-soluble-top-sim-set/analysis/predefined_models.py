@@ -112,7 +112,7 @@ def predefined_mordred(mol, desc_type="best", desc_names=False):
         return result._values
    
 
-def generate(mol, verbose=False):
+def generate(mols, verbose=False):
     selected_columns = [
         "nHBAcc",
         "nHBDon",
@@ -175,15 +175,16 @@ def generate(mol, verbose=False):
     test_formula_list = []
     test_mordred_descriptors = []
 
-    mol = Chem.AddHs(mol)
-    formula = Chem.rdMolDescriptors.CalcMolFormula(mol)
-    formula = formula.replace("+", "")
-    formula = formula.replace("-", "")
+    for mol in mols:
+        mol = Chem.AddHs(mol)
+        formula = Chem.rdMolDescriptors.CalcMolFormula(mol)
+        formula = formula.replace("+", "")
+        formula = formula.replace("-", "")
 
-    test_formula_list.append(formula)
-    test_mordred_descriptors.append(
-        predefined_models.predefined_mordred(mol, "all")
-    )
+        test_formula_list.append(formula)
+        test_mordred_descriptors.append(
+            predefined_models.predefined_mordred(mol, "all")
+        )
 
     # get all column names
     column_names = predefined_models.predefined_mordred(

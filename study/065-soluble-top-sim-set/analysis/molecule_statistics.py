@@ -45,7 +45,7 @@ def calculate_logS(molecules, models_dir: Path) -> list:
     Returns:
         float: the LogS of that molecule
     """
-    all_generated_descriptors = [predefined_models.generate(mol) for mol in molecules]
+    all_generated_descriptors = predefined_models.generate(molecules)
 
     # Import pretrained models
     mlp_model_import = pickle.load(open((models_dir / "aqsolpred_mlp_model.pkl"), "rb"))
