@@ -60,7 +60,7 @@ def calculate_logS(molecules, models_dir: Path) -> list:
 
     return pred_consensus
 
-def rank_csv_in(csv_rank_file: Path) -> list[list]:
+def rank_csv_in(csv_rank_file: Path) -> list:
     with open(csv_rank_file, "r") as f:
         return [line.strip().split(",") for line in f.read().strip().split("\n")]
 
