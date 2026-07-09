@@ -35,15 +35,16 @@ def build_pains_catalog():
 
 
 def calculate_logS(molecules, models_dir: Path) -> list:
-    """Takes in an RDKIT molecule and returns
-    its LogS
+    """Takes in a list of RDKIT molecules and returns
+    their LogS. Index of LogS = index in moleculeslist.
 
     Args:
-        mol: an RDKIT molecule to find LogS of
+        molecules: list of RDKIT molecules to find LogS of
         models_dir (Path): where the models are held
 
     Returns:
-        float: the LogS of that molecule
+        float: list of LogS for each molecule. Index in this list =
+            molecule's index in molecules list
     """
     all_generated_descriptors = predefined_models.generate(molecules)
 
@@ -59,10 +60,12 @@ def calculate_logS(molecules, models_dir: Path) -> list:
 
     return pred_consensus
 
+def rank_csv_in(csv_rank_file: Path) -> list[list]:
+    with open(csv_rank_file, "r") as f:
+        return [line.strip().split(",") for line in f.read().strip().split("\n")]
 
 
-
-def main(sdf_file: Path, models_dir: Path, csv_file: Path):
+def main(sdf_file: Path, csv_rank_file: Path, models_dir: Path, csv_file: Path):
     """Takes in an SDF file, calculates a number of statistics, and places into a csv file
 
     CSV file format:
@@ -70,6 +73,8 @@ def main(sdf_file: Path, models_dir: Path, csv_file: Path):
 
     Args:
         sdf_file (Path): the concat SDF file with all molecules
+        csv_rank_file (Path): CSV with all molecules listed in ranked order
+            Index = index in sdf_file
         models_dir (Path): Where LogP models are stored
         csv_file (Path): csv file location
             Will create folder if it does not exist
@@ -77,10 +82,12 @@ def main(sdf_file: Path, models_dir: Path, csv_file: Path):
     # read in the molecules
     molecules = Chem.SDMolSupplier(str(sdf_file), sanitize=True, removeHs=False,
                             strictParsing=True)
-    # calculate LogS
+    # setup molecule analysis
     logs_list: list[float] = calculate_logS(molecules, models_dir)
     pains_catalog = build_pains_catalog()
-    data: list[list] = [["Name","LogS","Molar Mass","Heavy Atoms","PAINS Flags","SMILES"]]
+    csv_rank_list: list[list] = rank_csv_in(csv_rank_file)
+    # create csv
+    data: list[list] = [["Name","LogS","CNN_VS","CNNaffinity","Group","Molar Mass","Heavy Atoms","PAINS Flags","SMILES","Soluability","Notes"]]
     for ind, mol in enumerate(molecules):
         temp_data: list = []
         # get name
@@ -88,8 +95,11 @@ def main(sdf_file: Path, models_dir: Path, csv_file: Path):
         # get LogS of molecules
         temp_data.append(logs_list[ind])
         # Get CNN score
+        temp_data.append(mol.GetProp("CNN_VS").strip())
         # get CNN Affinity
+        temp_data.append(mol.GetProp("CNNaffinity").strip())
         # get region/mol/group
+        temp_data.append(f"{csv_rank_list[ind][1]}/{csv_rank_list[ind][2].split('.')[0]}")
         # get molar mass
         temp_data.append(Descriptors.MolWt(mol))
         # get heavy atoms
@@ -99,6 +109,10 @@ def main(sdf_file: Path, models_dir: Path, csv_file: Path):
         temp_data.append(";".join(flags) if flags else "")
         # get smiles
         temp_data.append(Chem.MolToSmiles(mol))
+        # if soluable
+        temp_data.append("ok" if logs_list[ind] > -4.5 else "predicted to be poorly soluable")
+        # notes
+        temp_data.append("")
 
         data.append(temp_data)
     
@@ -111,8 +125,9 @@ def main(sdf_file: Path, models_dir: Path, csv_file: Path):
 if __name__ == "__main__":
     # inputs
     sdf_file: Path = (DIR_STUDY / "061-filter-gnina-op" / "data" / "best_drugs" / "overall_concat.sdf").resolve()
+    csv_rank_file: Path = (DIR_STUDY / "061-filter-gnina-op" / "data" / "best_drugs" / "ranked_docked_mols.csv").resolve()
     models_dir: Path = (DIR_SCRIPT / "models")
-    csv_file: Path = (DIR_SCRIPT / ".." / "data" / "solubility.csv").resolve()
-    main(sdf_file,models_dir,csv_file)
+    csv_file: Path = (DIR_SCRIPT / ".." / "data" / "top_dock_stats.csv").resolve()
+    main(sdf_file, csv_rank_file, models_dir, csv_file)
 
 
