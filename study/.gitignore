@@ -15,6 +15,7 @@
 *run_pharmit_search.sh
 *create_db.sh
 *run_gypsum.sh
+028-pharms-top-div-set/analysis/get_pharms.slurm
 032-create-pharm-db/data/*
 066-pharm-search-exp-set/analysis/pharm_search.slurm
 002-testing/6-29-db-test/test1/DB

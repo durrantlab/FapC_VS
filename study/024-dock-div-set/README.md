@@ -1,5 +1,20 @@
+
 # 024-dock-div-set
-Goal: dock the diversity set
+Goal: dock the diversity set with GNINA
+- Input: each molecule with a separate SDF, setup with hydrogens and different conforms
+- Output: many SDFs with the same molecules in them, but now they are moved to be in docked location and hold data about the scoring inside the SDF
+
+## How To Use:
+1) Put together (concatenate) SDF files
+- Ensure script (concat_sdf_files) points to where mass, separate SDFs are located and where the concatenated ones should be placed
+ - *Decided on 30 SDFs*
+- Run the script
+2) Create all Gnina inputs
+- Ensure all the paths point to the correct spot 
+- Run create_gnina_job_list: pixi run python create_gnina_job_list.py
+3) Run Gnina
+- chmod +x run_gnina.sh
+- ./run_gnina.sh
 
 ## Data
 concat_lig: holds the prepped ligands, when put together into large SDFs
