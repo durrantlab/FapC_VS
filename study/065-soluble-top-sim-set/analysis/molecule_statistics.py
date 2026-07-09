@@ -34,7 +34,7 @@ def build_pains_catalog():
 
 
 
-def calculate_logS(molecules, models_dir: Path) -> list[float]:
+def calculate_logS(molecules, models_dir: Path) -> list:
     """Takes in an RDKIT molecule and returns
     its LogS
 
