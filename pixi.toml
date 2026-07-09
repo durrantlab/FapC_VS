@@ -22,7 +22,7 @@ libc = { family="glibc", version="2.17"}
 dev = ["dev"]
 docs = ["docs"]
 pharmit = { features = ["pharmit"], no-default-feature = true }
-logs_pred = { features = ["logs_pred"], no-default-feature = true }
+logs-pred = { features = ["logs-pred"], no-default-feature = true }
 
 [tasks]
 
@@ -36,7 +36,6 @@ scipy = ">=1.18.0,<2"
 mpi4py = ">=4.1.2,<5"
 molvs = ">=0.1.1,<0.2"
 requests = ">=2.34.2,<3"
-mordredcommunity = ">=2.0.7,<3"
 
 [feature.dev.dependencies]
 black = ">=23.10.0"
@@ -102,7 +101,7 @@ pharmit = { url = "https://github.com/durrantlab/pharmit-dl/releases/download/v0
 [feature.pharmit]
 channels = ["conda-forge"]
 
-[feature.logs_pred.dependencies]
+[feature.logs-pred.target.linux-64.dependencies]
 python = "==3.7.6"
 rdkit = "2019.9.*"
 xgboost = "1.0.2.*"
@@ -115,7 +114,7 @@ click = "7.1.2.*"
 mordred = "1.2.0.*"
 pillow = "7.0.0.*"
 
-[feature.logs_pred]
+[feature.logs-pred]
 channels = ["conda-forge"]
 
 [target.linux-64.dependencies]
