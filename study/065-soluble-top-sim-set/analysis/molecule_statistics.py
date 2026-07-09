@@ -99,7 +99,7 @@ def main(sdf_file: Path, csv_rank_file: Path, models_dir: Path, csv_file: Path):
         # get CNN Affinity
         temp_data.append(mol.GetProp("CNNaffinity").strip())
         # get region/mol/group
-        temp_data.append(f"{csv_rank_list[ind][1]}/{csv_rank_list[ind][2].split('.')[0]}")
+        temp_data.append(f"{csv_rank_list[ind+1][1]}/{csv_rank_list[ind+1][2].split('.')[0]}")
         # get molar mass
         temp_data.append(Descriptors.MolWt(mol))
         # get heavy atoms
