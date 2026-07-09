@@ -16,6 +16,9 @@ from mordred import Calculator, descriptors
 from mordred import SLogP,Chi,ABCIndex,BondCount,Polarizability,RingCount,EState,RotatableBond,CarbonTypes,Aromatic,AtomCount,VdwVolumeABC,McGowanVolume,HydrogenBond
 from mordred import BertzCT, BalabanJ,EccentricConnectivityIndex
 
+from rdkit import Chem
+import predefined_models
+import pandas as pd
 
 
 #mlp with 1 test set
@@ -109,3 +112,98 @@ def predefined_mordred(mol, desc_type="best", desc_names=False):
         return result._values
    
 
+def generate(mol, verbose=False):
+    selected_columns = [
+        "nHBAcc",
+        "nHBDon",
+        "nRot",
+        "nBonds",
+        "nAromBond",
+        "nBondsO",
+        "nBondsS",
+        "TopoPSA(NO)",
+        "TopoPSA",
+        "LabuteASA",
+        "bpol",
+        "nAcid",
+        "nBase",
+        "ECIndex",
+        "GGI1",
+        "SLogP",
+        "SMR",
+        "BertzCT",
+        "BalabanJ",
+        "Zagreb1",
+        "ABCGG",
+        "nHRing",
+        "naHRing",
+        "NsCH3",
+        "NaaCH",
+        "NaaaC",
+        "NssssC",
+        "SsCH3",
+        "SdCH2",
+        "SssCH2",
+        "StCH",
+        "SdsCH",
+        "SaaCH",
+        "SsssCH",
+        "SdssC",
+        "SaasC",
+        "SaaaC",
+        "SsNH2",
+        "SssNH",
+        "StN",
+        "SdsN",
+        "SaaN",
+        "SsssN",
+        "SaasN",
+        "SsOH",
+        "SdO",
+        "SssO",
+        "SaaO",
+        "SsF",
+        "SdsssP",
+        "SsSH",
+        "SdS",
+        "SddssS",
+        "SsCl",
+        "SsI",
+    ]
+
+    # Test Data filter
+    test_formula_list = []
+    test_mordred_descriptors = []
+
+    mol = Chem.AddHs(mol)
+    formula = Chem.rdMolDescriptors.CalcMolFormula(mol)
+    formula = formula.replace("+", "")
+    formula = formula.replace("-", "")
+
+    test_formula_list.append(formula)
+    test_mordred_descriptors.append(
+        predefined_models.predefined_mordred(mol, "all")
+    )
+
+    # get all column names
+    column_names = predefined_models.predefined_mordred(
+        Chem.MolFromSmiles("CC"), "all", True
+    )
+
+    # create Mordred desc dataframe
+    test_df = pd.DataFrame(
+        index=test_formula_list, data=test_mordred_descriptors, columns=column_names
+    )
+
+    # Select predefined columns by the model
+    selected_data_test = test_df[selected_columns]
+    selected_data_test = selected_data_test.apply(pd.to_numeric, errors="coerce")
+    selected_data_test = selected_data_test.fillna(0)
+
+    nan_cols = selected_data_test.columns[selected_data_test.isna().any()].tolist()
+    if nan_cols:
+        print(
+            f"Warning: {len(nan_cols)} descriptors failed: {nan_cols[:5]}..."
+        )  # Show first 5
+
+    return selected_data_test
