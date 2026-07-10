@@ -20,4 +20,5 @@
 066-pharm-search-exp-set/analysis/pharm_search.slurm
 002-testing/6-29-db-test/test1/DB
 063-pharms-exp-set/analysis/get_pharms.slurm
-065-soluble-top-sim-set/analysis/AqSolPred-web-main
+065-stats-top-sim-set/analysis/AqSolPred-web-main
+071-stats-top-sim-set/analysis/AqSolPred-web-main
