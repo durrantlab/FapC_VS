@@ -1,5 +1,5 @@
-# 032-create-pharm-db
-Goal: create a pharmit database so a pharmacophore search can be done on it
+# 032-create-pharm-db (SECTION SKIPPED)
+~~Goal: create a pharmit database so a pharmacophore search can be done on it~~
 
 ## Data
 *As it is too large, it is held in ix. Under FapC_VS/032-DB*

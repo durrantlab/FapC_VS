@@ -82,7 +82,7 @@ def main(pharm_list_file: Path, sdf_file: Path, csv_file: Path,
     print("\nSorting csv file")
     sort_csv(csv_file)
     concat_sdfs(sdf_files, sdf_file, csv_file)
-    #shutil.rmtree(temp_dir)
+    shutil.rmtree(temp_dir)
     print("Done!")
 
 

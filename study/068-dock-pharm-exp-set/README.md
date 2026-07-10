@@ -1,8 +1,8 @@
 
-# 051-dock-pharm-div-set
-Goal: dock the similar to top diversity set
-- Input: SDFs with many molecules (which have many conformers), setup with hydrogens and different conforms. Organized: region_# / mol# / group_# / [].sdf
-- Output: many SDFs with the many different molecules in them, but now they are moved to be in docked location and hold data about the scoring inside the SDF. Organized: region_#/mol#/group_#.sdf
+# 068-dock-pharm-exp-set
+Goal: dock the similar to experimental set
+- Input: SDFs with many molecules (which have many conformers) that are similar to experimental set, setup with hydrogens and different conforms. Organized: mol# / group_# / [].sdf
+- Output: many SDFs with the many different molecules in them, but now they are moved to be in docked location and hold data about the scoring inside the SDF. Organized: mol#/group_#.sdf
 
 ## How To Use:
 1) Create all Gnina inputs
@@ -33,3 +33,6 @@ run_gnina.sh: submits the batch jobs (created)
 dock.slurm: settings for the batch job
 job_list.txt: list of arguments for each run of gnina (created)
 check_output.py: will check that each molecule of input was successfully docked
+
+## Visualization
+exp_set_boxes.pse: pymol session with all experimental molecules and the boxes. Used to determine which region each experimental molecule was initially docked to (pre-this project)
