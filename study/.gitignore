@@ -10,6 +10,7 @@
 *.json
 *.zip
 *.smi
+*.xlsx
 
 *run_gnina.sh
 *run_pharmit_search.sh
