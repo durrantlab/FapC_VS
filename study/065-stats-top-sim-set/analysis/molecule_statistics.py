@@ -88,23 +88,32 @@ def main(sdf_file: Path, csv_rank_file: Path, models_dir: Path, csv_file: Path):
     pains_catalog = build_pains_catalog()
     csv_rank_list: list[list] = rank_csv_in(csv_rank_file)
     # create csv
-    data: list[list] = [["Name","LogS","CNN_VS","CNNaffinity","Group","Molar Mass","Heavy Atoms","PAINS Flags","SMILES","Soluability","Notes"]]
+    data: list[list] = [["SDF Index","Name","LogS","CNN_VS","CNNaffinity","CNN_Score","Group","Molar Mass","Heavy Atoms","Lig Eff","PAINS Flags","SMILES","Soluability","Notes"]]
     for ind, mol in enumerate(molecules):
         temp_data: list = []
+        # get SDF index
+        temp_data.append(ind)
         # get name
         temp_data.append(mol.GetProp("_Name").strip())
         # get LogS of molecules
         temp_data.append(logs_list[ind])
         # Get CNN score
-        temp_data.append(mol.GetProp("CNN_VS").strip())
+        cnn_vs: float = float(mol.GetProp("CNN_VS").strip())
+        temp_data.append(cnn_vs)
         # get CNN Affinity
-        temp_data.append(mol.GetProp("CNNaffinity").strip())
+        cnn_affinity: float = float(mol.GetProp("CNNaffinity").strip())
+        temp_data.append(cnn_affinity)
+        # get CNN Score
+        temp_data.append(cnn_vs / cnn_affinity)
         # get region/mol/group
         temp_data.append(f"{csv_rank_list[ind+1][1]}/{csv_rank_list[ind+1][2].split('.')[0]}")
         # get molar mass
         temp_data.append(Descriptors.MolWt(mol))
         # get heavy atoms
-        temp_data.append(mol.GetNumHeavyAtoms())
+        heavy_atoms: int = mol.GetNumHeavyAtoms()
+        temp_data.append(heavy_atoms)
+        # get lig eff
+        temp_data.append(cnn_affinity / heavy_atoms)
         # get pains flags
         flags = [m.GetDescription() for m in pains_catalog.GetMatches(mol)]
         temp_data.append(";".join(flags) if flags else "")
