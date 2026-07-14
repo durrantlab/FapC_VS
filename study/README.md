@@ -4,7 +4,8 @@ This directory includes all code in the base pipeline, data for the project, fig
 
 ## Overall Organization
 
-Each directory is a different step of the FapC virtual screen pipeline. It is organized by subsections (initial letter in directory name), then in order of the pipeline by number.
+Each directory is a different step of the FapC virtual screen pipeline. The letter in front represents the subsection of pipeline (group of steps organized together), then the number is the order of steps in that subsection. 
+Pipeline was run starting at a01 -> a02 -> a03 -> b01 -> ... -> g01.
 
 ## Subsection Overview
 - 0 = template section / testing section. Not involved in actual pipeline

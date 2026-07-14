@@ -40,7 +40,7 @@ def calculate_logS(molecules, models_dir: Path) -> list:
 
     Args:
         molecules: list of RDKIT molecules to find LogS of
-        models_dir (Path): where the models are held
+        models_dir: where the models are held
 
     Returns:
         float: list of LogS for each molecule. Index in this list =
@@ -73,11 +73,11 @@ def main(sdf_file: Path, csv_rank_file: Path, models_dir: Path, csv_file: Path):
 
 
     Args:
-        sdf_file (Path): the concat SDF file with all molecules
-        csv_rank_file (Path): CSV with all molecules listed in ranked order
+        sdf_file: the concat SDF file with all molecules
+        csv_rank_file: CSV with all molecules listed in ranked order
             Index = index in sdf_file
-        models_dir (Path): Where LogP models are stored
-        csv_file (Path): csv file location
+        models_dir: Where LogP models are stored
+        csv_file: csv file location
             Will create folder if it does not exist
     """
     # read in the molecules

@@ -19,9 +19,9 @@ def main(docked_ligands_dir: Path, protein_file: Path, op_dir: Path):
     the interactions present for each ligand
 
     Args:
-        docked_ligands_dir (Path): where the ligands stored.
-        protein_file (Path): the protein pdb they were docked too
-        op_dir (Path): where output data will be placed
+        docked_ligands_dir: where the ligands stored.
+        protein_file: the protein pdb they were docked too
+        op_dir: where output data will be placed
     """
     # read in protein
     rdkit_prot = Chem.MolFromPDBFile(str(protein_file), removeHs=False)

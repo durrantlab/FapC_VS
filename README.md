@@ -1,6 +1,6 @@
 # FapC_VS
 
-### Introduce Project
+### How To Read Project
 
 Most of this project is in the study directory. For more information on the project, look at the readme in that folder.
 

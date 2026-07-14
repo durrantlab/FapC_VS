@@ -39,14 +39,14 @@ def main(sdf_path: Path, csv_path: Path, pharm_json_path: Path, op_pharm_dir: Pa
     pharmacophore lists, though each molecule has a seperate file
 
     Args:
-        sdf_path (Path): where sdf with molecules is stored
-        csv_path (Path): where the csv of molecular interactions are stored
-        pharm_json_path (Path): where concat json with all pharmacophores are stored
-        op_pharm_dir (Path): where the updated jsons, 1 for each molecule, will be stored
+        sdf_path: where sdf with molecules is stored
+        csv_path: where the csv of molecular interactions are stored
+        pharm_json_path: where concat json with all pharmacophores are stored
+        op_pharm_dir: where the updated jsons, 1 for each molecule, will be stored
             Note: no longer concat, each molecule has a seperate file
             Index of file = index of molecule in sdf
             Creates directory path if DNE
-        op_csv_path (Path): where the csv holding which pharms are enabled / disabled is stored
+        op_csv_path: where the csv holding which pharms are enabled / disabled is stored
             Index in csv = index of molecule in sdf
             Creates directory path if DNE
     """

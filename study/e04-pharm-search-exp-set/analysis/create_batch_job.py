@@ -17,14 +17,14 @@ def main(main_disabled_pharmit_dir: Path, main_pharmit_output_dir: Path,
     a csv (name is [molecule name].csv) and in an sdf as well (same name, but .sdf)
 
     Args:
-        disabled_pharmit_dir (Path): where the inputs with disabled pharms based
+        disabled_pharmit_dir: where the inputs with disabled pharms based
             on prolif are stored. Should just have jsons inside
-        pharmit_output_dir (Path): where final pharmit search inputs will be stored
+        pharmit_output_dir: where final pharmit search inputs will be stored
             will be placed into folders named after name of csv/sdf
             will be named after molecule
-        pharm_search_base (Path): path to file with the basis for the .slurm file
-        iterative_pharm_loc (Path): path to iterative_pharmit.py script
-        max_ret_mol (int): max number of molecules to be returned per molecule
+        pharm_search_base: path to file with the basis for the .slurm file
+        iterative_pharm_loc: path to iterative_pharmit.py script
+        max_ret_mol: max number of molecules to be returned per molecule
     """
     
     # read in disabled pharmits

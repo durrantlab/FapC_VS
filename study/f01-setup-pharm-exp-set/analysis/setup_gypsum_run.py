@@ -24,13 +24,13 @@ def main(sdf_input_dir: Path, split_sdf_dir: Path, split_size: int, gypsum_sdf_d
     gypsum inputs to be run
 
     Args:
-        sdf_input_dir (Path): where SDF inputs are held (organized mol#.sdf)
-        split_sdf_dir (Path): where SDFs split into specific size are held
+        sdf_input_dir: where SDF inputs are held (organized mol#.sdf)
+        split_sdf_dir: where SDFs split into specific size are held
             Directory created if not already present.
             Will add mol_#/ directories to it
             If directories already exist, will skip splitting
-        split_size (Path): how many molecules are in each split
-        gypsum_sdf_dir (Path): where final gypsum outputs are held
+        split_size: how many molecules are in each split
+        gypsum_sdf_dir: where final gypsum outputs are held
             Directory created if not already present
             Will add region_#/mol_#/group_# directories to it
     """

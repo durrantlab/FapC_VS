@@ -23,14 +23,14 @@ def run(query_path: Path, out_path: Path, interval: float,
     
 
     Args:
-        query_path (Path): location of pharmacophore list
-        out_path (Path): location where SDF will be placed
+        query_path: location of pharmacophore list
+        out_path: location where SDF will be placed
                         make sure file does not already exist before running
-        interval (float): how often to check server when waiing for response
-        timeout (float): how long before saying server is timed out
-        csv_path (Path): location where the csv of molecule ranking is placed
+        interval: how often to check server when waiing for response
+        timeout: how long before saying server is timed out
+        csv_path: location where the csv of molecule ranking is placed
                         make sure file does not already exist before running
-        max_mol (int): max number of molecules to return
+        max_mol: max number of molecules to return
     
     Returns:
         Boolean if the search successfully found molecules or not
@@ -73,7 +73,7 @@ def apply_search_filters(query: dict, max_mol: int) -> dict:
     """Add extra search filters / parameters to query dictionary
 
     Args:
-        query (dict): the pharmacophore query JSON (modified in place)
+        query: the pharmacophore query JSON (modified in place)
 
     Returns:
         dict: the same query dict, with the filter keys set
@@ -123,7 +123,7 @@ def start_query(session: requests.Session, query: dict, old_qid: int | None = No
 
     Args:
         session (Session): the website querying session
-        query (dict): the pharmacophore JSON
+        query: the pharmacophore JSON
         old_qid (int, optional): 
 
     Returns:
@@ -154,9 +154,9 @@ def poll(session: requests.Session, qid: int, interval: float = 1.0, timeout: fl
     
     Args:
         session (Session): the website querying session
-        qid (int): server session id. Comes from when session initially setup
-        interval (float): how long to wait between server pings
-        timeout (float): how long before deciding server timed out
+        qid: server session id. Comes from when session initially setup
+        interval: how long to wait between server pings
+        timeout: how long before deciding server timed out
 
     Returns:
         int: how many molecules found
@@ -203,8 +203,8 @@ def save_results(session: requests.Session, qid: int, out_path: Path) -> Path:
 
     Args:
         session (Session): the website querying session
-        qid (int): server session id. Comes from when session initially setup
-        out_path (Path): dir where SDF file will be placed
+        qid: server session id. Comes from when session initially setup
+        out_path: dir where SDF file will be placed
 
     Returns:
         Path: specific SDF file path
@@ -225,9 +225,9 @@ def fetch_all_rows(session: requests.Session, qid: int, total: int,
 
     Args:
         session (Session): the website querying session
-        qid (int): server session id
-        total (int): number of hits to retrieve (from poll())
-        page (int): how many rows to request per call
+        qid: server session id
+        total: number of hits to retrieve (from poll())
+        page: how many rows to request per call
 
     Returns:
         list: all result rows, each a list like [name, rmsd, mass, ...]
@@ -273,9 +273,9 @@ def save_rmsd_csv(session: requests.Session, qid: int, csv_path: Path,
 
     Args:
         session (Session): the website querying session
-        qid (int): server session id
-        csv_path (Path): where the CSV will be written
-        total (int): number of hits (from poll())
+        qid: server session id
+        csv_path: where the CSV will be written
+        total: number of hits (from poll())
 
     Returns:
         Path: the CSV file path

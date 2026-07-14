@@ -26,9 +26,9 @@ def main(top_div_set_dir: Path, output_dir: Path):
     to extract all pharmacophores from them
 
     Args:
-        top_div_set_dir (Path): location of top molecules for each
+        top_div_set_dir: location of top molecules for each
             region
-        output_dir (Path): where the json list of pharmacophores
+        output_dir: where the json list of pharmacophores
             will be output
     """
     slurm_str: str = HEADER

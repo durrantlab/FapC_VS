@@ -16,9 +16,9 @@ def main(top_div_set_dir: Path, exp_set_file: Path, op_dir: Path):
     describing it
 
     Args:
-        top_div_set_dir (Path): where top div set sdfs are stored
-        exp_set_file (Path): where exp set sdf is stored
-        op_dir (Path): where outputs are stored
+        top_div_set_dir: where top div set sdfs are stored
+        exp_set_file: where exp set sdf is stored
+        op_dir: where outputs are stored
     """
     # read in experimental set
     RDLogger.DisableLog('rdApp.warning')

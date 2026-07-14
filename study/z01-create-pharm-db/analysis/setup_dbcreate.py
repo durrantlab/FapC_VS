@@ -12,8 +12,8 @@ def main(sdf_db_path: Path, db_main_path: Path, skip_file_format: bool = False, 
     will setup the database
 
     Args:
-        sdf_db_path (Path): where the sdf library is
-        db_main_path (Path): where the db will be placed
+        sdf_db_path: where the sdf library is
+        db_main_path: where the db will be placed
     """
     
     # get all sdf files

@@ -16,13 +16,13 @@ def main(main_disabled_pharmit_dir: Path, main_pharmit_output_dir: Path, max_ret
     a csv (name is [region_name]/[molecule name].csv) and in an sdf as well (same name, but .sdf)
 
     Args:
-        disabled_pharmit_dir (Path): where the inputs with disabled pharms based
+        disabled_pharmit_dir: where the inputs with disabled pharms based
             on prolif are stored. Should have sub-dir based on each region, then jsons for
             each molecule inside that
-        pharmit_output_dir (Path): where final pharmit search inputs will be stored
+        pharmit_output_dir: where final pharmit search inputs will be stored
             will be placed into folders named after region and name of csv/sdf
             will be named after molecule
-        max_ret_mol (int): max number of molecules to be returned per molecule
+        max_ret_mol: max number of molecules to be returned per molecule
     """
     
     # read in disabled pharmits

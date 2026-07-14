@@ -10,10 +10,10 @@ def main(lig_inp_dir: Path, box_dirs: Path, pdb_dir: Path, output_dir: Path):
     And create gnina inputs to dock every ligand to every box.
 
     Args:
-        lig_inp_dir (Path): dir that holds are the ligands
+        lig_inp_dir: dir that holds are the ligands
         box_dirs (list[Path]): dir that holds all the boxes
-        pdb_dir (Path): path of protein
-        output_dir (Path): dir to store all outputs
+        pdb_dir: path of protein
+        output_dir: dir to store all outputs
     """
     
     # get all ligands, boxes

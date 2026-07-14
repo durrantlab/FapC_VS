@@ -20,20 +20,20 @@ def main(pharm_list_file: Path, sdf_file: Path, csv_file: Path,
     Will place all data in a single sorted sdf and sorted csv, specified in input
 
     Args:
-        pharm_list_file (Path): The location of the pharmit search input 
+        pharm_list_file: The location of the pharmit search input 
             (pharmacophore list) that is being searched.
-        sdf_file (Path): where SDF file output of pharmit will be stored (sorted, only 1 made)
+        sdf_file: where SDF file output of pharmit will be stored (sorted, only 1 made)
             Has format of typical concatenated SDF file
             Will create directory path if not present
-        csv_file (Path): Where CSV file output of pharmit will be stored (sorted, only 1 made)
+        csv_file: Where CSV file output of pharmit will be stored (sorted, only 1 made)
             Header is [# of mols],name,rmsd. Each row is a different molecule,
             storing it's index, name and RMSD
             Will create directory path if not present
-        temp_dir (Path): where temporary files will be stored
+        temp_dir: where temporary files will be stored
             This is deleted before and after. Make sure it does not overlap with
             other parallel runs. Holds temp sdf, csv outputs and inputs to pharmit
             Will create directory path. Should not be present before hand.
-        max_mol (Path): max molecules to find
+        max_mol: max molecules to find
     """
     # setup iterative pharm data structure. Allows going through different
     # combinations of pharmacophore lists
@@ -95,7 +95,7 @@ def concat_sdfs(sdf_files: list[Path], sdf_file: Path, csv_file: Path):
     Args:
         sdf_files (list[Path]): where all SDFs output from
             pharmit are stored
-        sdf_file (Path): the final SDF file where all molecules
+        sdf_file: the final SDF file where all molecules
             are stored in sorted format. No duplicates.
     """
     with open(csv_file) as f:
@@ -120,7 +120,7 @@ def sort_csv(csv_path: Path):
     """Takes in a csv file and sorts it based rmsd (col2)
 
     Args:
-        csv_path (Path): where the csv file is currently placed
+        csv_path: where the csv file is currently placed
     """
     # read in csv file
     with open(csv_path) as f:
@@ -144,9 +144,9 @@ def update_csv(pharm_csv_op: Path, csv_file: Path, max_num: int) -> int:
     """Updates CSV based on the pharmit search
 
     Args:
-        pharm_op (Path): where the pharmit search op is
-        csv_file (Path): where the csv file is
-        max_num (int): max number of molecules to return
+        pharm_op: where the pharmit search op is
+        csv_file: where the csv file is
+        max_num: max number of molecules to return
     """
     # open up files
     file_name: str = pharm_csv_op.stem
@@ -191,13 +191,13 @@ def run_pharmit(pharm_file: Path, pharmit_output_dir: Path,
     name / rmsd. Ends with a \n
 
     Args:
-        pharm_file (Path): where pharm input is located
-        pharmit_output_dir (Path): where all output for this molecule is placed
+        pharm_file: where pharm input is located
+        pharmit_output_dir: where all output for this molecule is placed
                                 Name based on pharm file path / name
                                 Creates a CSV and SDF in this directory
-        run_name (str): name of the specific pharmacohpore iteration. Refers to
+        run_name: name of the specific pharmacohpore iteration. Refers to
                         which pharmacophores are disabled
-        max_mol (int): max # of molecules that can be returned
+        max_mol: max # of molecules that can be returned
     
     Returns:
         Bool: if pharmit found molecules succesfully
@@ -236,7 +236,7 @@ def csv_setup(csv_file: Path) -> Path:
     Body: rank, molecule name, rmsd
 
     Args:
-        csv_file (Path): the csv file path
+        csv_file: the csv file path
     """
 
     with open(csv_file, "w") as f:
@@ -274,9 +274,9 @@ class iter_pharm():
         Setups dictionary to allow translation
 
         Args:
-            pharm_list_dir (Path): The location of the pharmit search input 
+            pharm_list_dir: The location of the pharmit search input 
                                    (pharmacophore list) that is being searched.
-            temp_dir (Path): where the pharmit search output will be stored
+            temp_dir: where the pharmit search output will be stored
         """
         with open(pharm_list_file, "r", encoding='utf-8') as f:
             self.base_json = json.loads(f.read())

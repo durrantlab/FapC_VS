@@ -21,8 +21,8 @@ def update_pharm(mol_pharm: dict, valid_pharms: list[bool]) -> dict:
     on valid pharm list
 
     Args:
-        mol_pharm (list[json]): list of all pharms for this mol
-        valid_pharms (list[bool]): which pharms should be enabled / disabled
+        mol_pharm: list of all pharms for this mol
+        valid_pharms: which pharms should be enabled / disabled
 
     Returns:
         dict: pharms now enabled / disabled correctly
@@ -45,13 +45,13 @@ def get_valid_pharms(mol_pharm: dict, mol, res_list: list[str],
     Else disable it
 
     Args:
-        mol_pharm (json): list of pharmacophores for molecule
-        mol (molecule): the molecule being locked at
-        res_list (list[str]): list of all interaction residues for this molecule
+        mol_pharm: list of pharmacophores for molecule
+        mol: the molecule being locked at
+        res_list: list of all interaction residues for this molecule
             This + other 2 taken from interaction csv that includes this molecule
             Indicies should line up
-        inter_type_list (list[str]): type of finteraction for each residue
-        if_interact_list (list[bool]): if that interaciton is happening
+        inter_type_list: type of finteraction for each residue
+        if_interact_list: if that interaciton is happening
 
     Returns:
         list[bool]: list of pharmacophores for this molecule that are valid
@@ -109,7 +109,7 @@ def read_in_csv(inter_csv: Path) -> tuple[list[str], list[str], list[list[str | 
     Each interaction has a specific index.
 
     Args:
-        inter_csv (Path): the path to the interaction csv
+        inter_csv: the path to the interaction csv
 
     Returns:
         residues: list of protein residues interaction
@@ -141,7 +141,7 @@ def load_in_pharm_json(path: Path) -> list[dict]:
     The pharmacophore info itself is a dictionary
 
     Args:
-        path (Path): location of pharmacophore file
+        path: location of pharmacophore file
 
     Returns:
         A list of all pharmacophores stored in the file.
@@ -155,7 +155,7 @@ def load_concatenated_json(path: Path) -> list[dict]:
     and return a list of JSON objects for each one
 
     Args:
-        path (_type_): location of json
+        path: location of json
 
     Returns:
         list: list of the jsons in the file

@@ -11,9 +11,9 @@ def main(lig_inp_dir: Path, lig_op_dir: Path, n_sdf: int):
     be how many total docking jobs will be run
 
     Args:
-        lig_inp_dir (Path): Where ligands by themselves are found
-        lig_op_dir (Path): Where ligands together will be placed
-        n_sdf (int): number of together SDF files to be made
+        lig_inp_dir: Where ligands by themselves are found
+        lig_op_dir: Where ligands together will be placed
+        n_sdf: number of together SDF files to be made
     """
     if not lig_op_dir.is_dir():
         lig_op_dir.mkdir(parents=True, exist_ok=True)

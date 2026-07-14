@@ -10,14 +10,14 @@ def main(docked_dir: Path, csv_rank_file: Path, best_drugs_dir: Path, num_best: 
     It will output them into a csv and give the SDFs seperately + concatted
 
     Args:
-        docked_dir (Path): where the docked SDFs are
+        docked_dir: where the docked SDFs are
             Will search recursively
-        csv_rank_file (Path): where the ranking csv is
-        best_drugs_dir (Path): where the best drug data will be placed
+        csv_rank_file: where the ranking csv is
+        best_drugs_dir: where the best drug data will be placed
             Will create directory if it does not exist
             Adds in 'singles' directory with all molecules by themselves
             Creates a overall_concat.sdf with all of them inside
-        num_best (int): how many total molecules
+        num_best: how many total molecules
     """
 
     # read in the csv
@@ -63,9 +63,9 @@ def concat_sdfs(lig_inp_dir: Path, lig_op_file: Path):
     be how many total jobs will be run
 
     Args:
-        lig_inp_dir (Path): Where ligands by themselves are found
-        lig_op_dir (Path): Where ligands together will be placed
-        n_sdf (int): number of together SDF files to be made
+        lig_inp_dir: Where ligands by themselves are found
+        lig_op_dir: Where ligands together will be placed
+        n_sdf: number of together SDF files to be made
     """
     lig_list: list[Path] = [item for item in lig_inp_dir.iterdir() if item.is_file()]
     lig_list.sort()
@@ -87,9 +87,9 @@ def extract_molecule(drug: list, docked_dir: Path) -> str:
     / pose from the docked sdfs
 
     Args:
-        drug (list): holds data about drug. 
+        drug: holds data about drug. 
             cnn_vs,directory,file_name,pose_ind,name
-        docked_dirt (Path): holds path with all docked sdfs
+        docked_dirt: holds path with all docked sdfs
 
     Returns:
         str: the sdf data

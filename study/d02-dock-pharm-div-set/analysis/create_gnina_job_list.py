@@ -21,11 +21,11 @@ def main(lig_inp_dir: Path, box_dirs: Path, pdb_dir: Path, cleaned_dir: Path, ou
         Only creates if gnina OP .sdf does not exist
 
     Args:
-        lig_inp_dir (Path): dir that holds are the ligands
+        lig_inp_dir: dir that holds are the ligands
         box_dirs (list[Path]): dir that holds all the boxes
-        pdb_dir (Path): path of protein
-        cleaned_dir (Path): dir to store output of gypsum op cleaning
-        output_dir (Path): dir to store all outputs
+        pdb_dir: path of protein
+        cleaned_dir: dir to store output of gypsum op cleaning
+        output_dir: dir to store all outputs
     """
     
     # get all boxes

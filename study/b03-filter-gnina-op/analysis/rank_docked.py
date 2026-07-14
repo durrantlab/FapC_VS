@@ -11,9 +11,9 @@ def main(docked_dir: Path, csv_op_file: Path):
     for each and store the score. Will then order on score. Places order in a csv
 
     Args:
-        docked_dir (Path): Where all the docked molecules are stored
+        docked_dir: Where all the docked molecules are stored
             Can be in subdirectory
-        csv_op_file (Path): Where the ranks will be output
+        csv_op_file: Where the ranks will be output
             Will create file if doesnt exist
     """
 
@@ -79,7 +79,7 @@ def extract_pose_data(pose: str) -> tuple[str, float]:
     """Will take in a pose str and determine data stored in
 
     Args:
-        pose (str): data of the molecule in SDF form
+        pose: data of the molecule in SDF form
     
     str: name of molecule
     float: CNN_VS score
