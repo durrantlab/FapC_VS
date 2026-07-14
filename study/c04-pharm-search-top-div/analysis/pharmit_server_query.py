@@ -1,26 +1,32 @@
 import argparse
+import csv
 import json
 import sys
 import time
 from pathlib import Path
-import csv
 
 import requests
+
 SERVER = "https://pharmit.csb.pitt.edu/fcgi-bin/pharmitserv.fcgi"
 
 DIR_SCRIPT: Path = Path(__file__).parent.resolve()
-DIR_STUDY: Path = Path(DIR_SCRIPT  / ".." / "..").resolve()
+DIR_STUDY: Path = Path(DIR_SCRIPT / ".." / "..").resolve()
 
 
 class PharmitError(RuntimeError):
     pass
 
 
-
-def run(query_path: Path, out_path: Path, interval: float, 
-        timeout: float, csv_path: Path | None = None, max_mol: int = 2000) -> bool:
+def run(
+    query_path: Path,
+    out_path: Path,
+    interval: float,
+    timeout: float,
+    csv_path: Path | None = None,
+    max_mol: int = 2000,
+) -> bool:
     """Overall, takes in pharmacophore list, calls the server, then returns the SDF
-    
+
 
     Args:
         query_path: location of pharmacophore list
@@ -31,7 +37,7 @@ def run(query_path: Path, out_path: Path, interval: float,
         csv_path: location where the csv of molecule ranking is placed
                         make sure file does not already exist before running
         max_mol: max number of molecules to return
-    
+
     Returns:
         Boolean if the search successfully found molecules or not
     """
@@ -39,7 +45,7 @@ def run(query_path: Path, out_path: Path, interval: float,
         csv_path = out_path.with_suffix(".csv")
     if csv_path.is_file() or out_path.is_file():
         print(" WARNING: PHARMIT OUTPUT FILE(S) ALREADY EXIST. OVERWRITING")
-    
+
     # read in the pharmacophore file
     query = json.loads(query_path.read_text())
     n_enabled = sum(1 for p in query.get("points", []) if p.get("enabled"))
@@ -53,7 +59,7 @@ def run(query_path: Path, out_path: Path, interval: float,
     with requests.Session() as session:
         # setup the pharmacophores, molecular library, and search parameters
         started = start_query(session, query)
-        qid = started["qid"] # qid: query ID, ID of this session
+        qid = started["qid"]  # qid: query ID, ID of this session
         try:
             # run pharmacophore search on server and wait for it to complete
             total = poll(session, qid, interval=interval, timeout=timeout)
@@ -69,7 +75,6 @@ def run(query_path: Path, out_path: Path, interval: float,
 
 
 def apply_search_filters(query: dict, max_mol: int) -> dict:
-
     """Add extra search filters / parameters to query dictionary
 
     Args:
@@ -79,28 +84,30 @@ def apply_search_filters(query: dict, max_mol: int) -> dict:
         dict: the same query dict, with the filter keys set
     """
     # random settings
-    temp = {"ShapeModeSelect": "filter",
-    "inselect": "none",
-    "intolerance": 1,
-    "inshapestyle": "inshapestyle-solid",
-    "exselect": "none",
-    "extolerance": 1,
-    "exshapestyle": "exshapestyle-solid",
-    "minMolWeight": "",
-    "minrotbonds": "",
-    "maxrotbonds": "",
-    "minlogp": "",
-    "maxlogp": "",
-    "minpsa": "",
-    "maxpsa": "",
-    "minaromatics": "",
-    "maxaromatics": "",
-    "minhba": "",
-    "maxhba": "",
-    "minhbd": "",
-    "maxhbd": ""}
+    temp = {
+        "ShapeModeSelect": "filter",
+        "inselect": "none",
+        "intolerance": 1,
+        "inshapestyle": "inshapestyle-solid",
+        "exselect": "none",
+        "extolerance": 1,
+        "exshapestyle": "exshapestyle-solid",
+        "minMolWeight": "",
+        "minrotbonds": "",
+        "maxrotbonds": "",
+        "minlogp": "",
+        "maxlogp": "",
+        "minpsa": "",
+        "maxpsa": "",
+        "minaromatics": "",
+        "maxaromatics": "",
+        "minhba": "",
+        "maxhba": "",
+        "minhbd": "",
+        "maxhbd": "",
+    }
     query.update(temp)
-    
+
     # cap the total number of returned hits
     query["max-hits"] = max_mol
     # cap max weight
@@ -111,20 +118,22 @@ def apply_search_filters(query: dict, max_mol: int) -> dict:
     query["max-orient"] = 1
     query["reduceConfs"] = 1
 
-
-    print(f" applied filters: max-hits={query['max-hits']}, max molecular weight={query['maxMolWeight']} Da, dataset={query['subset']}")
+    print(
+        f" applied filters: max-hits={query['max-hits']}, max molecular weight={query['maxMolWeight']} Da, dataset={query['subset']}"
+    )
     return query
 
 
-
-def start_query(session: requests.Session, query: dict, old_qid: int | None = None) -> dict:
-    """Submits a 'startquery' to the server, which will setup session with the 
+def start_query(
+    session: requests.Session, query: dict, old_qid: int | None = None
+) -> dict:
+    """Submits a 'startquery' to the server, which will setup session with the
     pharmacophores and the molecule library
 
     Args:
         session (Session): the website querying session
         query: the pharmacophore JSON
-        old_qid (int, optional): 
+        old_qid (int, optional):
 
     Returns:
         dict: data returned from startquery submission
@@ -135,7 +144,7 @@ def start_query(session: requests.Session, query: dict, old_qid: int | None = No
     if old_qid is not None:
         payload["oldqid"] = old_qid
     resp = session.post(SERVER, data=payload, timeout=60)
-    
+
     # waits for response and stores it in data
     resp.raise_for_status()
     data = resp.json()
@@ -147,11 +156,12 @@ def start_query(session: requests.Session, query: dict, old_qid: int | None = No
     return data
 
 
-
-def poll(session: requests.Session, qid: int, interval: float = 1.0, timeout: float = 600.0) -> int:
-    """Will run the pharmacophore search on server, wait for it to complete (sending 
+def poll(
+    session: requests.Session, qid: int, interval: float = 1.0, timeout: float = 600.0
+) -> int:
+    """Will run the pharmacophore search on server, wait for it to complete (sending
     updates as the server gives them), then returns total found.
-    
+
     Args:
         session (Session): the website querying session
         qid: server session id. Comes from when session initially setup
@@ -173,14 +183,14 @@ def poll(session: requests.Session, qid: int, interval: float = 1.0, timeout: fl
         "order[0][dir]": "asc",
     }
     """The data sent to the server. Tells it to do pharm search"""
-    
+
     deadline = time.monotonic() + timeout
     while True:
         # submits pharm search to server
         resp = session.post(SERVER, data=params, timeout=60)
         resp.raise_for_status()
-        data = resp.json() # a response does not mean search is done
-        
+        data = resp.json()  # a response does not mean search is done
+
         if data.get("status") == 0:
             raise PharmitError(f"search error: {data.get('msg', 'unknown error')}")
 
@@ -189,13 +199,12 @@ def poll(session: requests.Session, qid: int, interval: float = 1.0, timeout: fl
         if data.get("finished"):
             print(f" search finished: {total} hits")
             return total
-        
+
         # print info in last server response
         print(f" still searching... {total} hits so far")
         if time.monotonic() > deadline:
             raise PharmitError(f"poll timed out after {timeout}s (qid={qid})")
         time.sleep(interval)
-
 
 
 def save_results(session: requests.Session, qid: int, out_path: Path) -> Path:
@@ -218,9 +227,9 @@ def save_results(session: requests.Session, qid: int, out_path: Path) -> Path:
     return out_path
 
 
-
-def fetch_all_rows(session: requests.Session, qid: int, total: int,
-                   page: int = 1000) -> list:
+def fetch_all_rows(
+    session: requests.Session, qid: int, total: int, page: int = 1000
+) -> list:
     """Pull every result row from the finished search via paged 'getdata' calls.
 
     Args:
@@ -263,9 +272,9 @@ def fetch_all_rows(session: requests.Session, qid: int, total: int,
     return rows
 
 
-
-def save_rmsd_csv(session: requests.Session, qid: int, csv_path: Path,
-                  total: int) -> Path:
+def save_rmsd_csv(
+    session: requests.Session, qid: int, csv_path: Path, total: int
+) -> Path:
     """Write a CSV of molecule name and RMSD for every hit in the search.
 
     Format: first row is name, rmsd always. Each row is each different
@@ -298,7 +307,6 @@ def save_rmsd_csv(session: requests.Session, qid: int, csv_path: Path,
     return csv_path
 
 
-
 def cancel(session: requests.Session, qid: int) -> None:
     """Free a running/finished query server-side."""
     try:
@@ -309,9 +317,16 @@ def cancel(session: requests.Session, qid: int) -> None:
 
 
 if __name__ == "__main__":
-    query_path: Path = (DIR_STUDY / "031-validate-pharm-top-div" / "data" / 
-                        "region_1" / "reg_1_mol1_base_input.json").resolve()
-    out_path: Path = (DIR_SCRIPT / ".." / "data" / "search_output" / "region_1" / "mol1" / "op.sdf").resolve()
+    query_path: Path = (
+        DIR_STUDY
+        / "031-validate-pharm-top-div"
+        / "data"
+        / "region_1"
+        / "reg_1_mol1_base_input.json"
+    ).resolve()
+    out_path: Path = (
+        DIR_SCRIPT / ".." / "data" / "search_output" / "region_1" / "mol1" / "op.sdf"
+    ).resolve()
     interval: float = 16.0
     timeout: float = 600.0
     run(query_path, out_path, interval, timeout, None)

@@ -1,10 +1,11 @@
-from pathlib import Path
 import logging
-
+from pathlib import Path
 
 DIR_SCRIPT: Path = Path(__file__).parent.resolve()
-DIR_STUDY: Path = Path(DIR_SCRIPT  / ".." / "..").resolve()
-FILE_LOG: Path = (DIR_SCRIPT / ".." / "logs" / f"{Path(__file__).name.split('.')[0]}.log").resolve()
+DIR_STUDY: Path = Path(DIR_SCRIPT / ".." / "..").resolve()
+FILE_LOG: Path = (
+    DIR_SCRIPT / ".." / "logs" / f"{Path(__file__).name.split('.')[0]}.log"
+).resolve()
 
 if not FILE_LOG.parent.is_dir():
     FILE_LOG.parent.mkdir(parents=True, exist_ok=True)
@@ -16,7 +17,9 @@ logging.basicConfig(
 )
 
 
-def main(sdf_input_dir: Path, split_sdf_dir: Path, split_size: int, gypsum_sdf_dir: Path):
+def main(
+    sdf_input_dir: Path, split_sdf_dir: Path, split_size: int, gypsum_sdf_dir: Path
+):
     """Takes in all the SDF to be gypsumed, splits into X chunks, then creates
     gypsum inputs to be run
 
@@ -32,22 +35,43 @@ def main(sdf_input_dir: Path, split_sdf_dir: Path, split_size: int, gypsum_sdf_d
             Will add region_#/mol_#/group_# directories to it
     """
     # for each region
-    input_region_dirs: list[Path] = [item for item in sdf_input_dir.iterdir() if item.is_dir() and item.name.startswith("region")]
+    input_region_dirs: list[Path] = [
+        item
+        for item in sdf_input_dir.iterdir()
+        if item.is_dir() and item.name.startswith("region")
+    ]
     args_list: list[str] = []
     for input_region_dir in input_region_dirs:
         # for each diversity set molecule
-        input_mol_files = [item for item in input_region_dir.iterdir() if item.is_file() and item.suffix == ".sdf"]
+        input_mol_files = [
+            item
+            for item in input_region_dir.iterdir()
+            if item.is_file() and item.suffix == ".sdf"
+        ]
         for input_mol_file in input_mol_files:
             # split into chunks
-            mol_split_sdf_dir: Path = (split_sdf_dir / input_region_dir.name / input_mol_file.stem).resolve()
+            mol_split_sdf_dir: Path = (
+                split_sdf_dir / input_region_dir.name / input_mol_file.stem
+            ).resolve()
             if not mol_split_sdf_dir.is_dir():
                 mol_split_sdf_dir.mkdir(parents=True, exist_ok=True)
-                sdf_list: list[Path] = sdf_set_size_split(input_mol_file, mol_split_sdf_dir, split_size)
+                sdf_list: list[Path] = sdf_set_size_split(
+                    input_mol_file, mol_split_sdf_dir, split_size
+                )
             else:
-                sdf_list: list[Path] = [item for item in mol_split_sdf_dir.iterdir() if item.is_file() and item.suffix == ".sdf"]
+                sdf_list: list[Path] = [
+                    item
+                    for item in mol_split_sdf_dir.iterdir()
+                    if item.is_file() and item.suffix == ".sdf"
+                ]
             # setup gypsum input for each file
             for sdf_file in sdf_list:
-                mol_gypsum_sdf_dir: Path = (gypsum_sdf_dir / input_region_dir.name / input_mol_file.stem / sdf_file.stem).resolve()
+                mol_gypsum_sdf_dir: Path = (
+                    gypsum_sdf_dir
+                    / input_region_dir.name
+                    / input_mol_file.stem
+                    / sdf_file.stem
+                ).resolve()
                 if not mol_gypsum_sdf_dir.is_dir():
                     mol_gypsum_sdf_dir.mkdir(parents=True, exist_ok=True)
                 # if gypsum output doesnt exist, add to args list
@@ -61,15 +85,16 @@ def main(sdf_input_dir: Path, split_sdf_dir: Path, split_size: int, gypsum_sdf_d
             if ind:
                 f.write("\n")
             f.write(arg)
-    
+
     # create batch script to run slurm
     batch_script_file: Path = (DIR_SCRIPT / "run_gypsum.sh").resolve()
     with open(batch_script_file, "w") as f:
         f.write(f"sbatch --array=0-{len(args_list)-1} --export=ALL run_gypsum.slurm\n")
 
 
-def sdf_set_size_split(input_mol_file: Path, mol_split_sdf_dir: Path, 
-                       split_size: int) -> list[Path]:
+def sdf_set_size_split(
+    input_mol_file: Path, mol_split_sdf_dir: Path, split_size: int
+) -> list[Path]:
     """Will take in a directory with SDFs and split them into new SDF files with
     exactly 'split_size' number of molecules in each. Last may be less.
 
@@ -77,22 +102,24 @@ def sdf_set_size_split(input_mol_file: Path, mol_split_sdf_dir: Path,
         input_mol_file: molecuel being split up
         mol_split_sdf_dir: directory where split molecules are put
         split_size: how many should be in each file
-    
+
     Return:
-        List of all SDF files created 
+        List of all SDF files created
     """
 
     # read in all the SDFs
     with open(input_mol_file, "r") as f:
-        all_molecules: list[str] = [item.strip() for item in f.read().strip().split("$$$$")[:-1]]
+        all_molecules: list[str] = [
+            item.strip() for item in f.read().strip().split("$$$$")[:-1]
+        ]
     # write out into chunks of split_size
     num_mols: int = len(all_molecules)
     all_sdfs: list[Path] = []
     for sdf_ind, start in enumerate(range(0, num_mols, split_size)):
-        end = start + split_size # end is not inclusive
+        end = start + split_size  # end is not inclusive
         if end > num_mols:
             end = num_mols
-        new_sdf: str = "\n\n$$$$\n".join(all_molecules[start:end]) +"\n\n$$$$"
+        new_sdf: str = "\n\n$$$$\n".join(all_molecules[start:end]) + "\n\n$$$$"
         sdf_file: Path = Path(mol_split_sdf_dir / f"group_{sdf_ind}.sdf")
         with open(sdf_file, "w") as f:
             f.write(new_sdf)
@@ -102,13 +129,13 @@ def sdf_set_size_split(input_mol_file: Path, mol_split_sdf_dir: Path,
 
 if __name__ == "__main__":
     # inputs
-    sdf_input_dir: Path = (DIR_STUDY / "033-pharm-search-top-div" / "data" / "search_output")
+    sdf_input_dir: Path = (
+        DIR_STUDY / "033-pharm-search-top-div" / "data" / "search_output"
+    )
     """Where input SDFs are. Will search recursively through iles for all .sdfs"""
-    split_sdf_dir: Path = (DIR_SCRIPT / ".." / "data" / "split_sdf")
+    split_sdf_dir: Path = DIR_SCRIPT / ".." / "data" / "split_sdf"
     """Where split SDFs to prepare for gypsum are held"""
-    gypsum_sdf_dir: Path = (DIR_SCRIPT / ".." / "data" / "output_sdf")
+    gypsum_sdf_dir: Path = DIR_SCRIPT / ".." / "data" / "output_sdf"
     """Where the outputs of gypsum are held"""
-    
+
     main(sdf_input_dir, split_sdf_dir, 250, gypsum_sdf_dir)
-
-

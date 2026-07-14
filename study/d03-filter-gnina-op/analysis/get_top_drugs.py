@@ -1,8 +1,8 @@
-from pathlib import Path
 import csv
+from pathlib import Path
 
 DIR_SCRIPT: Path = Path(__file__).parent.resolve()
-DIR_STUDY: Path = Path(DIR_SCRIPT  / ".." / "..").resolve()
+DIR_STUDY: Path = Path(DIR_SCRIPT / ".." / "..").resolve()
 
 
 def main(docked_dir: Path, csv_rank_file: Path, best_drugs_dir: Path, num_best: int):
@@ -25,14 +25,14 @@ def main(docked_dir: Path, csv_rank_file: Path, best_drugs_dir: Path, num_best: 
         text: list[str] = f.read().strip().split("\n")
         headers: list[str] = text[0].split(",")
         ranking: list[list] = [item.split(",") for item in text[1:] if len(item) > 5]
-    
+
     best_drugs: list[list] = []
 
     # get the best molecules in each region
     for molecule in ranking:
         if len(best_drugs) < num_best:
-           best_drugs.append(molecule)
-    
+            best_drugs.append(molecule)
+
     if not best_drugs_dir.is_dir():
         best_drugs_dir.mkdir(parents=True, exist_ok=True)
 
@@ -40,7 +40,7 @@ def main(docked_dir: Path, csv_rank_file: Path, best_drugs_dir: Path, num_best: 
     csv_op_file: Path = Path(best_drugs_dir / f"overall_best.csv").resolve()
     with open(csv_op_file, mode="w", newline="") as file:
         writer = csv.writer(file)
-        
+
         writer.writerow(headers)
         writer.writerows(best_drugs)
 
@@ -80,14 +80,12 @@ def concat_sdfs(lig_inp_dir: Path, lig_op_file: Path):
             f.write(towrite.strip())
 
 
-
-
 def extract_molecule(drug: list, docked_dir: Path) -> str:
     """Will take in drug data and extract its specific molecule
     / pose from the docked sdfs
 
     Args:
-        drug: holds data about drug. 
+        drug: holds data about drug.
             cnn_vs,directory,file_name,pose_ind,name
         docked_dirt: holds path with all docked sdfs
 
@@ -96,18 +94,19 @@ def extract_molecule(drug: list, docked_dir: Path) -> str:
     """
 
     full_path: Path = Path(docked_dir / drug[1] / f"{drug[2]}")
-    with open(full_path, "r", encoding='utf-8') as f:
+    with open(full_path, "r", encoding="utf-8") as f:
         all_drugs: list = [item.strip() for item in f.read().strip().split("$$$$")]
     return all_drugs[int(drug[3])]
 
 
-
 if __name__ == "__main__":
     # inputs
-    docked_dir: Path = Path(DIR_STUDY / "051-dock-pharm-div-set" / "data" / "docked_compounds")
-    csv_rank_file: Path = Path(DIR_STUDY / "061-filter-gnina-op" / "data" / "ranked_docked_mols.csv")
+    docked_dir: Path = Path(
+        DIR_STUDY / "051-dock-pharm-div-set" / "data" / "docked_compounds"
+    )
+    csv_rank_file: Path = Path(
+        DIR_STUDY / "061-filter-gnina-op" / "data" / "ranked_docked_mols.csv"
+    )
     best_drugs: Path = Path(DIR_STUDY / "061-filter-gnina-op" / "data" / "best_drugs")
-    
+
     main(docked_dir, csv_rank_file, best_drugs, 100)
-
-

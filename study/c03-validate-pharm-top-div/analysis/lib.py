@@ -1,19 +1,15 @@
-from pathlib import Path
 import csv
 import json
+from pathlib import Path
 
 PROLIF_TO_PHARMACOPHORE = {
     "Hydrophobic": "Hydrophobic",
-    "HBDonor":     "HydrogenDonor",
-    "HBAcceptor":  "HydrogenAcceptor",
-    "PiStacking":  "Aromatic",
-    "Cationic":    "PositiveIon",
-    "Anionic":     "NegativeIon",
+    "HBDonor": "HydrogenDonor",
+    "HBAcceptor": "HydrogenAcceptor",
+    "PiStacking": "Aromatic",
+    "Cationic": "PositiveIon",
+    "Anionic": "NegativeIon",
 }
-
-
-
-
 
 
 def update_pharm(mol_pharm: dict, valid_pharms: list[bool]) -> dict:
@@ -31,17 +27,19 @@ def update_pharm(mol_pharm: dict, valid_pharms: list[bool]) -> dict:
     for index in range(len(mol_pharm["points"])):
         if not valid_pharms[index]:
             mol_pharm["points"][index]["enabled"] = False
-    
+
     return mol_pharm
 
 
-
-
-
-def get_valid_pharms(mol_pharm: dict, mol, res_list: list[str], 
-                     inter_type_list: list[str], if_interact_list: list[str | list[int]]) -> list[bool]:
+def get_valid_pharms(
+    mol_pharm: dict,
+    mol,
+    res_list: list[str],
+    inter_type_list: list[str],
+    if_interact_list: list[str | list[int]],
+) -> list[bool]:
     """For a single molecule, takes in it's pharmacophore JSON and compares it to present
-    interactions. If the pharmacophore is close to interacting atoms (of the same type), enable it. 
+    interactions. If the pharmacophore is close to interacting atoms (of the same type), enable it.
     Else disable it
 
     Args:
@@ -59,7 +57,7 @@ def get_valid_pharms(mol_pharm: dict, mol, res_list: list[str],
     if_pharm: list[bool] = []
     for pharm in mol_pharm["points"]:
         # get data about pharmacophore
-        pharm_loc = [pharm["x"],pharm["y"],pharm["z"]]
+        pharm_loc = [pharm["x"], pharm["y"], pharm["z"]]
         pharm_type = pharm["name"]
         # go through each interacting residue
         if_any_inside: bool = False
@@ -71,12 +69,12 @@ def get_valid_pharms(mol_pharm: dict, mol, res_list: list[str],
                 # go through each atom
                 for atom in atoms_interact:
                     conf = mol.GetConformer()
-                    atom_pos = list(conf.GetAtomPosition(int(atom)-1))
+                    atom_pos = list(conf.GetAtomPosition(int(atom) - 1))
                     # determine distance and if valid
                     dist: float = eucl_dist(atom_pos, pharm_loc)
                     if_any_inside = if_inside_pharm(dist, prolif_inter_type)
                     if if_any_inside:
-                        break 
+                        break
             if if_any_inside:
                 break
         if if_any_inside:
@@ -86,25 +84,27 @@ def get_valid_pharms(mol_pharm: dict, mol, res_list: list[str],
 
     return if_pharm
 
+
 def if_inside_pharm(dist, inter_type) -> bool:
     if inter_type == "Hydrophobic" or inter_type == "Aromatic":
         if dist < 2:
             return True
     if inter_type == "HydrogenDonor" or inter_type == "HydrogenAcceptor":
         if dist < 2:
-            return True 
+            return True
     if inter_type == "Cationic" or inter_type == "Anionic":
         if dist < 2:
-            return True 
+            return True
     return False
 
 
 def eucl_dist(a: list[int], b: list[int]) -> int:
-    return ((a[0]-b[0])**2 + (a[1]-b[1])**2 + (a[2]-b[2])**2) ** 0.5
+    return ((a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2 + (a[2] - b[2]) ** 2) ** 0.5
 
 
-
-def read_in_csv(inter_csv: Path) -> tuple[list[str], list[str], list[list[str | list[int]]]]:
+def read_in_csv(
+    inter_csv: Path,
+) -> tuple[list[str], list[str], list[list[str | list[int]]]]:
     """Will take in a interaction list csv file and return lists describing each interaction.
     Each interaction has a specific index.
 
@@ -124,11 +124,12 @@ def read_in_csv(inter_csv: Path) -> tuple[list[str], list[str], list[list[str | 
         next(reader)
         residues = next(reader)
         inter_type = next(reader)
-        if_interact = \
-            [[[int(u) for u in v.split(".")] if v != "False" else "False" for v in row] for row in list(reader)]
-    
-    return residues, inter_type, if_interact
+        if_interact = [
+            [[int(u) for u in v.split(".")] if v != "False" else "False" for v in row]
+            for row in list(reader)
+        ]
 
+    return residues, inter_type, if_interact
 
 
 def to_bool(s):
@@ -168,7 +169,7 @@ def load_concatenated_json(path: Path) -> list[dict]:
     idx = 0
     n = len(text)
     while idx < n:
-        while idx < n and text[idx].isspace(): 
+        while idx < n and text[idx].isspace():
             idx += 1
         if idx >= n:
             break
@@ -176,6 +177,7 @@ def load_concatenated_json(path: Path) -> list[dict]:
         objects.append(obj)
         idx = end
     return objects
+
 
 def write_concatenated_json(objects, path, indent=2):
     with open(path, "w") as f:

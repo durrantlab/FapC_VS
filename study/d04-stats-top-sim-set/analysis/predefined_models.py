@@ -7,18 +7,35 @@ Created on Thu Sep  5 14:15:21 2019
 """
 
 
+import mordred
+import numpy as np
+import pandas as pd
+import predefined_models
+from mordred import (
+    ABCIndex,
+    Aromatic,
+    AtomCount,
+    BalabanJ,
+    BertzCT,
+    BondCount,
+    Calculator,
+    CarbonTypes,
+    Chi,
+    EccentricConnectivityIndex,
+    EState,
+    HydrogenBond,
+    McGowanVolume,
+    Polarizability,
+    RingCount,
+    RotatableBond,
+    SLogP,
+    VdwVolumeABC,
+    descriptors,
+)
+from rdkit import Chem
 from sklearn.metrics import mean_absolute_error as mae
 from sklearn.metrics import mean_squared_error as mse
 from sklearn.metrics import r2_score as r2
-import numpy as np 
-import mordred
-from mordred import Calculator, descriptors
-from mordred import SLogP,Chi,ABCIndex,BondCount,Polarizability,RingCount,EState,RotatableBond,CarbonTypes,Aromatic,AtomCount,VdwVolumeABC,McGowanVolume,HydrogenBond
-from mordred import BertzCT, BalabanJ,EccentricConnectivityIndex
-
-from rdkit import Chem
-import predefined_models
-import pandas as pd
 
 
 #mlp with 1 test set

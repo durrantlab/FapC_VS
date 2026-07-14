@@ -1,8 +1,7 @@
 from pathlib import Path
 
-
 DIR_SCRIPT: Path = Path(__file__).parent.resolve()
-DIR_STUDY: Path = Path(DIR_SCRIPT  / ".." / "..").resolve()
+DIR_STUDY: Path = Path(DIR_SCRIPT / ".." / "..").resolve()
 
 HEADER: str = """#!/bin/bash
 #SBATCH --job-name=get_pharms                	 		 # Job name
@@ -34,19 +33,23 @@ def main(top_div_set_dir: Path, output_dir: Path):
     slurm_str: str = HEADER
 
     # get all SDFs
-    div_sdf_list: list[Path] = [item for item in top_div_set_dir.iterdir() if item.is_file() and item.suffix == ".sdf"]
-    
+    div_sdf_list: list[Path] = [
+        item
+        for item in top_div_set_dir.iterdir()
+        if item.is_file() and item.suffix == ".sdf"
+    ]
+
     # create for every SDF
     for div_sdf in div_sdf_list:
         out_path: Path = (output_dir / f"{div_sdf.stem}.json").resolve()
-        line: str = f"pixi run -e pharmit pharmit pharma -in {str(div_sdf)} -out {str(out_path)}"
+        line: str = (
+            f"pixi run -e pharmit pharmit pharma -in {str(div_sdf)} -out {str(out_path)}"
+        )
         slurm_str = slurm_str + "\n" + line
 
     slurm_path: Path = (DIR_SCRIPT / "get_pharms.slurm").resolve()
     with open(slurm_path, "w") as f:
         f.write(slurm_str)
-
-
 
 
 if __name__ == "__main__":
@@ -55,5 +58,3 @@ if __name__ == "__main__":
     output_dir: Path = (DIR_SCRIPT / ".." / "data").resolve()
 
     main(top_div_set_dir, output_dir)
-
-

@@ -50,8 +50,8 @@ colorama = ">=0.4.6"
 
 [feature.dev.tasks]
 mdlint = { cmd = ["markdownlint-cli2", '"**/*.{md,markdown}"', "--fix", "--config", ".markdownlint.yaml", "||", "true"] }
-isort = { cmd = ["isort", "--settings-path", ".isort.cfg", "./FapC_VS", "./tests", "||", "true"] }
-black = { cmd = ["black", "--config", ".black.toml", "./FapC_VS", "./tests", "||", "true"] }
+isort = { cmd = ["isort", "--settings-path", ".isort.cfg", "./study", "./tests", "||", "true"] }
+black = { cmd = ["black", "--config", ".black.toml", "./study", "./tests", "||", "true"] }
 format = { depends-on = ["mdlint", "isort", "black"] }
 tests = { cmd = [
     "PYTHONPATH=.",

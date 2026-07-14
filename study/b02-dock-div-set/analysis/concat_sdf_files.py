@@ -1,8 +1,8 @@
-from pathlib import Path
 import math
+from pathlib import Path
 
 DIR_SCRIPT: Path = Path(__file__).parent.resolve()
-DIR_STUDY: Path = Path(DIR_SCRIPT  / ".." / "..").resolve()
+DIR_STUDY: Path = Path(DIR_SCRIPT / ".." / "..").resolve()
 
 
 def main(lig_inp_dir: Path, lig_op_dir: Path, n_sdf: int):
@@ -30,22 +30,22 @@ def main(lig_inp_dir: Path, lig_op_dir: Path, n_sdf: int):
 
     min: int = 0
     max: int = count_per_sdf
-    
+
     # for each new file
     for file_num in range(0, n_sdf):
         file_path: Path = Path(lig_op_dir / f"ligs_{file_num:03d}.sdf").resolve()
         # go through correct range and get all files
         if max >= len(lig_list):
             max = len(lig_list) - 1
-        
+
         if min >= len(lig_list):
             raise Exception("Somehow min messed up")
 
         towrite: str = ""
-        for file_ind in range(min, max+1):
+        for file_ind in range(min, max + 1):
             with open(lig_list[file_ind], "r") as f:
                 toadd: str = f.read()
-                if(toadd.endswith("\n")):
+                if toadd.endswith("\n"):
                     towrite = towrite + toadd
                 else:
                     towrite = towrite + toadd + "\n"
@@ -57,14 +57,11 @@ def main(lig_inp_dir: Path, lig_op_dir: Path, n_sdf: int):
             f.write(towrite)
 
 
-
-
-
 if __name__ == "__main__":
     # inputs
-    lig_inp_dir: Path = Path("/ihome/jdurrant/nag81/PSMa1/Initial_Dock/Gypsum_Files").resolve()
+    lig_inp_dir: Path = Path(
+        "/ihome/jdurrant/nag81/PSMa1/Initial_Dock/Gypsum_Files"
+    ).resolve()
     lig_op_dir: Path = Path(DIR_SCRIPT / ".." / "data" / "concat_lig").resolve()
-    
+
     main(lig_inp_dir, lig_op_dir, 30)
-
-
