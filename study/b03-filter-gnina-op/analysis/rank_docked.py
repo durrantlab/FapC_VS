@@ -1,5 +1,4 @@
 import csv
-from locale import str
 from pathlib import Path
 
 DIR_SCRIPT: Path = Path(__file__).parent.resolve()
@@ -7,8 +6,9 @@ DIR_STUDY: Path = Path(DIR_SCRIPT / ".." / "..").resolve()
 
 
 def main(docked_dir: Path, csv_op_file: Path):
-    """Will take in all docked molecules (recursively) in a directory, determine the best pose
-    for each and store the score. Will then order on score. Places order in a csv
+    """Will take in all docked molecules (recursively) in a directory, determine 
+    the best pose for each and store the score. Will then order on score. 
+    Places order in a csv
 
     Args:
         docked_dir: Where all the docked molecules are stored
@@ -98,7 +98,8 @@ def extract_pose_data(pose: str) -> tuple[str, float]:
     name: str = lines[0].strip()
 
     substring: str = "<CNN_VS>"
-    index_cnn: int = next((i for i, s in enumerate(lines) if substring in s), -1) + 1
+    index_cnn: int = next((i for i, s in enumerate(lines) if substring in s), 
+                          -1) + 1
     cnn_vs: float = float(lines[index_cnn].strip())
 
     return name, cnn_vs
