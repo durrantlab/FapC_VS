@@ -59,7 +59,7 @@ plugins:
   - material-plausible
   - gen-files:
       scripts:
-        - docs/gen_ref_pages.py
+        - study/gen_ref_pages.py
   - mkdocstrings:
       handlers:
         python:
