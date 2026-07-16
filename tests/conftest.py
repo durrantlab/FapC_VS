@@ -2,7 +2,7 @@ import os
 
 import pytest
 
-from FapC_VS import enable_logging
+from fapc import enable_logging
 
 TEST_DIR = os.path.dirname(__file__)
 
