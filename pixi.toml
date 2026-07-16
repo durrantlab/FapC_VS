@@ -1,5 +1,4 @@
 [workspace]
-[workspace]
 authors = [
     "FapC_VS <ian.herzogpohl@gmail.com>",
 ]
@@ -15,9 +14,6 @@ readme = "README.md"
 FapC_VS = { path = ".", editable = true }
 gypsum-dl = ">=1.2.7, <2"
 
-[system-requirements]
-linux = "3.10.0"
-libc = { family="glibc", version="2.17"}
 
 [environments]
 dev = ["dev"]
