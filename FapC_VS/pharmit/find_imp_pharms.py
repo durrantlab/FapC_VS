@@ -15,7 +15,7 @@ PROLIF_TO_PHARMACOPHORE = {
     "Anionic": "NegativeIon",
 }
 
-def make_log_dir(FILE_LOG: Path):
+def make_log_dir(FILE_LOG: Path) -> None:
     if not FILE_LOG.parent.is_dir():
         FILE_LOG.parent.mkdir(parents=True, exist_ok=True)
 
@@ -119,15 +119,6 @@ def log_pharms(mol_index: int, valid_pharms: list[bool]):
         logging.info(f"Mol{mol_index} has {bool_count} pharms")
     else:
         logging.warning(f"Mol{mol_index} has {bool_count} pharms. Check manually")
-
-PROLIF_TO_PHARMACOPHORE = {
-    "Hydrophobic": "Hydrophobic",
-    "HBDonor": "HydrogenDonor",
-    "HBAcceptor": "HydrogenAcceptor",
-    "PiStacking": "Aromatic",
-    "Cationic": "PositiveIon",
-    "Anionic": "NegativeIon",
-}
 
 
 def update_pharm(mol_pharm: dict, valid_pharms: list[bool]) -> dict:
