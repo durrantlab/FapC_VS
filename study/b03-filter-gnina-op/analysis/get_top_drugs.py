@@ -5,7 +5,7 @@ DIR_SCRIPT: Path = Path(__file__).parent.resolve()
 DIR_STUDY: Path = Path(DIR_SCRIPT / ".." / "..").resolve()
 
 
-def main(docked_dir: Path, csv_rank_file: Path, best_drugs_dir: Path, num_best: int):
+def main(docked_dir: Path, csv_rank_file: Path, best_drugs_dir: Path, num_best: int) -> None:
     """Will take in the best drugs csv, and for each region (box) it will
     find the top X best. It will output them into a csv and give the SDFs
     seperately
