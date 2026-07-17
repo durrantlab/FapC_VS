@@ -19,7 +19,7 @@ def main(
     pharmit_output_dir: Path,
     temp_dir: Path,
     max_mol: int,
-):
+) -> None:
     iterative_pharm.main(
         pharm_list_file, pharm_db_dir, pharmit_output_dir, temp_dir, max_mol
     )

@@ -1,16 +1,14 @@
 import sys
 from pathlib import Path
-
-DIR_SCRIPT: Path = Path(__file__).parent.resolve()
-DIR_STUDY: Path = Path(DIR_SCRIPT / ".." / "..").resolve()
-
 from rdkit import Chem, RDLogger
 from rdkit.Chem import AllChem
 
 RDLogger.DisableLog("rdApp.warning")
+DIR_SCRIPT: Path = Path(__file__).parent.resolve()
+DIR_STUDY: Path = Path(DIR_SCRIPT / ".." / "..").resolve()
 
 
-def main(curr_db_dir: Path, fixed_db_dir: Path):
+def main(curr_db_dir: Path, fixed_db_dir: Path) -> None:
     # go through each molecule in curr DB
     db_sdf_list: list[Path] = [
         item

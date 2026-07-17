@@ -18,4 +18,4 @@ ARGS=$(awk -v line=$((SLURM_ARRAY_TASK_ID + 1)) 'NR == line {print $0}' "job_lis
 LOG="${OUT%.sdf}.log"
 echo "Done!"
 
-bash -c "pixi run -e pharmit pharmit dbcreate $ARGS" | tee "$LOG"
+pixi run -e pharmit pharmit dbcreate $ARGS | tee "$LOG"

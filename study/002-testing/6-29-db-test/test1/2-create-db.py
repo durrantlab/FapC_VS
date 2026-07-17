@@ -13,15 +13,13 @@ sys.path.insert(0, str(LIB_PATH))
 import setup_dbcreate
 
 
-def main(sdf_db_path: Path, db_main_path: Path, skip_file_format: bool = False):
+def main(sdf_db_path: Path, db_main_path: Path, skip_file_format: bool = False) -> None:
     setup_dbcreate.main(sdf_db_path, db_main_path, skip_file_format, DIR_SCRIPT)
 
 
 if __name__ == "__main__":
     # inputs
     sdf_db_path: Path = Path(DIR_SCRIPT / "db_mols_fixed").resolve()
-    # sdf_db_path: Path = Path("F:\\FapC_VS\\study\\032-create-pharm-db\\data\\").resolve() # for testing
-    # db_main_path: Path = (DIR_SCRIPT / ".." / "data" / "DB").resolve()
     db_main_path: Path = Path(DIR_SCRIPT / "DB").resolve()
 
     main(sdf_db_path, db_main_path, True)
