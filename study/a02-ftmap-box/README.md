@@ -5,6 +5,33 @@ Goal: determine docking boxes using FTMap.
 
 ## Data
 9nqd.fftmap.output.pdb: PDB output from FTMap with docked molecules
+<script>
+document.addEventListener(
+    'DOMContentLoaded',
+    (event) => {
+        const viewer = molstar.Viewer.create(
+            'Top-Structure-view',
+            {
+                layoutIsExpanded: false,
+                layoutShowControls: false,
+                layoutShowRemoteState: false,
+                layoutShowSequence: true,
+                layoutShowLog: false,
+                layoutShowLeftPanel: false,
+                viewportShowExpand: true,
+                viewportShowSelectionMode: true,
+                viewportShowAnimation: false,
+                pdbProvider: 'rcsb',
+            }
+        ).then(viewer => {
+            viewer.loadStructureFromUrl(
+                "data/9nqd.fftmap.output.pdb",
+                "pdb"
+            );
+        });
+    }
+);
+</script>
 9nqd.fftmap.cleared.pdb: PDB output from FTMap, docked molecules removed. Same as input
 box/region_#.txt: each box output from FTMap. Has format required for GNINA
 

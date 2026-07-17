@@ -1,16 +1,9 @@
 import sys
 from pathlib import Path
+from FapC_VS.pharmit import iterative_pharm
 
 DIR_SCRIPT: Path = Path(__file__).parent.resolve()
 DIR_STUDY: Path = Path(DIR_SCRIPT / ".." / "..").resolve()
-
-
-# add the parent directory to the import search path
-LIB_PATH: Path = (
-    Path(__file__) / ".." / ".." / ".." / ".." / "c04-pharm-search-top-div" / "analysis"
-).resolve()
-sys.path.insert(0, str(LIB_PATH))
-import iterative_pharm
 
 
 def main(

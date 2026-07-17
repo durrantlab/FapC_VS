@@ -1,13 +1,5 @@
-set ambient, 0.25
-set cartoon_transparency, 0.35
-set field_of_view 20
-set cartoon_discrete_colours, on
-set antialias, 4
+@load_fapc.pml
 
-
-delete all
-load D:\\FapC_VS\\study\\a01-base-data\\data\\9NQD.cif
-dss
 
 select single, chain 3
 select entire, all
