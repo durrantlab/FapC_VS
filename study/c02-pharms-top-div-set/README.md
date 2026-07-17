@@ -5,15 +5,11 @@ Goal: find the pharmacophores of the most successful dockers of the diversity se
 - Outputs: each region’s top molecule of diversity sets pharmacophores in a concated JSON format. Name: /region_#_concat.json
 
 ## How To Use:
-1) Setup pharmit
-- Create pharmit environment with pharmit feature: pixi workspace environment add pharmit --feature pharmit
-- Add pharmit to pixi: pixi add https://github.com/durrantlab/pharmit-dl/releases/download/v0.1.2/pharmit-0.1.2-hb0f4dca_0.conda --feature pharmit --platform linux-64
- - Adds it to the pharmit feature and only for linux-64 https://github.com/durrantlab/pharmit-dl
-2) Create slurm script that will run pharmacophore extraction script
+1) Create slurm script that will run pharmacophore extraction script
 - All inside create_pharm_get_inp
 - Check that it points to where top div set molecules are located, and the data of this section
 - Run it with pixi
-3) Run the generated slurm
+2) Run the generated slurm
 - sbatch get_pharms.slurm
 - Info on Pharmit: https://github.com/dkoes/pharmit/tree/master 
 
