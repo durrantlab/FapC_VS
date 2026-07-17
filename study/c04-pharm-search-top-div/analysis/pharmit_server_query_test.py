@@ -1,7 +1,8 @@
+
 import argparse
 from pathlib import Path
-
 from FapC_VS.pharmit import pharmit_server_query
+
 DIR_SCRIPT: Path = Path(__file__).parent.resolve()
 DIR_STUDY: Path = Path(DIR_SCRIPT / ".." / "..").resolve()
 
@@ -9,7 +10,7 @@ DIR_STUDY: Path = Path(DIR_SCRIPT / ".." / "..").resolve()
 if __name__ == "__main__":
     query_path: Path = (
         DIR_STUDY
-        / "031-validate-pharm-top-div"
+        / "c03-validate-pharm-top-div"
         / "data"
         / "region_1"
         / "reg_1_mol1_base_input.json"

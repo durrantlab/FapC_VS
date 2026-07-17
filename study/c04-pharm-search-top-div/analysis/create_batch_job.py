@@ -1,11 +1,10 @@
+
 import shutil
 import sys
 from pathlib import Path
 
 DIR_SCRIPT: Path = Path(__file__).parent.resolve()
 DIR_STUDY: Path = Path(DIR_SCRIPT / ".." / "..").resolve()
-
-sys.path.insert(0, str((DIR_STUDY / "031-validate-pharm-top-div").resolve()))
 
 
 def main(
@@ -91,7 +90,7 @@ def main(
 if __name__ == "__main__":
     # inputs
     disabled_pharmit_dir: Path = (
-        DIR_STUDY / "031-validate-pharm-top-div" / "data" / "visual_inspect"
+        DIR_STUDY / "c03-validate-pharm-top-div" / "data" / "visual_inspect"
     ).resolve()
     pharmit_output_dir: Path = (DIR_SCRIPT / ".." / "data" / "search_output").resolve()
 

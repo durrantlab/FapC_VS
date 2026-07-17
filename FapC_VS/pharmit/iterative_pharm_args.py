@@ -7,7 +7,7 @@ def main(DIR_STUDY: Path, DIR_SCRIPT: Path, region_def: str, mol_num_def: str):
     )
     pharm_list_file: Path = (
         DIR_STUDY
-        / "031-validate-pharm-top-div"
+        / "c03-validate-pharm-top-div"
         / "data"
         / region_def
         / f"mol{mol_num_def}_input.json"
