@@ -82,6 +82,9 @@ def main(docked_ligands_dir: Path, protein_file: Path,
 
         df: df = fp.to_dataframe(index_col="Pose")
         df_list: list[list] = [df.columns.tolist()] + df.to_numpy().tolist()
+        #why make a dataframe here? just process it directly
+        #you turn it into a df then numpy array then a list
+        #i think fp is a numpy array so you should be able to just do
 
         for mol_indx in range(len(df_list[1:])):
             act_indx = mol_indx + 1
@@ -100,6 +103,7 @@ def main(docked_ligands_dir: Path, protein_file: Path,
         csv_op: Path = (
             op_dir / f"{'_'.join(div_sdf.stem.split('_')[0:2])}_interacts.csv"
         ).resolve()
+        #maybe this is a good use case for you to just append the prolif interaction results from here to the df from earlier and simplify this then save it as a csv
         with open(csv_op, "w") as f:
             # add in headers
             headers: list[list] = [list(row) for row in zip(*df_list[0])]
