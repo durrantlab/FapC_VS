@@ -6,9 +6,8 @@ set antialias, 4
 
 
 delete all
-load D:\\FapC_VS\\study\\001-base-data\\data\\9NQD.cif
-load D:\\FapC_VS\\study\\025-filter-gnina-op\\data\\best_drugs\\region_1\\r01_F3382-4604.sdf
-dss
+@load_protein.pml
+load ../data/best_drugs/region_1/r01_F3382-4604.sdf
 
 select entire, all and not chain 3 and not chain 4
 select mol, object r01_F3382-4604
