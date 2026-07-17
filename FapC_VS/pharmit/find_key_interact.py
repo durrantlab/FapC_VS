@@ -12,7 +12,8 @@ warnings.filterwarnings("ignore", category=DeprecationWarning)
 warnings.filterwarnings("ignore", category=UserWarning)
 
 
-def main(docked_ligands_dir: Path, protein_file: Path, op_dir: Path):
+def main(docked_ligands_dir: Path, protein_file: Path, 
+    op_dir: Path) -> None:
     """Will take in number of SDF files and a protein file and determine
     the interactions present for each ligand
 
