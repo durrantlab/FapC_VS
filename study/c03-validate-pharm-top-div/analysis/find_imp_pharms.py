@@ -10,11 +10,11 @@ FILE_LOG: Path = (
 
 if __name__ == "__main__":
     # base files
-    interaction_csv_dir: Path = (DIR_STUDY / "027-key-top-div-inter" / "data").resolve()
+    interaction_csv_dir: Path = (DIR_STUDY / "c01-key-top-div-inter" / "data").resolve()
     docked_sdfs: Path = (
-        DIR_STUDY / "025-filter-gnina-op" / "data" / "best_drugs"
+        DIR_STUDY / "b03-filter-gnina-op" / "data" / "best_drugs"
     ).resolve()
-    pharm_json_dir: Path = (DIR_STUDY / "028-pharms-top-div-set" / "data").resolve()
+    pharm_json_dir: Path = (DIR_STUDY / "c02-pharms-top-div-set" / "data").resolve()
     op_dir: Path = (DIR_SCRIPT / ".." / "data").resolve()
 
     # extract regions
