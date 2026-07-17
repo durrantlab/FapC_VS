@@ -5,7 +5,7 @@ authors = [
 channels = ["conda-forge", "bioconda"]
 name = "FapC_VS"
 description = "test"
-platforms = ["win-64", {platform = "linux-64", glibc="2.17"},  "osx-64"]
+platforms = ["win-64", "linux-64",  "osx-64"]
 version = "0.0.0"
 license = "Apache-2.0"
 readme = "README.md"
