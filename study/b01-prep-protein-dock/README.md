@@ -1,17 +1,14 @@
 
 # b01-prep-protein-dock
-Goal: Setup the protein for docking with reduce library
+Goal: Setup the protein for docking with [reduce](https://github.com/rlabduke/reduce)
 - Input: each molecule with a separate SDF, setup with hydrogens and different conforms
 - Output: organized by region_#/ligs_###.sdf, where each SDF has many molecules / conforms inside and are docked / scored. Each molecule is present in each region folder. Number of SDFs in each region specified.
 
 ## How To Use:
-1) Add reduce to Pixi environment
-- Add bioconda to channel: pixi workspace channel add bioconda
-- Install only for linux: pixi add reduce --platform linux-64
-2) Setup protonate.sh
+1) Setup protonate.sh
 - Make sure that PDB_inp points to the cleared FTMap
 - Make sure the PDB_op points to this files data folder
-3) Run protonate.sh: 
+2) Run protonate.sh: 
 - Allow script to be run: chmod +x prep_protein.sh
 - Run script: ./prep_protein.sh
 
