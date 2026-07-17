@@ -9,8 +9,10 @@ Goal: determine docking boxes using FTMap.
 box/region_#.txt: each box output from FTMap. Has format required for GNINA
 
 ## Figures
-boxes_highlighted.pml: protein with highlighted boxes
+boxes_highlighted.pml: protein with highlighted boxes.
 no_boxes.pml: protein without boxes
 
 ## Visualization
-boxes_highlighted.pse: pymol session with the boxes present
+boxes_highlighted.pml: sets up seesion with boxes present
+    All .pml scripts point to 9nqd.fftmap.cleared.pdb in data
+

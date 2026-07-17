@@ -5,7 +5,7 @@ set cartoon_discrete_colours, on
 set antialias, 4
 
 delete all
-load F:\\FapC_VS\\study\\021-ftmap-box\\data\\9nqd.fftmap.cleared.pdb
+load ../data/9nqd.fftmap.cleared.pdb
 dss
 
 select entire, all
