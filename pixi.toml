@@ -11,7 +11,7 @@ license = "Apache-2.0"
 readme = "README.md"
 
 [pypi-dependencies]
-FapC_VS = { path = ".", editable = true }
+fapc = { path = ".", editable = true }
 gypsum-dl = ">=1.2.7, <2"
 
 
