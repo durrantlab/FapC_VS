@@ -1,5 +1,5 @@
 
-# 066-pharm-search-exp-set
+# e04-pharm-search-exp-set
 Goal: find the 5000 most similar molecules to each molecule of experimental set
 - Inputs: a folder where each molecule has a separate input json where non-important pharms are disabled
 - Outputs: many similar molecules for each molecule in top div set. Each molecule will have an SDF with it’s similar molecules, and csv file of the best molecules. Both ranked with rmsd. /mol#.csv and /mol#.sdf/

@@ -1,5 +1,5 @@
 
-# 061-filter-gnina-op-pharm-div
+# d03-filter-gnina-op
 Goal: Go through each docked molecule and find best pose. Then order from best to worst
 - Input: Docked molecules in large SDF files with CNN_VS scores listed from gnina. Organized /region_#/mol#/group_#.sdf
 - Output: the best overall molecules all in separate SDFs, a concatenated SDF, and a CSV

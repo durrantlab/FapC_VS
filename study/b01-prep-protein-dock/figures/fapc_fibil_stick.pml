@@ -6,7 +6,7 @@ set antialias, 4
 
 
 delete all
-load D:\\FapC_VS\\study\\023-prep-protein-dock\\data\\9nqd_protonated.pdb
+load D:\\FapC_VS\\study\\b01-prep-protein-dock\\data\\9nqd_protonated.pdb
 dss
 
 select single, chain A

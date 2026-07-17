@@ -1,5 +1,5 @@
 
-# 062-key-exp-inter
+# e01-key-exp-inter
 Goal: for each experimentally determined molecule, determine the interactions present between it and the protein
 - Inputs: top molecules from pharm search docking (SDF(s) in a directory), protonated PDB
 - Outputs: 1 csv report that holds each molecules residue interaction / types. It stores false if no interaction present in that molecule, or . separated list of atom indices in ligand

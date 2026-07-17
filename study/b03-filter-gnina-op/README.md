@@ -1,5 +1,5 @@
 
-# 025-filter-gnina-op
+# b03-filter-gnina-op
 Goal: Go through all SDF files and find best pose (based on CNN_VS) for each molecule. Then for each region, find top 10 molecules from best to worst
 - Input: Docked molecules in large SDF files with CNN_VS scores listed from gnina. Organized /region_#/ligs_##.sdf
 - Output: CSV that holds best variant of each molecule (across regions and poses), ordered best to worst. The best molecules for each region all in separate SDFs, a concat SDF, and a CSV.

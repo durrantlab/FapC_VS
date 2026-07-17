@@ -6,18 +6,18 @@ set antialias, 4
 
 
 delete all
-load F:\\FapC_VS\\study\\023-prep-protein-dock\\data\\9nqd_protonated.pdb
-load F:\\FapC_VS\\study\\025-filter-gnina-op\\data\\best_drugs\\region_1\\r01_F3382-4604.sdf
-load F:\\FapC_VS\\study\\025-filter-gnina-op\\data\\best_drugs\\region_1\\r03_F5231-0075.sdf
-load F:\\FapC_VS\\study\\025-filter-gnina-op\\data\\best_drugs\\region_1\\r08_F3165-1168.sdf
+load F:\\FapC_VS\\study\\b01-prep-protein-dock\\data\\9nqd_protonated.pdb
+load F:\\FapC_VS\\study\\b03-filter-gnina-op\\data\\best_drugs\\region_1\\r01_F3382-4604.sdf
+load F:\\FapC_VS\\study\\b03-filter-gnina-op\\data\\best_drugs\\region_1\\r03_F5231-0075.sdf
+load F:\\FapC_VS\\study\\b03-filter-gnina-op\\data\\best_drugs\\region_1\\r08_F3165-1168.sdf
 
-load F:\\FapC_VS\\study\\025-filter-gnina-op\\data\\best_drugs\\region_2\\r00_F3394-0291.sdf
-load F:\\FapC_VS\\study\\025-filter-gnina-op\\data\\best_drugs\\region_2\\r07_F3394-0637.sdf
-load F:\\FapC_VS\\study\\025-filter-gnina-op\\data\\best_drugs\\region_2\\r09_F0192-0171.sdf
+load F:\\FapC_VS\\study\\b03-filter-gnina-op\\data\\best_drugs\\region_2\\r00_F3394-0291.sdf
+load F:\\FapC_VS\\study\\b03-filter-gnina-op\\data\\best_drugs\\region_2\\r07_F3394-0637.sdf
+load F:\\FapC_VS\\study\\b03-filter-gnina-op\\data\\best_drugs\\region_2\\r09_F0192-0171.sdf
 
-load F:\\FapC_VS\\study\\025-filter-gnina-op\\data\\best_drugs\\region_3\\r00_F5012-0253.sdf
-load F:\\FapC_VS\\study\\025-filter-gnina-op\\data\\best_drugs\\region_3\\r04_F8887-2343.sdf
-load F:\\FapC_VS\\study\\025-filter-gnina-op\\data\\best_drugs\\region_3\\r09_F3407-0812.sdf
+load F:\\FapC_VS\\study\\b03-filter-gnina-op\\data\\best_drugs\\region_3\\r00_F5012-0253.sdf
+load F:\\FapC_VS\\study\\b03-filter-gnina-op\\data\\best_drugs\\region_3\\r04_F8887-2343.sdf
+load F:\\FapC_VS\\study\\b03-filter-gnina-op\\data\\best_drugs\\region_3\\r09_F3407-0812.sdf
 
 
 dss

@@ -1,5 +1,5 @@
 
-# 024-dock-div-set
+# b02-dock-div-set
 Goal: dock the diversity set with GNINA
 - Input: each molecule with a separate SDF, setup with hydrogens and different conforms
 - Output: many SDFs with the same molecules in them, but now they are moved to be in docked location and hold data about the scoring inside the SDF

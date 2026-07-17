@@ -130,7 +130,7 @@ def sdf_set_size_split(
 if __name__ == "__main__":
     # inputs
     sdf_input_dir: Path = (
-        DIR_STUDY / "033-pharm-search-top-div" / "data" / "search_output"
+        DIR_STUDY / "c04-pharm-search-top-div" / "data" / "search_output"
     )
     """Where input SDFs are. Will search recursively through iles for all .sdfs"""
     split_sdf_dir: Path = DIR_SCRIPT / ".." / "data" / "split_sdf"

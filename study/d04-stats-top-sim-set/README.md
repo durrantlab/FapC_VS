@@ -1,5 +1,5 @@
 
-# 065-stats-top-sim-set
+# d04-stats-top-sim-set
 Goal: determine statistics of the top compounds of the similar to top diversity set. Then do visual inspection of top dockers.
 - Inputs: concat SDF of the top compounds
 - Outputs: csv with each compounds statistics. Csv index aligns with align in SDF

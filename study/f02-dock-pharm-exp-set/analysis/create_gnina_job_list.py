@@ -104,15 +104,15 @@ def clean_up_sdf(sdf_file: Path, op_file: Path) -> str:
 if __name__ == "__main__":
     # imports
     lig_inp_dir = Path(
-        DIR_STUDY / "067-setup-pharm-exp-set" / "data" / "output_sdf"
+        DIR_STUDY / "f01-setup-pharm-exp-set" / "data" / "output_sdf"
     ).resolve()
     """The overall folder holding all setup ligands. Folder should have structure of:
     /mol#/group_#/output.sdf"""
-    box_dirs = Path(DIR_STUDY / "021-ftmap-box" / "data" / "box").resolve()
+    box_dirs = Path(DIR_STUDY / "a02-ftmap-box" / "data" / "box").resolve()
     """Folder that holds all the docking boxes. Should have all boxes stored in this directory
     in a .txt file."""
     pdb_dir = Path(
-        DIR_STUDY / "023-prep-protein-dock" / "data" / "9nqd_protonated.pdb"
+        DIR_STUDY / "b01-prep-protein-dock" / "data" / "9nqd_protonated.pdb"
     ).resolve()
     """where the PDB is held"""
     cleaned_dir = Path(DIR_SCRIPT / ".." / "data" / "cleaned_compounds").resolve()

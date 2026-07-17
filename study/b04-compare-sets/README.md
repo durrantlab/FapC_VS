@@ -1,5 +1,5 @@
 
-# 026-compare-sets
+# b04-compare-sets
 Goal: take top 100 results from diversity set scoring. Use tanimoto coefficients to determine similarity. If similar, then go further with experimental set.
 - Inputs: top SDF outputs from div set scoring in separate SDFs, experimental SDFs all in one together
 - Outputs: report about top tanimoto similarity of each experimental saying which it is closest to, prints images of experimental molecules / similar to 

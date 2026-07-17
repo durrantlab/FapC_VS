@@ -48,13 +48,13 @@ def main(lig_inp_dir: Path, box_dirs: Path, pdb_dir: Path, output_dir: Path):
 
 if __name__ == "__main__":
     # imports
-    lig_inp_dir = Path(DIR_STUDY / "024-dock-div-set" / "data" / "concat_lig").resolve()
-    box_dirs = Path(DIR_STUDY / "021-ftmap-box" / "data" / "box").resolve()
+    lig_inp_dir = Path(DIR_STUDY / "b02-dock-div-set" / "data" / "concat_lig").resolve()
+    box_dirs = Path(DIR_STUDY / "a02-ftmap-box" / "data" / "box").resolve()
     pdb_dir = Path(
-        DIR_STUDY / "023-prep-protein-dock" / "data" / "9nqd_protonated.pdb"
+        DIR_STUDY / "b01-prep-protein-dock" / "data" / "9nqd_protonated.pdb"
     ).resolve()
     output_dir = Path(
-        DIR_STUDY / "024-dock-div-set" / "data" / "docked_compounds"
+        DIR_STUDY / "b02-dock-div-set" / "data" / "docked_compounds"
     ).resolve()
 
     main(lig_inp_dir, box_dirs, pdb_dir, output_dir)

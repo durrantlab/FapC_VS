@@ -6,8 +6,8 @@ set antialias, 4
 
 
 delete all
-load D:\\FapC_VS\\study\\001-base-data\\data\\9NQD.cif
-load D:\\FapC_VS\\study\\025-filter-gnina-op\\data\\best_drugs\\region_1\\r00_F0608-0624.sdf
+load D:\\FapC_VS\\study\\a01-base-data\\data\\9NQD.cif
+load D:\\FapC_VS\\study\\b03-filter-gnina-op\\data\\best_drugs\\region_1\\r00_F0608-0624.sdf
 dss
 
 select entire, all and not chain 3 and not chain 4

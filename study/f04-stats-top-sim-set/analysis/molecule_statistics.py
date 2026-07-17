@@ -8,27 +8,27 @@ FILE_LOG: Path = (
 ).resolve()
 
 # add the directory of script to path
-sys.path.insert(0, str((DIR_STUDY / "065-stats-top-sim-set" / "analysis").resolve()))
+sys.path.insert(0, str((DIR_STUDY / "d04-stats-top-sim-set" / "analysis").resolve()))
 import molecule_statistics
 
 if __name__ == "__main__":
     # inputs
     sdf_file: Path = (
         DIR_STUDY
-        / "069-filter-gnina-op-pharm-exp"
+        / "f03-filter-gnina-op-pharm-exp"
         / "data"
         / "best_drugs"
         / "overall_concat.sdf"
     ).resolve()
     csv_rank_file: Path = (
         DIR_STUDY
-        / "069-filter-gnina-op-pharm-exp"
+        / "f03-filter-gnina-op-pharm-exp"
         / "data"
         / "best_drugs"
         / "overall_best.csv"
     ).resolve()
     models_dir: Path = (
-        DIR_STUDY / "065-stats-top-sim-set" / "analysis" / "models"
+        DIR_STUDY / "d04-stats-top-sim-set" / "analysis" / "models"
     ).resolve()
     csv_file: Path = (DIR_SCRIPT / ".." / "data" / "top_dock_stats.csv").resolve()
     molecule_statistics.main(sdf_file, csv_rank_file, models_dir, csv_file)

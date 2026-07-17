@@ -6,7 +6,7 @@ set antialias, 4
 
 
 delete all
-load D:\\FapC_VS\\study\\001-base-data\\data\\9NQD.cif
+load D:\\FapC_VS\\study\\a01-base-data\\data\\9NQD.cif
 dss
 
 select single, chain 3

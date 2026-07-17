@@ -1,5 +1,5 @@
 
-# 031-validate-pharm0top-div
+# c03-validate-pharm-top-div
 Goal: determine which pharmacophores are actually interacting in each docked molecule
 - Inputs: csvs that list all interactions for each molecule in each region, top diversity set (concat SDF, 1 for each region), each molecules list of pharmacophores (concat JSON, 1 for each region)
 - Outputs: each molecule with a separate input json where non-important pharms are disabled

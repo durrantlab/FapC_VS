@@ -102,7 +102,7 @@ def extract_molecule(drug: list, docked_dir: Path) -> str:
 if __name__ == "__main__":
     # inputs
     docked_dir: Path = Path(
-        DIR_STUDY / "051-dock-pharm-div-set" / "data" / "docked_compounds"
+        DIR_STUDY / "d02-dock-pharm-div-set" / "data" / "docked_compounds"
     )
     csv_rank_file: Path = Path(
         DIR_STUDY / "061-filter-gnina-op" / "data" / "ranked_docked_mols.csv"

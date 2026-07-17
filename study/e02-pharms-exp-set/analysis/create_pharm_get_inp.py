@@ -54,7 +54,7 @@ def main(top_div_set_dir: Path, output_dir: Path):
 
 if __name__ == "__main__":
     # inputs
-    top_div_set_dir: Path = (DIR_STUDY / "026-compare-sets" / "data").resolve()
+    top_div_set_dir: Path = (DIR_STUDY / "b04-compare-sets" / "data").resolve()
     output_dir: Path = (DIR_SCRIPT / ".." / "data").resolve()
 
     main(top_div_set_dir, output_dir)

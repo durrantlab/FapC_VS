@@ -108,10 +108,10 @@ def extract_pose_data(pose: str) -> tuple[str, float]:
 if __name__ == "__main__":
     # inputs
     docked_dir: Path = Path(
-        DIR_STUDY / "024-dock-div-set" / "data" / "docked_compounds"
+        DIR_STUDY / "b02-dock-div-set" / "data" / "docked_compounds"
     )
     csv_op_file: Path = Path(
-        DIR_STUDY / "025-filter-gnina-op" / "data" / "ranked_docked_mols.csv"
+        DIR_STUDY / "b03-filter-gnina-op" / "data" / "ranked_docked_mols.csv"
     )
 
     main(docked_dir, csv_op_file)

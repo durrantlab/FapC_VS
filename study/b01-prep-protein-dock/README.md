@@ -1,5 +1,5 @@
 
-# 023-prep-protein-dock
+# b01-prep-protein-dock
 Goal: Setup the protein for docking with reduce library
 - Input: each molecule with a separate SDF, setup with hydrogens and different conforms
 - Output: organized by region_#/ligs_###.sdf, where each SDF has many molecules / conforms inside and are docked / scored. Each molecule is present in each region folder. Number of SDFs in each region specified.

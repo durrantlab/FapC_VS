@@ -1,5 +1,5 @@
 
-# 028-pharms-top-div-set
+# c02-pharms-top-div-set
 Goal: find the pharmacophores of the most successful dockers of the diversity set
 - Inputs: top div set for each region (concat SDFs, format of region_#_concat.sdf in dir together), protonated PDB
 - Outputs: each region’s top molecule of diversity sets pharmacophores in a concated JSON format. Name: /region_#_concat.json

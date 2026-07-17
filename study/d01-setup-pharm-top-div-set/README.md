@@ -1,5 +1,5 @@
 
-# 041-setup-pharm-top-div-set
+# d01-setup-pharm-top-div-set
 Goal: take the set of molecules similar to top diversity set and set them up with gypsum.
 - Input: many similar molecules for each molecule in top div set. Each region will have a folder that holds SDFs of similar molecules for each molecule. (region#/mol#.sdf)
 - Output: each molecule’s list of similar molecules, split into chunks of 250 (called groups) and be setup with gypsum. (region#/mol#/group#/[].sdf)

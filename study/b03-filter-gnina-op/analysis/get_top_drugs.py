@@ -28,9 +28,7 @@ def main(docked_dir: Path, csv_rank_file: Path, best_drugs_dir: Path, num_best: 
     # get all regions
     regions: list[str] = [p.name for p in docked_dir.iterdir() if p.is_dir()]
 
-    best_drugs: dict[str, list] = {}
-    for region in regions:
-        best_drugs[region] = []
+    best_drugs: dict[str, list] = {region: [] for region in regions} 
 
     # get the best molecules in each region
     for molecule in ranking:
@@ -114,11 +112,11 @@ def extract_molecule(drug: list, docked_dir: Path) -> str:
 if __name__ == "__main__":
     # inputs
     docked_dir: Path = Path(
-        DIR_STUDY / "024-dock-div-set" / "data" / "docked_compounds"
+        DIR_STUDY / "b02-dock-div-set" / "data" / "docked_compounds"
     )
     csv_rank_file: Path = Path(
-        DIR_STUDY / "025-filter-gnina-op" / "data" / "ranked_docked_mols.csv"
+        DIR_STUDY / "b03-filter-gnina-op" / "data" / "ranked_docked_mols.csv"
     )
-    best_drugs: Path = Path(DIR_STUDY / "025-filter-gnina-op" / "data" / "best_drugs")
+    best_drugs: Path = Path(DIR_STUDY / "b03-filter-gnina-op" / "data" / "best_drugs")
 
     main(docked_dir, csv_rank_file, best_drugs, 10)

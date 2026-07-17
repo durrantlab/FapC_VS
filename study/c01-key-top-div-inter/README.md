@@ -1,5 +1,5 @@
 
-# 027-key-top-div-inter
+# c01-key-top-div-inter
 Goal: for each ligand, determine the interactions present between it and the protein
 - Inputs: top molecules from div set docking (concat SDFs, format of region_#_concat.sdf in dir together), protonated PDB
 - Outputs: each region has a csv report that holds each molecules residue interaction / types. It stores false if no interaction present in that molecule, or . separated list of atom indices in ligand

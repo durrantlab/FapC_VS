@@ -9,10 +9,6 @@ import requests
 
 SERVER = "https://pharmit.csb.pitt.edu/fcgi-bin/pharmitserv.fcgi"
 
-DIR_SCRIPT: Path = Path(__file__).parent.resolve()
-DIR_STUDY: Path = Path(DIR_SCRIPT / ".." / "..").resolve()
-
-
 class PharmitError(RuntimeError):
     pass
 
@@ -316,17 +312,3 @@ def cancel(session: requests.Session, qid: int) -> None:
         pass  # best effort
 
 
-if __name__ == "__main__":
-    query_path: Path = (
-        DIR_STUDY
-        / "031-validate-pharm-top-div"
-        / "data"
-        / "region_1"
-        / "reg_1_mol1_base_input.json"
-    ).resolve()
-    out_path: Path = (
-        DIR_SCRIPT / ".." / "data" / "search_output" / "region_1" / "mol1" / "op.sdf"
-    ).resolve()
-    interval: float = 16.0
-    timeout: float = 600.0
-    run(query_path, out_path, interval, timeout, None)

@@ -55,8 +55,8 @@ def main(top_div_set_dir: Path, output_dir: Path):
 if __name__ == "__main__":
     # inputs
     top_div_set_dir: Path = (
-        DIR_STUDY / "025-filter-gnina-op" / "data" / "best_drugs"
+        DIR_STUDY / "b03-filter-gnina-op" / "data" / "best_drugs"
     ).resolve()
-    output_dir: Path = (DIR_STUDY / "028-pharms-top-div-set" / "data").resolve()
+    output_dir: Path = (DIR_STUDY / "c02-pharms-top-div-set" / "data").resolve()
 
     main(top_div_set_dir, output_dir)

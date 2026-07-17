@@ -1,5 +1,5 @@
 
-# 068-dock-pharm-exp-set
+# f02-dock-pharm-exp-set
 Goal: dock the similar to experimental set
 - Input: SDFs with many molecules (which have many conformers) that are similar to experimental set, setup with hydrogens and different conforms. Organized: mol# / group_# / [].sdf
 - Output: many SDFs with the many different molecules in them, but now they are moved to be in docked location and hold data about the scoring inside the SDF. Organized: mol#/group_#.sdf

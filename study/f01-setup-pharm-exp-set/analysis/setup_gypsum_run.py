@@ -19,7 +19,7 @@ logging.basicConfig(
 
 # add the directory of script to path
 sys.path.insert(
-    0, str((DIR_STUDY / "041-setup-pharm-top-div-set" / "analysis").resolve())
+    0, str((DIR_STUDY / "d01-setup-pharm-top-div-set" / "analysis").resolve())
 )
 import setup_gypsum_run
 
@@ -92,7 +92,7 @@ def main(
 if __name__ == "__main__":
     # inputs
     sdf_input_dir: Path = (
-        DIR_STUDY / "066-pharm-search-exp-set" / "data" / "search_output"
+        DIR_STUDY / "e04-pharm-search-exp-set" / "data" / "search_output"
     )
     """Where input SDFs are. Will search through dir for all .sdfs"""
     split_sdf_dir: Path = DIR_SCRIPT / ".." / "data" / "split_sdf"

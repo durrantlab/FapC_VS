@@ -1,5 +1,5 @@
 
-# 063-pharms-exp-set
+# e02-pharms-exp-set
 Goal: find the pharmacophores of the experimental set
 - Inputs: protonated PDB, experimental set (single SDF with all experimental molecules present)
 - Outputs: each molecule in experimental sets list of pharmacophores, together in a concat JSON

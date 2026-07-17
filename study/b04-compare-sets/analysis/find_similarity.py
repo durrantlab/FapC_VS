@@ -73,9 +73,9 @@ def draw_image(mol, photo_path: Path):
 if __name__ == "__main__":
     # inputs
     top_div_set_dir: Path = Path(
-        DIR_STUDY / "025-filter-gnina-op" / "data" / "best_drugs"
+        DIR_STUDY / "b03-filter-gnina-op" / "data" / "best_drugs"
     )
-    exp_set_file: Path = Path(DIR_STUDY / "026-compare-sets" / "data" / "exp_set.sdf")
-    op_dir: Path = Path(DIR_STUDY / "026-compare-sets" / "data")
+    exp_set_file: Path = Path(DIR_STUDY / "b04-compare-sets" / "data" / "exp_set.sdf")
+    op_dir: Path = Path(DIR_STUDY / "b04-compare-sets" / "data")
 
     main(top_div_set_dir, exp_set_file, op_dir)

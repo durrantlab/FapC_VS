@@ -1,5 +1,5 @@
 
-# 067-setup-pharm-exp-set
+# f01-setup-pharm-exp-set
 Goal: take the set of molecules similar to experimental set and set them up with gypsum.
 - Input: many similar molecules for each molecule in experimental set. Will be a folder with 1 SDF for each experimental molecule. /mol#.sdf
 - Output: a folder for each molecule, has multiple SDFs each with up to 250 molecules setup in it. /mol#/group_#/[].sdf. 20 groups in total (5000/250 = 20)

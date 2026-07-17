@@ -1,4 +1,4 @@
-# 032-create-pharm-db (SECTION SKIPPED)
+# z01-create-pharm-db (SECTION SKIPPED)
 ~~Goal: create a pharmit database so a pharmacophore search can be done on it~~
 
 ## Data

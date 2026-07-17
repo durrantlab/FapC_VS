@@ -12,7 +12,7 @@ import get_top_drugs
 if __name__ == "__main__":
     # inputs
     docked_dir: Path = Path(
-        DIR_STUDY / "068-dock-pharm-exp-set" / "data" / "docked_compounds"
+        DIR_STUDY / "f02-dock-pharm-exp-set" / "data" / "docked_compounds"
     )
     csv_rank_file: Path = Path(DIR_SCRIPT / ".." / "data" / "ranked_docked_mols.csv")
     best_drugs: Path = Path(DIR_SCRIPT / ".." / "data" / "best_drugs")

@@ -7,7 +7,7 @@ DIR_STUDY: Path = Path(DIR_SCRIPT / ".." / "..").resolve()
 
 # add the parent directory to the import search path
 LIB_PATH: Path = (
-    Path(__file__) / ".." / ".." / ".." / ".." / "033-pharm-search-top-div" / "analysis"
+    Path(__file__) / ".." / ".." / ".." / ".." / "c04-pharm-search-top-div" / "analysis"
 ).resolve()
 sys.path.insert(0, str(LIB_PATH))
 import iterative_pharm

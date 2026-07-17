@@ -115,23 +115,23 @@ def clean_up_sdf(sdf_file: Path, op_file: Path) -> str:
 if __name__ == "__main__":
     # imports
     lig_inp_dir = Path(
-        DIR_STUDY / "041-setup-pharm-top-div-set" / "data" / "output_sdf"
+        DIR_STUDY / "d01-setup-pharm-top-div-set" / "data" / "output_sdf"
     ).resolve()
     """The overall folder holding all setup ligands. Folder should have structure of:
     region_#/mol#/group_#/output.sdf"""
-    box_dirs = Path(DIR_STUDY / "021-ftmap-box" / "data" / "box").resolve()
+    box_dirs = Path(DIR_STUDY / "a02-ftmap-box" / "data" / "box").resolve()
     """Folder that holds all the docking boxes. Should have all boxes stored in this directory
     in a .txt file."""
     pdb_dir = Path(
-        DIR_STUDY / "023-prep-protein-dock" / "data" / "9nqd_protonated.pdb"
+        DIR_STUDY / "b01-prep-protein-dock" / "data" / "9nqd_protonated.pdb"
     ).resolve()
     """where the PDB is held"""
     cleaned_dir = Path(
-        DIR_STUDY / "051-dock-pharm-div-set" / "data" / "cleaned_compounds"
+        DIR_STUDY / "d02-dock-pharm-div-set" / "data" / "cleaned_compounds"
     ).resolve()
     """Where the cleaned compounds will be stored. WIll create files if they do not exist."""
     output_dir = Path(
-        DIR_STUDY / "051-dock-pharm-div-set" / "data" / "docked_compounds"
+        DIR_STUDY / "d02-dock-pharm-div-set" / "data" / "docked_compounds"
     ).resolve()
     """Where the docked compounds will be stored. WIll create files if they do not exist."""
 

@@ -1,5 +1,5 @@
 
-# 022-setup-div-set
+# a03-setup-div-set
 Goal: Setup the diversity set for docking
 *This was already run. Data stored in []/PSMa1/Initial_Dock/Gypsum_Files instead of here*
 

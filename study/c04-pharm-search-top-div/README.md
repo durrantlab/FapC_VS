@@ -1,5 +1,5 @@
 
-# 033-pharm-search-top-div
+# c04-pharm-search-top-div
 Goal: find the 2000 most similar molecules to each top molecule of diversity set. Will keep running search removing pharmacophores until all 2000 found.
 - Inputs: each molecule with a separate input json where non-important pharms are disabled
 - Outputs: many similar molecules for each molecule in top div set. Each molecule will concat SDFs of similar molecules, and csv file of the best molecules ranked via rmsd. Organized region_#/mol#.sdf(csv)

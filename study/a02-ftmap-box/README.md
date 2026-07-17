@@ -1,5 +1,5 @@
 
-# 021-FTMap-box
+# a02-ftmap-box
 Goal: determine docking boxes using FTMap.
 *This was all run previously, therefore just holds output from that*
 

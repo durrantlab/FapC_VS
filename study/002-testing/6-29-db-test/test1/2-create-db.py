@@ -7,7 +7,7 @@ DIR_STUDY: Path = Path(DIR_SCRIPT / ".." / "..").resolve()
 
 # add the parent directory to the import search path
 LIB_PATH: Path = (
-    Path(__file__) / ".." / ".." / ".." / ".." / "032-create-pharm-db" / "analysis"
+    Path(__file__) / ".." / ".." / ".." / ".." / "z01-create-pharm-db" / "analysis"
 ).resolve()
 sys.path.insert(0, str(LIB_PATH))
 import setup_dbcreate

@@ -1,5 +1,5 @@
 
-# 064-validate-pharm-exp
+# e03-validate-pharm-exp
 Goal: determine which pharmacophores are actually interacting in each docked molecule 
 - Inputs: csvs that list all interactions for each molecule, experimental set (in concat SDF), each molecules list of pharmacophores (in concat JSON)
 - Outputs: each molecule has a separate input json where non-important pharms are disabled. /mol#_input.json
