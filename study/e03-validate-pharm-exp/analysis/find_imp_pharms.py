@@ -1,5 +1,5 @@
-import sys
 from pathlib import Path
+from FapC_VS.pharmit import find_imp_pharms
 
 DIR_SCRIPT: Path = Path(__file__).parent.resolve()
 DIR_STUDY: Path = (DIR_SCRIPT / ".." / "..").resolve()
@@ -7,20 +7,15 @@ FILE_LOG: Path = (
     DIR_SCRIPT / ".." / "logs" / f"{Path(__file__).name.split('.')[0]}.log"
 ).resolve()
 
-# add the directory of script to path
-sys.path.insert(
-    0, str((DIR_STUDY / "031-validate-pharm-top-div" / "analysis").resolve())
-)
-import find_imp_pharms
 
 if __name__ == "__main__":
     # inputs
-    sdf_path: Path = (DIR_STUDY / "026-compare-sets" / "data" / "exp_set.sdf").resolve()
+    sdf_path: Path = (DIR_STUDY / "b04-compare-sets" / "data" / "exp_set.sdf").resolve()
     csv_path: Path = (
-        DIR_STUDY / "062-key-exp-inter" / "data" / "exp_set_interacts.csv"
+        DIR_STUDY / "e01-key-exp-inter" / "data" / "exp_set_interacts.csv"
     ).resolve()
     pharm_json_path: Path = (
-        DIR_STUDY / "063-pharms-exp-set" / "data" / "exp_set.json"
+        DIR_STUDY / "e02-pharms-exp-set" / "data" / "exp_set.json"
     ).resolve()
     op_pharm_dir: Path = (DIR_SCRIPT / ".." / "data" / "script_output").resolve()
     op_csv_path: Path = DIR_SCRIPT / ".." / "data" / "pharm_disable.csv"
