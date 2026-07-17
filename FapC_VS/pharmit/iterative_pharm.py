@@ -3,7 +3,7 @@ import shutil
 from copy import copy, deepcopy
 from pathlib import Path
 
-import pharmit_server_query
+from . import pharmit_server_query
 
 
 def main(
