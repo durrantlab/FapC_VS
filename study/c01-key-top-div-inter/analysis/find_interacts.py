@@ -1,5 +1,5 @@
 from pathlib import Path
-from fapc.pharmit import find_key_interact
+from FapC_VS.pharmit import find_key_interact
 
 DIR_SCRIPT: Path = Path(__file__).parent.resolve()
 DIR_STUDY: Path = Path(DIR_SCRIPT / ".." / "..").resolve()
