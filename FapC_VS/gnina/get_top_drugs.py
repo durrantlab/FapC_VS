@@ -71,7 +71,6 @@ def concat_sdfs(lig_inp_dir: Path, lig_op_file: Path):
     """
     lig_list: list[Path] = [item for item in lig_inp_dir.iterdir() if item.is_file()]
     lig_list.sort()
-    print(lig_list)
     lig_num: float = len(lig_list)
 
     towrite = ""
