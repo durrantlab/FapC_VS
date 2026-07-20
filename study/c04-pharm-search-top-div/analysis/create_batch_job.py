@@ -1,97 +1,26 @@
 
-import shutil
-import sys
 from pathlib import Path
+from FapC_VS.pharmit import create_batch_iterative_pharm_job
 
 DIR_SCRIPT: Path = Path(__file__).parent.resolve()
 DIR_STUDY: Path = Path(DIR_SCRIPT / ".." / "..").resolve()
 
 
-def main(
-    main_disabled_pharmit_dir: Path,
-    main_pharmit_output_dir: Path,
-    max_ret_mol: int = 2000,
-    DIR_SCRIPT: Path = DIR_SCRIPT,
-):
-    """Will take in pharmits input files and create a slurm to run the iterative pharm script.
-
-    On running pharmit, for each molecule in each region, will find up to 2000 similar molecules, store them in
-    a csv (name is [region_name]/[molecule name].csv) and in an sdf as well (same name, but .sdf)
-
-    Args:
-        disabled_pharmit_dir: where the inputs with disabled pharms based
-            on prolif are stored. Should have sub-dir based on each region, then jsons for
-            each molecule inside that
-        pharmit_output_dir: where final pharmit search inputs will be stored
-            will be placed into folders named after region and name of csv/sdf
-            will be named after molecule
-        max_ret_mol: max number of molecules to be returned per molecule
-    """
-
-    # read in disabled pharmits
-    pharmit_inp_region_dirs: list[Path] = [
-        item
-        for item in main_disabled_pharmit_dir.iterdir()
-        if item.is_dir() and item.name.startswith("region")
-    ]
-    regions: list[str] = []
-    pharmit_input_files = []
-    for pharmit_inp_dir in pharmit_inp_region_dirs:
-        region: str = pharmit_inp_dir.name
-        regions.append(region)
-        pharmit_input_files.extend(
-            [
-                item
-                for item in pharmit_inp_dir.iterdir()
-                if item.is_file() and item.suffix == ".json"
-            ]
-        )
-
-    # create the python inputs
-    pharmit_inputs: list[str] = []
-    for pharmit_json in pharmit_input_files:
-        # setup inputs
-        region: str = pharmit_json.parent.name
-        mol_name: str = pharmit_json.stem.split("_")[0]
-
-        pharm_list_file: Path = pharmit_json
-        sdf_file: Path = (
-            main_pharmit_output_dir / region / f"{mol_name}.sdf"
-        ).resolve()
-        csv_file: Path = (
-            main_pharmit_output_dir / region / f"{mol_name}.csv"
-        ).resolve()
-        temp_dir: Path = DIR_SCRIPT / "temp" / region / mol_name
-        max_mol: int = max_ret_mol
-
-        # OP directories are automatically created by iterative_pharmit, so not made here
-
-        # string
-        input_str: str = f"{pharm_list_file} {sdf_file} {csv_file} "
-        input_str = input_str + f"{temp_dir} {max_mol}"
-        pharmit_inputs.append(input_str)
-
-    # write the job_list
-    job_list_file: Path = (DIR_SCRIPT / "job_list.txt").resolve()
-    with open(job_list_file, "w") as f:
-        for ind, pharmit_input in enumerate(pharmit_inputs):
-            if ind:
-                f.write("\n")
-            f.write(pharmit_input)
-
-    # create batch script to run slurm
-    batch_script_file: Path = (DIR_SCRIPT / "run_pharmit_search.sh").resolve()
-    with open(batch_script_file, "w") as f:
-        f.write(
-            f"sbatch --array=0-{len(pharmit_input_files)-1} --export=ALL pharm_search.slurm\n"
-        )
-
-
 if __name__ == "__main__":
-    # inputs
-    disabled_pharmit_dir: Path = (
+    # base directories
+    base_disabled_pharmit_dir: Path = (
         DIR_STUDY / "c03-validate-pharm-top-div" / "data" / "visual_inspect"
     ).resolve()
-    pharmit_output_dir: Path = (DIR_SCRIPT / ".." / "data" / "search_output").resolve()
+    base_pharmit_output_dir: Path = (DIR_SCRIPT / ".." / "data" / "search_output").resolve()
 
-    main(disabled_pharmit_dir, pharmit_output_dir, 2000)
+    # go through every region and run create batch job
+    disabled_pharmit_dirs: list[Path] = [
+        item
+        for item in base_disabled_pharmit_dir.iterdir()
+        if item.is_dir() and item.name.startswith("region")
+    ]
+    for disabled_pharmit_dir in disabled_pharmit_dirs:
+        region: str = disabled_pharmit_dir.stem
+        pharmit_output_dir = (base_pharmit_output_dir / region).resolve()
+        create_batch_iterative_pharm_job.main(disabled_pharmit_dir, pharmit_output_dir, 
+            DIR_STUDY, 2000)
