@@ -15,4 +15,4 @@ if __name__ == "__main__":
 
     # go through every region and run create batch job
     create_batch_iterative_pharm_job.main(base_disabled_pharmit_dir, 
-        base_pharmit_output_dir, DIR_STUDY, 2000)
+        base_pharmit_output_dir, DIR_SCRIPT, 2000)
