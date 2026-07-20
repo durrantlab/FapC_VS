@@ -22,5 +22,5 @@ if __name__ == "__main__":
     for disabled_pharmit_dir in disabled_pharmit_dirs:
         region: str = disabled_pharmit_dir.stem
         pharmit_output_dir = (base_pharmit_output_dir / region).resolve()
-        create_batch_iterative_pharm_job.main(disabled_pharmit_dir, pharmit_output_dir, 
-            DIR_STUDY, 2000)
+    create_batch_iterative_pharm_job.main(disabled_pharmit_dir, pharmit_output_dir, 
+        DIR_STUDY, 2000)

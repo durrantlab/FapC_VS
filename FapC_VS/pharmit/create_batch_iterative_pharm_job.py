@@ -11,18 +11,21 @@ def main(
     max_ret_mol: int = 2000,
 
 ):
-    """Will take in pharmits input files and create a slurm to run the iterative pharm script.
+    """Will take in pharmits input files and create a slurm to run 
+    the iterative pharm script.
 
-    On running pharmit, for each pharmacophore JSON in the directory, will find up 
-    to <max_ret_mol> similar molecules, store them in a csv 
-    (name is <main_pharmit_output_dir>/<molecule name>.csv) 
-    and in an sdf as well (same name, but .sdf)
+    On running pharmit, for each pharmacophore JSON in the directory 
+    (searches recursively), will find up to <max_ret_mol> similar molecules, s
+    tore them in a csv (name is <main_pharmit_output_dir>/<file path in input>/
+    <molecule name>.csv) and in an sdf as well (same name, but .sdf)
 
     Args:
         disabled_pharmit_dir: where the inputs with disabled pharms based
             on prolif are stored. Has jsons for each molecule inside
             Expects the input files to have format: mol#_input.json
+            Searches recursively through folder
         pharmit_output_dir: where final pharmit search inputs will be stored
+            folder stored in is same as file (if exist) in input
             name of csv/sdf will be named after molecule
         DIR_SCRIPT: directory of the script calling this function
             Temporary files and files to run iterative_pharmit will be placed here
@@ -32,7 +35,7 @@ def main(
     # read in disabled pharmits
     pharmit_input_files = [
             item
-            for item in main_disabled_pharmit_dir.iterdir()
+            for item in main_disabled_pharmit_dir.rglob("*")
             if item.is_file() and item.suffix == ".json"
         ]
 
@@ -41,15 +44,16 @@ def main(
     for pharmit_json in pharmit_input_files:
         # setup inputs
         mol_name: str = pharmit_json.stem.split("_")[0]
+        rel_path = pharmit_json.relative_to(main_disabled_pharmit_dir).parent
 
         pharm_list_file: Path = pharmit_json
         sdf_file: Path = (
-            main_pharmit_output_dir / f"{mol_name}.sdf"
+            main_pharmit_output_dir / str(rel_path) / f"{mol_name}.sdf"
         ).resolve()
         csv_file: Path = (
-            main_pharmit_output_dir / f"{mol_name}.csv"
+            main_pharmit_output_dir / str(rel_path) / f"{mol_name}.csv"
         ).resolve()
-        temp_dir: Path = DIR_SCRIPT / "temp" / mol_name
+        temp_dir: Path = DIR_SCRIPT / "temp" / str(rel_path) / mol_name
         max_mol: int = max_ret_mol
 
         # OP directories are automatically created by iterative_pharmit, 

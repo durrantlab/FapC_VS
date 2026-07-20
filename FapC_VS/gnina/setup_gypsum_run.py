@@ -1,9 +1,6 @@
 
 from pathlib import Path
 
-DIR_SCRIPT: Path = Path(__file__).parent.resolve()
-DIR_STUDY: Path = Path(DIR_SCRIPT / ".." / "..").resolve()
-
 
 def main(
     sdf_input_dir: Path, split_sdf_dir: Path, split_size: int, gypsum_sdf_dir: Path
@@ -113,17 +110,3 @@ def sdf_set_size_split(
             f.write(new_sdf)
         all_sdfs.append(sdf_file)
     return all_sdfs
-
-
-if __name__ == "__main__":
-    # inputs
-    sdf_input_dir: Path = (
-        DIR_STUDY / "c04-pharm-search-top-div" / "data" / "search_output"
-    )
-    """Where input SDFs are. Will search recursively through iles for all .sdfs"""
-    split_sdf_dir: Path = DIR_SCRIPT / ".." / "data" / "split_sdf"
-    """Where split SDFs to prepare for gypsum are held"""
-    gypsum_sdf_dir: Path = DIR_SCRIPT / ".." / "data" / "output_sdf"
-    """Where the outputs of gypsum are held"""
-
-    main(sdf_input_dir, split_sdf_dir, 250, gypsum_sdf_dir)
