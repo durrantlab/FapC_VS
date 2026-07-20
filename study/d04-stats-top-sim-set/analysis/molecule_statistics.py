@@ -12,7 +12,7 @@ FILE_LOG: Path = (
 if __name__ == "__main__":
     # inputs
     sdf_file: Path = (
-        DIR_STUDY / "d0-filter-gnina-op" / "data" / "best_drugs" / "overall_concat.sdf"
+        DIR_STUDY / "d03-filter-gnina-op" / "data" / "best_drugs" / "overall_concat.sdf"
     ).resolve()
     csv_rank_file: Path = (
         DIR_STUDY / "d03-filter-gnina-op" / "data" / "best_drugs" / "overall_best.csv"
