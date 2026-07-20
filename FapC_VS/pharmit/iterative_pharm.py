@@ -2,12 +2,17 @@ import json
 import shutil
 from copy import copy, deepcopy
 from pathlib import Path
+import logging
 
 from . import pharmit_server_query
 
+def make_log_dir(FILE_LOG: Path) -> None:
+    if not FILE_LOG.parent.is_dir():
+        FILE_LOG.parent.mkdir(parents=True, exist_ok=True)
 
 def main(
-    pharm_list_file: Path, sdf_file: Path, csv_file: Path, temp_dir: Path, max_mol: int
+    pharm_list_file: Path, sdf_file: Path, csv_file: Path, 
+    temp_dir: Path, max_mol: int, FILE_LOG: Path
 ):
     """Using 1 pharmacophore list input will iteratively run pharmacophore searches
     with pharmit, removing pharmacophores in BFS style, until only 3 remain or
@@ -31,14 +36,22 @@ def main(
             Will create directory path. Should not be present before hand.
         max_mol: max molecules to find
     """
+    # set up logging
+    make_log_dir(FILE_LOG)
+    logging.basicConfig(
+        filename=FILE_LOG,
+        level=logging.INFO,
+        format="%(asctime)s  %(levelname)-8s  %(message)s",
+    )
+
     # setup iterative pharm data structure. Allows going through different
     # combinations of pharmacophore lists
-    print(f"ITERATIVE PHARM ON: {pharm_list_file}")
+    logging.info(f"ITERATIVE PHARM ON: {pharm_list_file}")
     pharm_obj: iter_pharm = iter_pharm(pharm_list_file, temp_dir)
 
     # create temp_dir / pharmit_output dir
     if temp_dir.is_dir():
-        print("WARNING: TEMP DIR IS ALREADY PRESENT. DELETING.")
+        logging.warning("TEMP DIR IS ALREADY PRESENT. DELETING.")
         shutil.rmtree(temp_dir)  # only works on linux
         pass
     temp_dir.mkdir(parents=True, exist_ok=True)
@@ -62,16 +75,17 @@ def main(
         else:
             iter_name: str = pharm_obj.next_pharm()
             if iter_name == "invalid":
-                print("no more valid combinations left")
+                logging.info("no more valid combinations left")
                 break
         pharm_file: Path = pharm_obj.write_curr_json()
-        print(f"\nSearching with pharm config: disabled {iter_name}")
+        logging.info(f"\nSearching with pharm config: disabled {iter_name}")
         # run pharmit with pharm file
         success, op_sdf_file, op_csv_file = run_pharmit(
             pharm_file,
             temp_dir,
             f"op_{iter_name}",
             max_mol - total_mol + (max_mol // 4),
+            FILE_LOG
         )
         # update list of SDF / csv if pharmit found molecules
         if success:
@@ -79,11 +93,11 @@ def main(
             total_mol: int = update_csv(op_csv_file, csv_file, max_mol)
 
     # sort csv and concat sdfs
-    print("\nSorting csv file")
+    logging.info("\nSorting csv file")
     sort_csv(csv_file)
     concat_sdfs(sdf_files, sdf_file, csv_file)
     shutil.rmtree(temp_dir)
-    print("Done!")
+    logging.info("Done!")
 
 
 def concat_sdfs(sdf_files: list[Path], sdf_file: Path, csv_file: Path):
@@ -194,7 +208,8 @@ def already_inside_csv(csv: list[list[str]], name: str):
 
 
 def run_pharmit(
-    pharm_file: Path, pharmit_output_dir: Path, run_name: str, max_mol: int
+    pharm_file: Path, pharmit_output_dir: Path, 
+    run_name: str, max_mol: int, FILE_LOG: Path
 ) -> tuple[bool, Path, Path]:
     """Takes in pharmit inputs, and sends it to the server. Creates
     an SDF with all hits of out order, and csv with each molecule's
@@ -225,7 +240,7 @@ def run_pharmit(
 
     # run pharmit
     success = pharmit_server_query.run(
-        pharm_file, final_sdf, 16, 500, final_csv, max_mol
+        pharm_file, final_sdf, 16, 500, final_csv, max_mol, FILE_LOG
     )
 
     return success, final_sdf, final_csv

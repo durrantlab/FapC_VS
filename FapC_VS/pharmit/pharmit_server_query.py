@@ -5,6 +5,7 @@ import sys
 import time
 from pathlib import Path
 import requests
+import logging
 
 SERVER = "https://pharmit.csb.pitt.edu/fcgi-bin/pharmitserv.fcgi"
 
@@ -17,8 +18,9 @@ def run(
     out_path: Path,
     interval: float,
     timeout: float,
-    csv_path: Path | None = None,
-    max_mol: int = 2000,
+    csv_path: Path | None,
+    max_mol: int,
+    FILE_LOG: Path
 ) -> bool:
     """Overall, takes in pharmacophore list, calls the server, then returns the SDF
 
@@ -39,12 +41,12 @@ def run(
     if csv_path is None:
         csv_path = out_path.with_suffix(".csv")
     if csv_path.is_file() or out_path.is_file():
-        print(" WARNING: PHARMIT OUTPUT FILE(S) ALREADY EXIST. OVERWRITING")
+        logging.warning("PHARMIT OUTPUT FILE(S) ALREADY EXIST. OVERWRITING")
 
     # read in the pharmacophore file
     query = json.loads(query_path.read_text())
     n_enabled = sum(1 for p in query.get("points", []) if p.get("enabled"))
-    print(f" loaded query: {len(query.get('points', []))} points ({n_enabled} enabled)")
+    logging.info(f" loaded query: {len(query.get('points', []))} points ({n_enabled} enabled)")
 
     # add filters to search
     apply_search_filters(query, max_mol)
@@ -63,7 +65,7 @@ def run(
                 save_rmsd_csv(session, qid, csv_path, total)
                 success = True
             else:
-                print(" no hits; skipping saveres")
+                logging.info(" no hits; skipping saveres")
         finally:
             cancel(session, qid)
     return success
@@ -113,7 +115,7 @@ def apply_search_filters(query: dict, max_mol: int) -> dict:
     query["max-orient"] = 1
     query["reduceConfs"] = 1
 
-    print(
+    logging.info(
         f" applied filters: max-hits={query['max-hits']}, max molecular weight={query['maxMolWeight']} Da, dataset={query['subset']}"
     )
     return query
@@ -145,7 +147,7 @@ def start_query(
     data = resp.json()
     if not data.get("status"):
         raise PharmitError(f"startquery rejected: {data.get('msg', 'unknown error')}")
-    print(
+    logging.info(
         f" query accepted qid={data['qid']} searching {data.get('numMols', '?')} mols / {data.get('numConfs', '?')} confs"
     )
     return data
@@ -192,11 +194,11 @@ def poll(
         # once complete, return search is complete
         total = data.get("recordsTotal", 0)
         if data.get("finished"):
-            print(f" search finished: {total} hits")
+            logging.info(f" search finished: {total} hits")
             return total
 
         # print info in last server response
-        print(f" still searching... {total} hits so far")
+        logging.info(f" still searching... {total} hits so far")
         if time.monotonic() > deadline:
             raise PharmitError(f"poll timed out after {timeout}s (qid={qid})")
         time.sleep(interval)
@@ -218,7 +220,7 @@ def save_results(session: requests.Session, qid: int, out_path: Path) -> Path:
     resp.raise_for_status()
     # write out the SDF file
     out_path.write_bytes(resp.content)
-    print(f" wrote {len(resp.content)} bytes -> {out_path}")
+    logging.info(f" wrote {len(resp.content)} bytes -> {out_path}")
     return out_path
 
 
@@ -263,7 +265,7 @@ def fetch_all_rows(
         start += len(chunk)
         draw += 1
 
-    print(f" fetched {len(rows)} of {total} result rows")
+    logging.info(f" fetched {len(rows)} of {total} result rows")
     return rows
 
 
@@ -298,7 +300,7 @@ def save_rmsd_csv(
             except Exception:
                 pass
 
-    print(f" wrote {len(rows)} rows -> {csv_path}")
+    logging.info(f" wrote {len(rows)} rows -> {csv_path}")
     return csv_path
 
 
@@ -306,7 +308,7 @@ def cancel(session: requests.Session, qid: int) -> None:
     """Free a running/finished query server-side."""
     try:
         session.post(SERVER, data={"cmd": "cancelquery", "oldqid": qid}, timeout=30)
-        print(f" session canceled {qid}")
+        logging.info(f" session canceled {qid}")
     except requests.RequestException:
         pass  # best effort
 
