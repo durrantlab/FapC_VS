@@ -1,4 +1,6 @@
+
 from pathlib import Path
+from FapC_VS.gnina.clean_up_gypsum import clean_up_sdf
 
 DIR_SCRIPT: Path = Path(__file__).parent.resolve()
 DIR_STUDY: Path = Path(DIR_SCRIPT / ".." / "..").resolve()
@@ -91,25 +93,6 @@ def main(
     bash_script: Path = Path(DIR_SCRIPT / "run_gnina.sh").resolve()
     with open(bash_script, "w") as f:
         f.write(f"sbatch --array=0-{len(gnina_inputs)-1} --export=ALL dock.slurm\n")
-
-
-"""def clean_up_sdf(sdf_file: Path, op_file: Path) -> str:
-    # NOTE: ran incorrectly initially, overwritting original files and adding in new issue,
-    # so temporarily rewrote section to fix that. This is that. Below is script to
-    # use normally
-    with open(sdf_file, "r") as f:
-        mols: list[str] = [item.strip() for item in f.read().strip().split("$$$$")]
-    with open(op_file, "w") as f:
-        f.write("\n\n$$$$\n".join(mols[:-1]))
-    return mols[0]"""
-
-
-def clean_up_sdf(sdf_file: Path, op_file: Path) -> str:
-    with open(sdf_file, "r") as f:
-        mols: list[str] = [item.strip() for item in f.read().strip().split("$$$$")]
-    with open(op_file, "w") as f:
-        f.write("\n\n$$$$\n".join(mols[1:]))
-    return mols[0]
 
 
 if __name__ == "__main__":
