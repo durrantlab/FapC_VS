@@ -111,7 +111,7 @@ click = "7.1.2.*"
 mordred = "1.2.0.*"
 pillow = "7.0.0.*"
 
-[feature.logs-pred.target.linux-64.pypi-dependencies.]
+[feature.logs-pred.target.linux-64.pypi-dependencies]
 FapC_VS = { path = ".", editable = true }
 
 [feature.logs-pred]
