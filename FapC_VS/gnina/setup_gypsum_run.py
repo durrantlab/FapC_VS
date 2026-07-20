@@ -3,66 +3,64 @@ from pathlib import Path
 
 
 def main(
-    sdf_input_dir: Path, split_sdf_dir: Path, split_size: int, gypsum_sdf_dir: Path
+    sdf_input_dir: Path, split_sdf_dir: Path, split_size: int, 
+    gypsum_sdf_dir: Path, DIR_SCRIPT: Path
 ):
     """Takes in all the SDF to be gypsumed, splits into X chunks, then creates
     gypsum inputs to be run
 
     Args:
-        sdf_input_dir: where SDF inputs are held (organized region_#/mol#.sdf)
+        sdf_input_dir: where SDF inputs are held (searches for <>.sdf recursively)
         split_sdf_dir: where SDFs split into specific size are held
             Directory created if not already present.
-            Will add region_#/mol_#/ directories to it
+            Will add <relative path of input>/mol_#/ directories to it
             If directories already exist, will skip splitting
         split_size: how many molecules are in each split
         gypsum_sdf_dir: where final gypsum outputs are held
             Directory created if not already present
-            Will add region_#/mol_#/group_# directories to it
+            Will add <relative path of input>/mol_#/group_# directories to it
     """
-    # for each region
-    input_region_dirs: list[Path] = [
-        item
-        for item in sdf_input_dir.iterdir()
-        if item.is_dir() and item.name.startswith("region")
-    ]
-    args_list: list[str] = []
-    for input_region_dir in input_region_dirs:
-        # for each diversity set molecule
-        input_mol_files = [
+    # get all input files
+    sdf_input_files = [
             item
-            for item in input_region_dir.iterdir()
+            for item in sdf_input_dir.rglob("*")
             if item.is_file() and item.suffix == ".sdf"
         ]
-        for input_mol_file in input_mol_files:
-            # split into chunks
-            mol_split_sdf_dir: Path = (
-                split_sdf_dir / input_region_dir.name / input_mol_file.stem
+
+    args_list: list[str] = []
+    # for each molecule
+    for sdf_input_file in sdf_input_files:
+        # path of input SDF relative to input path
+        rel_path = sdf_input_file.relative_to(sdf_input_dir).parent
+        # split into chunks
+        mol_split_sdf_dir: Path = (
+            split_sdf_dir / str(rel_path) / sdf_input_file.stem
+        ).resolve()
+        if not mol_split_sdf_dir.is_dir():
+            mol_split_sdf_dir.mkdir(parents=True, exist_ok=True)
+            sdf_list: list[Path] = sdf_set_size_split(
+                sdf_input_file, mol_split_sdf_dir, split_size
+            )
+        else:
+            sdf_list: list[Path] = [
+                item
+                for item in mol_split_sdf_dir.iterdir()
+                if item.is_file() and item.suffix == ".sdf"
+            ]
+        # setup gypsum input for each file
+        for sdf_file in sdf_list:
+            mol_gypsum_sdf_dir: Path = (
+                gypsum_sdf_dir
+                / rel_path
+                / sdf_input_file.stem
+                / sdf_file.stem
             ).resolve()
-            if not mol_split_sdf_dir.is_dir():
-                mol_split_sdf_dir.mkdir(parents=True, exist_ok=True)
-                sdf_list: list[Path] = sdf_set_size_split(
-                    input_mol_file, mol_split_sdf_dir, split_size
-                )
-            else:
-                sdf_list: list[Path] = [
-                    item
-                    for item in mol_split_sdf_dir.iterdir()
-                    if item.is_file() and item.suffix == ".sdf"
-                ]
-            # setup gypsum input for each file
-            for sdf_file in sdf_list:
-                mol_gypsum_sdf_dir: Path = (
-                    gypsum_sdf_dir
-                    / input_region_dir.name
-                    / input_mol_file.stem
-                    / sdf_file.stem
-                ).resolve()
-                if not mol_gypsum_sdf_dir.is_dir():
-                    mol_gypsum_sdf_dir.mkdir(parents=True, exist_ok=True)
-                # if gypsum output doesnt exist, add to args list
-                if not (mol_gypsum_sdf_dir / "gypsum_dl_success.sdf").is_file():
-                    args: str = f"-s {sdf_file} -o {mol_gypsum_sdf_dir}"
-                    args_list.append(args)
+            if not mol_gypsum_sdf_dir.is_dir():
+                mol_gypsum_sdf_dir.mkdir(parents=True, exist_ok=True)
+            # if gypsum output doesnt exist, add to args list
+            if not (mol_gypsum_sdf_dir / "gypsum_dl_success.sdf").is_file():
+                args: str = f"-s {sdf_file} -o {mol_gypsum_sdf_dir}"
+                args_list.append(args)
     # write the job_list
     job_list_file: Path = (DIR_SCRIPT / "job_list.txt").resolve()
     with open(job_list_file, "w") as f:
