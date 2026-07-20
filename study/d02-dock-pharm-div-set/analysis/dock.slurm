@@ -34,5 +34,5 @@ echo "Ligand:   $LIGAND_FILE"
 echo "Output:   $OUT"
 
 echo "Running gnina..."
-bash -c "gnina --cpu $SLURM_CPUS_PER_TASK $ARGS" | tee "$LOG"
+gnina --cpu $SLURM_CPUS_PER_TASK $ARGS | tee "$LOG"
 echo "Done!"
