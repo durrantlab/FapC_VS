@@ -12,10 +12,10 @@ FILE_LOG: Path = (
 if __name__ == "__main__":
     # inputs
     sdf_file: Path = (
-        DIR_STUDY / "d03-filter-gnina-op" / "data" / "best_drugs" / "overall_concat.sdf"
+        DIR_STUDY / "d0-filter-gnina-op" / "data" / "best_drugs" / "overall_concat.sdf"
     ).resolve()
     csv_rank_file: Path = (
-        DIR_STUDY / "d03-filter-gnina-op" / "data" / "best_drugs" / "overall_best.csv"
+        DIR_STUDY / "d03WHAT-filter-gnina-op" / "data" / "best_drugs" / "overall_best.csv"
     ).resolve()
     models_dir: Path = DIR_SCRIPT / "models"
     csv_file: Path = (DIR_SCRIPT / ".." / "data" / "top_dock_stats.csv").resolve()

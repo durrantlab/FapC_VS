@@ -14,6 +14,6 @@ if __name__ == "__main__":
         DIR_STUDY / "d02-dock-pharm-div-set" / "data" / "docked_compounds"
     )
     csv_op_file: Path = Path(
-        DIR_STUDY / "d03-filter-gnina-op" / "data" / "ranked_docked_mols.csv"
+        DIR_STUDY / "d03WHAT-filter-gnina-op" / "data" / "ranked_docked_mols.csv"
     )
     rank_docked.main(docked_dir, csv_op_file)

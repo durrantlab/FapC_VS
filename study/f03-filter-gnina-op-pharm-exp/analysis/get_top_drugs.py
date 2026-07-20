@@ -6,7 +6,7 @@ DIR_SCRIPT: Path = Path(__file__).parent.resolve()
 DIR_STUDY: Path = Path(DIR_SCRIPT / ".." / "..").resolve()
 
 # add the directory of script to path
-sys.path.insert(0, str((DIR_STUDY / "d03-filter-gnina-op" / "analysis").resolve()))
+sys.path.insert(0, str((DIR_STUDY / "d03WHAT-filter-gnina-op" / "analysis").resolve()))
 import get_top_drugs
 
 if __name__ == "__main__":
