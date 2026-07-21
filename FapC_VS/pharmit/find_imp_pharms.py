@@ -6,7 +6,7 @@ from pathlib import Path
 from rdkit import Chem
 
 
-PROLIF_TO_PHARMACOPHORE = {
+PROLIF_TO_PHARMACOPHORE: dict[str,str] = {
     "Hydrophobic": "Hydrophobic",
     "HBDonor": "HydrogenDonor",
     "HBAcceptor": "HydrogenAcceptor",
@@ -167,6 +167,8 @@ def get_valid_pharms(
     for pharm in mol_pharm["points"]:
         # get data about pharmacophore
         pharm_loc = [pharm["x"], pharm["y"], pharm["z"]]
+        # for the full refactor we should workshop how to make this more efficient 
+        # (use a numpy array to store all the data and work on it directly)
         pharm_type = pharm["name"]
         # go through each interacting residue
         if_any_inside: bool = False
@@ -194,7 +196,7 @@ def get_valid_pharms(
     return if_pharm
 
 
-def if_inside_pharm(dist, inter_type) -> bool:
+def if_inside_pharm(dist: float, inter_type: str) -> bool:
     if inter_type == "Hydrophobic" or inter_type == "Aromatic":
         if dist < 2:
             return True
