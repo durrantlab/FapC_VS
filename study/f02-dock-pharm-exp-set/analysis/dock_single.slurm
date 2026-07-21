@@ -18,5 +18,10 @@ module load gnina
 LOG="${OUT%.sdf}.log"
 
 echo "Running gnina..."
-bash -c "gnina --cpu $SLURM_CPUS_PER_TASK --receptor /ihome/jdurrant/irh24/Projects/FapC_VS/study/b01-prep-protein-dock/data/9nqd_protonated.pdb --ligand /ihome/jdurrant/irh24/Projects/FapC_VS/study/d02-dock-pharm-div-set/data/cleaned_compounds/region_3/mol9/group_7.sdf --config /ihome/jdurrant/irh24/Projects/FapC_VS/study/a02-ftmap-box/data/box/region_3.txt --out /ihome/jdurrant/irh24/Projects/FapC_VS/study/d02-dock-pharm-div-set/data/docked_compounds/region_3/mol9/group_7.sdf" | tee "$LOG"
+gnina --cpu $SLURM_CPUS_PER_TASK \
+    --receptor /ihome/jdurrant/irh24/Projects/FapC_VS/study/023-prep-protein-dock/data/9nqd_protonated.pdb \ 
+    --ligand /ihome/jdurrant/irh24/Projects/FapC_VS/study/051-dock-pharm-div-set/data/cleaned_compounds/region_3/mol9/group_7.sdf \
+    --config /ihome/jdurrant/irh24/Projects/FapC_VS/study/021-ftmap-box/data/box/region_3.txt \
+    --out /ihome/jdurrant/irh24/Projects/FapC_VS/study/051-dock-pharm-div-set/data/docked_compounds/region_3/mol9/group_7.sdf \
+    | tee "$LOG"
 echo "Done!"
