@@ -15,9 +15,8 @@ PROLIF_TO_PHARMACOPHORE: dict[str,str] = {
     "Anionic": "NegativeIon",
 }
 
-def make_log_dir(FILE_LOG: Path) -> None:
-    if not FILE_LOG.parent.is_dir():
-        FILE_LOG.parent.mkdir(parents=True, exist_ok=True)
+from FapC_VS import enable_logging
+
 
 
 def main(
@@ -52,12 +51,7 @@ def main(
             Creates directory path if DNE
     """
     # set up logging
-    make_log_dir(FILE_LOG)
-    logging.basicConfig(
-        filename=FILE_LOG,
-        level=logging.INFO,
-        format="%(asctime)s  %(levelname)-8s  %(message)s",
-    )
+    enable_logging(FILE_LOG)
 
     # read in the csv
     logging.info("Reading in csv...")

@@ -1,21 +1,12 @@
 
 from pathlib import Path
 import logging
-
-
-def make_log_dir(FILE_LOG: Path) -> None:
-    if not FILE_LOG.parent.is_dir():
-        FILE_LOG.parent.mkdir(parents=True, exist_ok=True)
-    logging.basicConfig(
-        filename=FILE_LOG,
-        level=logging.INFO,
-        format="%(asctime)s  %(levelname)-8s  %(message)s",
-    )
+from FapC_VS import enable_logging
 
 
 def main(gnina_input_dir: Path, gnina_output_dir: Path, FILE_LOG: Path):
     # setup logging
-    make_log_dir(FILE_LOG)
+    enable_logging(FILE_LOG)
     # extract all inputs
     for inp_path in Path(gnina_input_dir).rglob("group*.sdf"):
         lower_path: Path = inp_path.relative_to(gnina_input_dir)

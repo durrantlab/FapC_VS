@@ -6,6 +6,7 @@ import time
 from pathlib import Path
 import requests
 import logging
+from FapC_VS import enable_logging
 
 SERVER = "https://pharmit.csb.pitt.edu/fcgi-bin/pharmitserv.fcgi"
 
@@ -38,6 +39,7 @@ def run(
     Returns:
         Boolean if the search successfully found molecules or not
     """
+    enable_logging(FILE_LOG)
     if csv_path is None:
         csv_path = out_path.with_suffix(".csv")
     if csv_path.is_file() or out_path.is_file():

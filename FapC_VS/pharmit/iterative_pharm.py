@@ -4,11 +4,8 @@ from copy import copy, deepcopy
 from pathlib import Path
 import logging
 
-from . import pharmit_server_query
-
-def make_log_dir(FILE_LOG: Path) -> None:
-    if not FILE_LOG.parent.is_dir():
-        FILE_LOG.parent.mkdir(parents=True, exist_ok=True)
+from FapC_VS.pharmit import pharmit_server_query
+from FapC_VS import enable_logging
 
 def main(
     pharm_list_file: Path, sdf_file: Path, csv_file: Path, 
@@ -37,12 +34,7 @@ def main(
         max_mol: max molecules to find
     """
     # set up logging
-    make_log_dir(FILE_LOG)
-    logging.basicConfig(
-        filename=FILE_LOG,
-        level=logging.INFO,
-        format="%(asctime)s  %(levelname)-8s  %(message)s",
-    )
+    enable_logging(FILE_LOG)
 
     # setup iterative pharm data structure. Allows going through different
     # combinations of pharmacophore lists
