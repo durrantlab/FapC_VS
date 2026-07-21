@@ -1,6 +1,6 @@
 
 from pathlib import Path
-from FapC_VS.pharmit import molecule_statistics
+from FapC_VS_log_pred import molecule_statistics
 
 DIR_SCRIPT: Path = Path(__file__).parent.resolve()
 DIR_STUDY: Path = Path(DIR_SCRIPT / ".." / "..").resolve()
