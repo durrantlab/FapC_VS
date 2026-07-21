@@ -1,6 +1,6 @@
 [project]
 authors = [
-    {name = "FapC_VS", email = "ian.herzogpohl@gmail.com"}
+    {name = "FapC_VS_log_pred", email = "ian.herzogpohl@gmail.com"}
 ]
 description = "test"
 name = "FapC_VS_log_pred"
