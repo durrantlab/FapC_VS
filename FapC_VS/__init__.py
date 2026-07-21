@@ -17,7 +17,7 @@ LOG_FORMAT = (
 
 
 def enable_logging(
-    level_set: int, stdout_set: bool = True, file_path = None
+    level_set: int, stdout_set: bool = True, file_path: str | None = None
 ) -> None:
     r"""Enable logging.
 
