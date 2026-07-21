@@ -10,7 +10,7 @@ def main(
     gypsum inputs to be run
 
     Args:
-        sdf_input_dir: where SDF inputs are held (searches for <>.sdf recursively)
+        sdf_input_dir: where SDF inputs are held (searches for `<>.sdf` recursively)
         split_sdf_dir: where SDFs split into specific size are held
             Directory created if not already present.
             Will add <relative path of input>/mol_#/ directories to it

@@ -14,7 +14,7 @@ Goal: find the pharmacophores of the most successful dockers of the diversity se
 - Info on Pharmit: https://github.com/dkoes/pharmit/tree/master 
 
 ## Data
-region_<>_concat.json: that region's molecules pharmacophore lists concatted together. The seperation between each molecule is just an enter, no comma. Technically invalid JSON.
+`region_<>_concat.json`: that region's molecules pharmacophore lists concatted together. The seperation between each molecule is just an enter, no comma. Technically invalid JSON.
 
 ## Analysis
 create_pharm_get_inp: will take in all the SDFs and auto generate a slurm script to extract all pharmacophores from them
