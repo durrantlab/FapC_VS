@@ -2333,7 +2333,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/linux-64/zlib-1.2.13-h4ab18f5_6.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/zstd-1.4.9-ha95c52a_0.tar.bz2
       - pypi: https://files.pythonhosted.org/packages/0c/29/0348de65b8cc732daa3e33e67806420b2ae89bdce2b04af740289c5c6c8c/loguru-0.7.3-py3-none-any.whl
-      - pypi: ./
+      - pypi: ./FapC_VS_log_pred
   pharmit:
     channels:
     - url: https://conda.anaconda.org/conda-forge/
@@ -4500,7 +4500,14 @@ packages:
 - pypi: ./
   name: fapc-vs
   version: 0.0.0
-  sha256: 8cf3923755cf8a71986a879f4912eb2f263285e5a5b680aa1bdb8cfe0127761e
+  sha256: 6ba5d92f1f0733d060a7b15c2d3acb5b9cad4c93133fbed40aa341c22ac7c6b9
+  requires_dist:
+  - loguru>=0.7.2,<0.8
+  requires_python: '>=3.12'
+- pypi: ./FapC_VS_log_pred
+  name: fapc-vs-log-pred
+  version: 0.0.0
+  sha256: d222647997f634a02a42719e2d6bab23eeb95680b0ecf9063cf690497882488b
   requires_dist:
   - loguru>=0.7.2,<0.8
   requires_python: '>=3.7'
