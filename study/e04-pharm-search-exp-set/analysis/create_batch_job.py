@@ -1,11 +1,10 @@
 import shutil
 import sys
 from pathlib import Path
+from FapC_VS.pharmit import create_batch_iterative_pharm_job
 
 DIR_SCRIPT: Path = Path(__file__).parent.resolve()
 DIR_STUDY: Path = Path(DIR_SCRIPT / ".." / "..").resolve()
-
-sys.path.insert(0, str((DIR_STUDY / "c03-validate-pharm-top-div").resolve()))
 
 
 def main(
@@ -77,7 +76,7 @@ def main(
     with open(pharm_search_base, "r") as f:
         slurm_text: list[str] = f.read().strip().split("\n")
     slurm_text[23] = (
-        f'bash -c "pixi run python -u {str(iterative_pharm_loc)} $ARGS" | tee "$LOG"'
+        f'pixi run python -u {str(iterative_pharm_loc)} $ARGS" | tee "$LOG'
     )
     pharm_slurm_file: Path = (pharm_search_base.parent / "pharm_search.slurm").resolve()
     with open(pharm_slurm_file, "w") as f:
@@ -95,10 +94,9 @@ if __name__ == "__main__":
         DIR_STUDY / "c04-pharm-search-top-div" / "analysis" / "iterative_pharm.py"
     ).resolve()
 
-    main(
+    create_batch_iterative_pharm_job.main(
         disabled_pharmit_dir,
         pharmit_output_dir,
         pharm_search_base,
-        iterative_pharm_loc,
         5000,
     )
