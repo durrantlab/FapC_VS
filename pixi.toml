@@ -11,7 +11,7 @@ license = "Apache-2.0"
 readme = "README.md"
 
 [pypi-dependencies]
-FapC_VS = { path = ".", editable = true }
+FapC_VS = { path = "./FapC_VS", editable = true }
 gypsum-dl = ">=1.2.7, <2"
 
 
@@ -112,7 +112,7 @@ mordred = "1.2.0.*"
 pillow = "7.0.0.*"
 
 [feature.logs-pred.target.linux-64.pypi-dependencies]
-FapC_VS_log_pred = { path = ".", editable = true }
+FapC_VS_log_pred = { path = "./FapC_VS_log_pred", editable = true }
 
 [feature.logs-pred]
 channels = ["conda-forge"]
