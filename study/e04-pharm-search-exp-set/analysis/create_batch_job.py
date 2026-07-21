@@ -97,6 +97,6 @@ if __name__ == "__main__":
     create_batch_iterative_pharm_job.main(
         disabled_pharmit_dir,
         pharmit_output_dir,
-        pharm_search_base,
+        DIR_SCRIPT,
         5000,
     )
