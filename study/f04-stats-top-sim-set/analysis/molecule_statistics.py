@@ -4,9 +4,7 @@ from FapC_VS.gnina import molecule_statistics
 
 DIR_SCRIPT: Path = Path(__file__).parent.resolve()
 DIR_STUDY: Path = Path(DIR_SCRIPT / ".." / "..").resolve()
-FILE_LOG: Path = (
-    DIR_SCRIPT / ".." / "logs" / f"{Path(__file__).name.split('.')[0]}.log"
-).resolve()
+
 
 if __name__ == "__main__":
     # inputs
@@ -24,8 +22,5 @@ if __name__ == "__main__":
         / "best_drugs"
         / "overall_best.csv"
     ).resolve()
-    models_dir: Path = (
-        DIR_STUDY / "d04-stats-top-sim-set" / "analysis" / "models"
-    ).resolve()
     csv_file: Path = (DIR_SCRIPT / ".." / "data" / "top_dock_stats.csv").resolve()
-    molecule_statistics.main(sdf_file, csv_rank_file, models_dir, csv_file)
+    molecule_statistics.main(sdf_file, csv_rank_file, csv_file)
