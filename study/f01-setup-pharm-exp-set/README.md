@@ -2,7 +2,7 @@
 # f01-setup-pharm-exp-set
 Goal: take the set of molecules similar to experimental set and set them up with gypsum.
 - Input: many similar molecules for each molecule in experimental set. Will be a folder with 1 SDF for each experimental molecule. /mol#.sdf
-- Output: a folder for each molecule, has multiple SDFs each with up to 250 molecules setup in it. /mol#/group_#/[].sdf. 20 groups in total (5000/250 = 20)
+- Output: a folder for each molecule, has multiple SDFs each with up to 250 molecules setup in it. `/mol#/group_#/<>.sdf`. 20 groups in total (5000/250 = 20)
 
 ## How To Use:
 1) Run gypsum on the molecules
@@ -23,7 +23,7 @@ Goal: take the set of molecules similar to experimental set and set them up with
 ## Data
 split_sdf/ holds all similar molecules, but for each /mol#, it is split into groups so each SDF has 250 (so 8 groups / molecule)
 - region_#/mol#/group_#.sdf
-output_sdf/ holds all similar molecules, now setup with gypsum. Organization: region_#/mol#/group_#/[].sdf
+output_sdf/ holds all similar molecules, now setup with gypsum. Organization: `region_#/mol#/group_#/<>.sdf`
 
 ## Analysis
 setup_gypsum.py: Takes in all the SDF to be gypsumed, splits into X chunks, then creates gypsum inputs to be run

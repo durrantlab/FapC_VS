@@ -20,9 +20,9 @@ Goal: Go through all SDF files and find best pose (based on CNN_VS) for each mol
 ## Data
 ranked_docked_mols.csv: for each compound's best pose/region holds: cnn_vs,directory,file_name,pose_ind,name. Sorted based on CNN_VS
 best_drugs: holds the top 10 molecules of each pocket (region)
-- [].csv: for top compounds of region holds: cnn_vs,directory,file_name,pose_ind,name. Sorted based on CNN_VS
-- [].sdf: holds those best compounds, in order, in 1 concatted SDF
-- region_[]: holds the top 10 molecules for that region in seperate SDFs. Named in order from best to worst, indexing starts at 0
+- `<>.csv`: for top compounds of region holds: cnn_vs,directory,file_name,pose_ind,name. Sorted based on CNN_VS
+- `<>.sdf`: holds those best compounds, in order, in 1 concatted SDF
+- `region_<>`: holds the top 10 molecules for that region in seperate SDFs. Named in order from best to worst, indexing starts at 0
 
 ## Analysis
 rank_docked: Will take in all docked molecules, determine the best pose for each (across conforms and regions) and store the score. Will then order on score and output in csv

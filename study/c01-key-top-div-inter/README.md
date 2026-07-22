@@ -14,7 +14,7 @@ The interaction naming is based on what the ligand is doing
 - Ex: if ligand is HBond acceptor, that is the name given
 
 ## Data
-region_[]_interacts: for each region holds every top molecule's interactions
+`region_<>_interacts`: for each region holds every top molecule's interactions
 - Each column is a different protein residue / interaction it can be involved in
 - Each row is a different molecule
 - Each sublist (seperated by .) is list of atoms involved in that interaction type with that residue. If it is false, means that the molecule does not interact with it. Atom indexing starts at 1, the type depends on the side of the interaction the ligand is involved in.

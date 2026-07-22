@@ -21,8 +21,8 @@ Goal: Go through each docked molecule and find best pose. Then order from best t
 ## Data
 ranked_docked_mols.csv: holds the best score for each molecule across all conforms. In order of CNN_VS score
 best_drugs: holds the top 100 molecules
-- [].csv: holds the name / location / score of the best compounds for that region, in order of CNN_VS. cnn_vs,directory,file_name,pose_ind,name
-- [].sdf: holds those best compounds, in order, in 1 concatted SDF
+- `<>.csv`: holds the name / location / score of the best compounds for that region, in order of CNN_VS. cnn_vs,directory,file_name,pose_ind,name
+- `<>.sdf`: holds those best compounds, in order, in 1 concatted SDF
 - singles: holds the top 100 molecules in seperate SDFs. Named in order from best to worst, indexing starts at 0. r#_[name of molecule].sdf
 
 ## Analysis

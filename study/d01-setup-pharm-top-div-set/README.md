@@ -2,7 +2,7 @@
 # d01-setup-pharm-top-div-set
 Goal: take the set of molecules similar to top diversity set and set them up with gypsum.
 - Input: many similar molecules for each molecule in top div set. Each region will have a folder that holds SDFs of similar molecules for each molecule. (region#/mol#.sdf)
-- Output: each molecule’s list of similar molecules, split into chunks of 250 (called groups) and be setup with gypsum. (region#/mol#/group#/[].sdf)
+- Output: each molecule’s list of similar molecules, split into chunks of 250 (called groups) and be setup with gypsum. (`region#/mol#/group#/<>.sdf`)
 
 ## How To Use:
 1) Run gypsum on the molecules
@@ -23,7 +23,7 @@ Goal: take the set of molecules similar to top diversity set and set them up wit
 ## Data
 split_sdf/ holds all similar molecules, but for each region#/mol#, it is split into groups so each SDF has 250 (so 8 groups / molecule)
 - region_#/mol#/group_#.sdf
-output_sdf/ holds all similar molecules, now setup with gypsum. Organization: region_#/mol#/group_#/[].sdf
+output_sdf/ holds all similar molecules, now setup with gypsum. Organization: `region_#/mol#/group_#/<>.sdf`
 
 ## Analysis
 setup_gypsum.py: Takes in all the SDF to be gypsumed, splits into X chunks, then creates gypsum inputs to be run
