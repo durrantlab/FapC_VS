@@ -113,7 +113,7 @@ def create_interact_df(fp: plf.Fingerprint,
     for mol_indx, prot_ress in enumerate(lig_inter_list):  # go through every molecule
         for prot_res, interactions in prot_ress.items():
             for interaction, atoms in interactions.items():
-                df.iloc[prot_res, (slice(None), mol_indx, interaction)] = ".".join(
+                df.loc[mol_indx, pandas.IndexSlice[:, prot_res, interaction]] = ".".join(
                             [str(item) for item in atoms]
                         )
     return df
