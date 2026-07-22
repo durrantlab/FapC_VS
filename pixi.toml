@@ -119,3 +119,6 @@ channels = ["conda-forge"]
 
 [target.linux-64.dependencies]
 reduce = ">=4.15,<5"
+
+[target.linux-64.pypi-dependencies]
+aqsolpred-web = { git = "https://github.com/nacefguessaymi/AqSolPred-web" }
