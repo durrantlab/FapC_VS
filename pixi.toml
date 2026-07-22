@@ -43,7 +43,7 @@ pillow = ">=12.3.0,<13"
 reduce = ">=4.15,<5"
 
 [target.linux-64.pypi-dependencies]
-aqsolpred-web = { git = "https://github.com/nacefguessaymi/AqSolPred-web" }
+AqSolPred_web = { git = "https://github.com/nacefguessaymi/AqSolPred-web" }
 
 [feature.dev.dependencies]
 black = ">=23.10.0"
