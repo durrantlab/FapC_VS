@@ -1,6 +1,7 @@
 
 import warnings
 from pandas.core.frame import DataFrame
+import pandas
 
 with warnings.catch_warnings(record=True):
     from pathlib import Path
@@ -80,36 +81,39 @@ def main(docked_ligands_dir: Path, protein_file: Path,
                             if not lig_atom in lig_inter_list[-1][prot_name]:
                                 lig_inter_list[-1][prot_name][int_name].append(lig_atom)
 
-        df: df = fp.to_dataframe(index_col="Pose")
-        df_list: list[list] = [df.columns.tolist()] + df.to_numpy().tolist()
-        #why make a dataframe here? just process it directly
-        #you turn it into a df then numpy array then a list
-        #i think fp is a numpy array so you should be able to just do
-
-        for mol_indx in range(len(df_list[1:])):
-            act_indx = mol_indx + 1
-            temp_lig_inters: dict[str, dict[str, list[int]]] = lig_inter_list[mol_indx]
-            for inter_indx in range(len(df_list[0])):
-                for prot_name, atoms_ in temp_lig_inters.items():
-                    for inter_name, atoms in atoms_.items():
-                        if (
-                            prot_name == df_list[0][inter_indx][1]
-                            and inter_name == df_list[0][inter_indx][2]
-                        ):
-                            df_list[act_indx][inter_indx] = ".".join(
-                                [str(item) for item in atoms]
-                            )
+        df = create_interact_df(fp, lig_inter_list)
 
         csv_op: Path = (
             op_dir / f"{'_'.join(div_sdf.stem.split('_')[0:2])}_interacts.csv"
         ).resolve()
-        #maybe this is a good use case for you to just append the prolif interaction results from here to the df from earlier and simplify this then save it as a csv
-        with open(csv_op, "w") as f:
-            # add in headers
-            headers: list[list] = [list(row) for row in zip(*df_list[0])]
-            for header in headers:
-                f.write(",".join(header) + "\n")
-            # add in data
-            for line in df_list[1:]:
-                f.write(",".join([str(item) for item in line]) + "\n")
+        df.to_csv(csv_op)
 
+
+def create_interact_df(fp: plf.Fingerprint, 
+                        lig_inter_list: list[dict[str, dict[str, list[int]]]]
+                        ) -> DataFrame:
+    """Takes in the interaction fingerprint and creates a DF
+    where each col is a different interaction / interaction type and row is
+    a different molecule. 
+
+    If interaction exists, lists atom indicies involved in molecule. If it 
+    does not, says false.
+
+    Headers are (1) ligand residue involved (2) prot residue involve (3) iteraction
+    type
+
+    Args:
+        fp (plf.Fingerprint): prolif fingerprint of an docked concat SDF
+
+    Returns:
+        DataFrame: pandas dataframe with setup described above
+    """
+    df: DataFrame = fp.to_dataframe(index_col="Pose")
+
+    for mol_indx, prot_ress in enumerate(lig_inter_list):  # go through every molecule
+        for prot_res, interactions in prot_ress.items():
+            for interaction, atoms in interactions.items():
+                df.iloc[prot_res, (slice(None), mol_indx, interaction)] = ".".join(
+                            [str(item) for item in atoms]
+                        )
+    return df
