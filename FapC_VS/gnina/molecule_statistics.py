@@ -1,15 +1,11 @@
 
 import csv
-import pickle
 from pathlib import Path
 
-import pandas as pd
-import xgboost
 from rdkit import Chem
 from rdkit.Chem import Descriptors, FilterCatalog
 from rdkit.Chem.FilterCatalog import FilterCatalogParams
-from AqSolPred_web.predict.predict_from_mol import calculate_logs
-
+from aqsolpred_web.predict.predict_from_mol import calculate_logs
 
 def build_pains_catalog():
     params = FilterCatalogParams()
