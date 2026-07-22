@@ -36,7 +36,8 @@ def main(sdf_file: Path, csv_rank_file: Path, csv_file: Path):
         str(sdf_file), sanitize=True, removeHs=False, strictParsing=True
     )
     # setup molecule analysis
-    logs_list: list[float] = calculate_logs(molecules)
+    models_dir: Path = (Path(__file__).parent / "models").resolve()
+    logs_list: list[float] = calculate_logs(molecules, models_dir)
     pains_catalog = build_pains_catalog()
     csv_rank_list: list[list] = rank_csv_in(csv_rank_file)
     # create csv
