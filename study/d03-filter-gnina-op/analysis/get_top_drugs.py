@@ -9,7 +9,7 @@ DIR_STUDY: Path = Path(DIR_SCRIPT / ".." / "..").resolve()
 if __name__ == "__main__":
     # inputs
     docked_dir: Path = Path(
-        DIR_STUDY / "d02-dock-div-set" / "data" / "docked_compounds"
+        DIR_STUDY / "d02-dock-pharm-div-set" / "data" / "docked_compounds"
     )
     csv_rank_file: Path = Path(
         DIR_SCRIPT / ".." / "data" / "ranked_docked_mols.csv"
