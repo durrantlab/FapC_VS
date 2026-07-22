@@ -116,5 +116,5 @@ def create_interact_df(fp: plf.Fingerprint,
                 df.loc[mol_indx, pandas.IndexSlice[:, prot_res, interaction]] = ".".join(
                             [str(item) for item in atoms]
                         )
-    df = df.droplevel(3, axis=1)
+    #df = df.droplevel(3, axis=1)
     return df
