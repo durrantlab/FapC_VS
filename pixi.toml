@@ -19,7 +19,6 @@ gypsum-dl = ">=1.2.7, <2"
 dev = ["dev"]
 docs = ["docs"]
 pharmit = { features = ["pharmit"], no-default-feature = true }
-logs-pred = { features = ["logs-pred"], no-default-feature = true }
 
 [tasks]
 
