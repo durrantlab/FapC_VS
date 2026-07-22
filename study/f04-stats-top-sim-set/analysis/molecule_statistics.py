@@ -1,15 +1,12 @@
 import sys
 from pathlib import Path
+from FapC_VS.gnina import molecule_statistics
 
 DIR_SCRIPT: Path = Path(__file__).parent.resolve()
 DIR_STUDY: Path = Path(DIR_SCRIPT / ".." / "..").resolve()
 FILE_LOG: Path = (
     DIR_SCRIPT / ".." / "logs" / f"{Path(__file__).name.split('.')[0]}.log"
 ).resolve()
-
-# add the directory of script to path
-sys.path.insert(0, str((DIR_STUDY / "d04-stats-top-sim-set" / "analysis").resolve()))
-import molecule_statistics
 
 if __name__ == "__main__":
     # inputs
