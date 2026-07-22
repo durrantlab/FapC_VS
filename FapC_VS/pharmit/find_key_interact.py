@@ -108,7 +108,7 @@ def create_interact_df(fp: plf.Fingerprint,
     Returns:
         DataFrame: pandas dataframe with setup described above
     """
-    df: DataFrame = fp.to_dataframe(index_col="Pose")
+    df: DataFrame = fp.to_dataframe(index_col="Pose").astype(str)
 
     for mol_indx, prot_ress in enumerate(lig_inter_list):  # go through every molecule
         for prot_res, interactions in prot_ress.items():
