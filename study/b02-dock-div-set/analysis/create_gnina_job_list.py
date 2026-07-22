@@ -16,4 +16,4 @@ if __name__ == "__main__":
         DIR_STUDY / "b02-dock-div-set" / "data" / "docked_compounds"
     ).resolve()
 
-    lig_each_box.main(lig_inp_dir, box_dirs, pdb_dir, output_dir)
+    lig_each_box.main(lig_inp_dir, box_dirs, pdb_dir, output_dir, DIR_SCRIPT)
