@@ -86,7 +86,7 @@ def main(docked_ligands_dir: Path, protein_file: Path,
         csv_op: Path = (
             op_dir / f"{'_'.join(div_sdf.stem.split('_')[0:2])}_interacts.csv"
         ).resolve()
-        df.to_csv(csv_op)
+        df.to_csv(csv_op, index=False)
 
 
 def create_interact_df(fp: plf.Fingerprint, 
@@ -116,4 +116,5 @@ def create_interact_df(fp: plf.Fingerprint,
                 df.loc[mol_indx, pandas.IndexSlice[:, prot_res, interaction]] = ".".join(
                             [str(item) for item in atoms]
                         )
+    df = df.droplevel(3, axis=1)
     return df
