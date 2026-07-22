@@ -1,6 +1,6 @@
 
 from pathlib import Path
-from FapC_VS.gnina.clean_up_gypsum import clean_up_sdf
+from FapC_VS.gnina.create_jobs.clean_up_gypsum import clean_up_sdf
 
 
 def main(
