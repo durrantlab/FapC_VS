@@ -34,7 +34,7 @@ mpi4py = ">=4.1.2,<5"
 molvs = ">=0.1.1,<0.2"
 requests = ">=2.34.2,<3"
 
-[dependencies.target.linux-64]
+[target.linux-64.dependencies]
 xgboost = ">=3.3.0,<4"
 scikit-learn = ">=1.9.0,<2"
 pandas = ">=3.0.3,<4"
