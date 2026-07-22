@@ -9,6 +9,7 @@ platforms = ["win-64", "linux-64",  "osx-64"]
 version = "0.0.0"
 license = "Apache-2.0"
 readme = "README.md"
+preview = ["pixi-build"]
 
 [pypi-dependencies]
 FapC_VS = { path = ".", editable = true }
