@@ -17,6 +17,5 @@ if __name__ == "__main__":
     csv_rank_file: Path = (
         DIR_STUDY / "d03-filter-gnina-op" / "data" / "best_drugs" / "overall_best.csv"
     ).resolve()
-    models_dir: Path = DIR_SCRIPT / "models"
     csv_file: Path = (DIR_SCRIPT / ".." / "data" / "top_dock_stats.csv").resolve()
-    molecule_statistics.main(sdf_file, csv_rank_file, models_dir, csv_file)
+    molecule_statistics.main(sdf_file, csv_rank_file, csv_file)

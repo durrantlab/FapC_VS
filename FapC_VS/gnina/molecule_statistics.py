@@ -18,7 +18,7 @@ def rank_csv_in(csv_rank_file: Path) -> list:
         return [line.strip().split(",") for line in f.read().strip().split("\n")]
 
 
-def main(sdf_file: Path, csv_rank_file: Path, models_dir: Path, csv_file: Path):
+def main(sdf_file: Path, csv_rank_file: Path, csv_file: Path):
     """Takes in an SDF file, calculates a number of statistics, and places into a csv file
 
     CSV file format:
@@ -28,7 +28,6 @@ def main(sdf_file: Path, csv_rank_file: Path, models_dir: Path, csv_file: Path):
         sdf_file: the concat SDF file with all molecules
         csv_rank_file: CSV with all molecules listed in ranked order
             Index = index in sdf_file
-        models_dir: Where LogP models are stored
         csv_file: csv file location
             Will create folder if it does not exist
     """
@@ -37,7 +36,7 @@ def main(sdf_file: Path, csv_rank_file: Path, models_dir: Path, csv_file: Path):
         str(sdf_file), sanitize=True, removeHs=False, strictParsing=True
     )
     # setup molecule analysis
-    logs_list: list[float] = calculate_logs(molecules, models_dir)
+    logs_list: list[float] = calculate_logs(molecules)
     pains_catalog = build_pains_catalog()
     csv_rank_list: list[list] = rank_csv_in(csv_rank_file)
     # create csv
