@@ -34,16 +34,7 @@ molvs = ">=0.1.1,<0.2"
 requests = ">=2.34.2,<3"
 
 [target.linux-64.dependencies]
-xgboost = ">=3.3.0,<4"
-scikit-learn = ">=1.9.0,<2"
-pandas = ">=3.0.3,<4"
-streamlit = ">=1.59.2,<2"
-mordred = ">=1.2.0,<2"
-pillow = ">=12.3.0,<13"
-reduce = ">=4.15,<5"
-
-[target.linux-64.pypi-dependencies]
-aqsolpred_web = { git = "https://github.com/nacefguessaymi/AqSolPred-web" }
+aqsolpred_web = { git = "https://github.com/nacefguessaymi/AqSolPred-web.git" }
 
 [feature.dev.dependencies]
 black = ">=23.10.0"
