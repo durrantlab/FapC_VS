@@ -35,6 +35,9 @@ mpi4py = ">=4.1.2,<5"
 molvs = ">=0.1.1,<0.2"
 requests = ">=2.34.2,<3"
 
+[target.linux-64.dependencies]
+reduce = ">=4.15,<5"
+
 [feature.logs-pred.target.linux-64.dependencies]
 aqsolpred-web = { git = "https://github.com/nacefguessaymi/AqSolPred-web.git" }
 
