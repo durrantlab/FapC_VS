@@ -25,7 +25,6 @@ def main(curr_db_dir: Path, fixed_db_dir: Path) -> None:
             mol = Chem.AddHs(mol)
             cids = AllChem.EmbedMultipleConfs(mol, numConfs=2, params=params)
             results = AllChem.UFFOptimizeMoleculeConfs(mol, numThreads=0, maxIters=350)
-            # print(results)
             fixed_mols.append(mol)
         # write out
         writer = Chem.SDWriter(fixed_db_dir / db_sdf.name)

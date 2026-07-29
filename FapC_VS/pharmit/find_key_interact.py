@@ -34,7 +34,6 @@ def main(docked_ligands_dir: Path, protein_file: Path,
     ]
     op = ""
     for div_sdf in div_sdf_list:
-        print(div_sdf)
 
         pose_iterable = plf.sdf_supplier(str(div_sdf))
         fp = plf.Fingerprint(

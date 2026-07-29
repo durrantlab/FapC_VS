@@ -4,9 +4,6 @@ from FapC_VS.gnina import molecule_statistics
 
 DIR_SCRIPT: Path = Path(__file__).parent.resolve()
 DIR_STUDY: Path = Path(DIR_SCRIPT / ".." / "..").resolve()
-FILE_LOG: Path = (
-    DIR_SCRIPT / ".." / "logs" / f"{Path(__file__).name.split('.')[0]}.log"
-).resolve()
 
 
 if __name__ == "__main__":
