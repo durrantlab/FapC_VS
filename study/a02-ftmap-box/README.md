@@ -36,8 +36,8 @@ document.addEventListener(
 box/region_#.txt: each box output from FTMap. Has format required for GNINA
 
 ## Figures
-boxes_highlighted.pml: protein with highlighted boxes.
-no_boxes.pml: protein without boxes
+[boxes_highlighted.pml](/study/a02-ftmap-box/figures/boxes_highlighted.pml): protein with highlighted boxes.
+[no_boxes.pml](/study/a02-ftmap-box/figures/no_boxes.pml): protein without boxes
 
 ## Visualization
 [boxes_highlighted.pml](/study/a02-ftmap-box/visualization/boxes_highlighted.pml): sets up seesion with boxes present
