@@ -11,18 +11,17 @@ license = "Apache-2.0"
 readme = "README.md"
 preview = ["pixi-build"]
 
-[pypi-dependencies]
-FapC_VS = { path = ".", editable = true }
-gypsum-dl = ">=1.2.7, <2"
-
-
 [environments]
 dev = ["dev"]
 docs = ["docs"]
 pharmit = { features = ["pharmit"], no-default-feature = true }
-logs-pred = { features = ["logs-pred"]}
+logs-pred = { features = ["logs-pred"], no-default-feature = true }
 
 [tasks]
+
+[pypi-dependencies]
+FapC_VS = { path = ".", editable = true }
+gypsum-dl = ">=1.2.7, <2"
 
 [dependencies]
 python = "=3.12"
@@ -39,6 +38,7 @@ requests = ">=2.34.2,<3"
 reduce = ">=4.15,<5"
 
 [feature.logs-pred.target.linux-64.dependencies]
+FapC_VS = { path = ".", editable = true }
 aqsolpred-web = { git = "https://github.com/nacefguessaymi/AqSolPred-web.git" }
 
 [feature.dev.dependencies]
