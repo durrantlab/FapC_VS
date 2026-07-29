@@ -18,7 +18,6 @@
 *create_db.sh
 *run_gypsum.sh
 *pharms-top-div-set/analysis/get_pharms.slurm
-*create-pharm-db/data/*
 *testing/6-29-db-test/test1/DB
 *pharms-exp-set/analysis/get_pharms.slurm
 *stats-top-sim-set/analysis/AqSolPred-web-main
