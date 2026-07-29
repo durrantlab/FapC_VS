@@ -59,7 +59,7 @@ def main(docked_dir: Path, csv_rank_file: Path,
         concat_sdfs(sdf_path, concat_sdf_file)
 
 
-def concat_sdfs(lig_inp_dir: Path, lig_op_file: Path):
+def concat_sdfs(lig_inp_dir: Path, lig_op_file: Path) -> None:
     """Will take in a list of ligands and combine into
     n_sdf number of sdf files. Number of SDF files should
     be how many total jobs will be run

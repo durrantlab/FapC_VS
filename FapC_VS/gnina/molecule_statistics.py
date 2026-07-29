@@ -7,7 +7,7 @@ from rdkit.Chem import Descriptors, FilterCatalog
 from rdkit.Chem.FilterCatalog import FilterCatalogParams
 from aqsolpred_web.predict.predict_from_mol import calculate_logs
 
-def build_pains_catalog():
+def build_pains_catalog() -> FilterCatalog.FilterCatalog:
     params = FilterCatalogParams()
     params.AddCatalog(FilterCatalogParams.FilterCatalogs.PAINS)
     return FilterCatalog.FilterCatalog(params)
@@ -18,7 +18,7 @@ def rank_csv_in(csv_rank_file: Path) -> list:
         return [line.strip().split(",") for line in f.read().strip().split("\n")]
 
 
-def main(sdf_file: Path, csv_rank_file: Path, csv_file: Path):
+def main(sdf_file: Path, csv_rank_file: Path, csv_file: Path) -> None:
     """Takes in an SDF file, calculates a number of statistics, and places into a csv file
 
     CSV file format:

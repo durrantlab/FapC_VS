@@ -10,7 +10,7 @@ def main(
     cleaned_dir: Path,
     output_dir: Path,
     DIR_SCRIPT: Path
-):
+) -> None:
     """Will take in (1) ligands to dock (2) boxes to dock in (3) pdb to dock to.
     And create gnina inputs to dock every ligand to every box.
 

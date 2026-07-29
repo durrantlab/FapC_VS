@@ -26,7 +26,7 @@ def main(
     op_pharm_dir: Path,
     op_csv_path: Path,
     FILE_LOG: Path,
-):
+) -> None:
     """ALL IN CONTEXT OF A SINGLE CONCATED SDF FILE. Requires running of pharmit on that
     and interaction determination script on it.
 
@@ -107,7 +107,7 @@ def main(
     logging.info(f"Completed\n")
 
 
-def log_pharms(mol_index: int, valid_pharms: list[bool]):
+def log_pharms(mol_index: int, valid_pharms: list[bool]) -> None:
     bool_count = valid_pharms.count(True)
     if bool_count > 3:
         logging.info(f"Mol{mol_index} has {bool_count} pharms")
@@ -237,7 +237,7 @@ def read_in_csv(
     return residues, inter_type, if_interact
 
 
-def to_bool(s):
+def to_bool(s) -> bool:
     return s.strip().lower() in ("true", "1", "t", "yes")
 
 
@@ -284,7 +284,7 @@ def load_concatenated_json(path: Path) -> list[dict]:
     return objects
 
 
-def write_concatenated_json(objects, path, indent=2):
+def write_concatenated_json(objects, path, indent=2) -> None:
     with open(path, "w") as f:
         for i, obj in enumerate(objects):
             if i:

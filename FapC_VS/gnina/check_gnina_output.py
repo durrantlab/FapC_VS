@@ -4,7 +4,7 @@ import logging
 from FapC_VS import enable_logging
 
 
-def main(gnina_input_dir: Path, gnina_output_dir: Path, FILE_LOG: Path):
+def main(gnina_input_dir: Path, gnina_output_dir: Path, FILE_LOG: Path) -> None:
     # setup logging
     enable_logging(FILE_LOG)
     # extract all inputs

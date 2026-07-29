@@ -5,7 +5,7 @@ from pathlib import Path
 def main(
     sdf_input_dir: Path, split_sdf_dir: Path, split_size: int, 
     gypsum_sdf_dir: Path, DIR_SCRIPT: Path
-):
+) -> None:
     """Takes in all the SDF to be gypsumed, splits into X chunks, then creates
     gypsum inputs to be run
 

@@ -2,7 +2,7 @@ import csv
 from pathlib import Path
 
 
-def main(docked_dir: Path, csv_op_file: Path):
+def main(docked_dir: Path, csv_op_file: Path) -> None:
     """Will take in all docked molecules (recursively) in a directory, determine 
     the best pose for each and store the score. Will then order on score. 
     Places order in a csv

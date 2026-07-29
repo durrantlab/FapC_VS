@@ -10,7 +10,7 @@ from FapC_VS import enable_logging
 def main(
     pharm_list_file: Path, sdf_file: Path, csv_file: Path, 
     temp_dir: Path, max_mol: int, FILE_LOG: Path
-):
+) -> None:
     """Using 1 pharmacophore list input will iteratively run pharmacophore searches
     with pharmit, removing pharmacophores in BFS style, until only 3 remain or
     max_mol compounds are found.
@@ -92,7 +92,7 @@ def main(
     logging.info("Done!")
 
 
-def concat_sdfs(sdf_files: list[Path], sdf_file: Path, csv_file: Path):
+def concat_sdfs(sdf_files: list[Path], sdf_file: Path, csv_file: Path) -> None:
     """Takes in all SDF files output (in temp dir) and
     brings them together into a single sorted sdf_file. No
     duplicates
@@ -127,7 +127,7 @@ def concat_sdfs(sdf_files: list[Path], sdf_file: Path, csv_file: Path):
                     break
 
 
-def sort_csv(csv_path: Path):
+def sort_csv(csv_path: Path) -> None:
     """Takes in a csv file and sorts it based rmsd (col2)
 
     Args:
@@ -192,7 +192,7 @@ def update_csv(pharm_csv_op: Path, csv_file: Path, max_num: int) -> int:
     return mol_num
 
 
-def already_inside_csv(csv: list[list[str]], name: str):
+def already_inside_csv(csv: list[list[str]], name: str) -> bool:
     for line in csv[1:]:
         if line[1] == name:
             return True
@@ -244,7 +244,7 @@ def already_inside_csv(csv: list[list], name: str) -> bool:
     return False
 
 
-def fake_pharmit(cmd: list[str]):
+def fake_pharmit(cmd: list[str]) -> None:
     """Just meant to replicate what pharmit would do if I could run it"""
     to_copy: Path = Path(
         "D:\\FapC_VS\\study\\c04-pharm-search-top-div\\data\\search_output\\op_all.sdf"
@@ -321,7 +321,7 @@ class iter_pharm:
             temp_dict["points"][pharm_index]["enabled"] = False
         return temp_dict
 
-    def next_pharm(self):
+    def next_pharm(self) -> str:
         """Will go to next disable state in the
         'BFS'
         """

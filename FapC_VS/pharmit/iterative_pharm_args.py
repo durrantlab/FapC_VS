@@ -1,7 +1,8 @@
 import argparse
 from pathlib import Path
 
-def main(DIR_STUDY: Path, DIR_SCRIPT: Path, region_def: str, mol_num_def: str):
+def main(DIR_STUDY: Path, DIR_SCRIPT: Path, 
+         region_def: str, mol_num_def: str) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="runs pharmit iteratively on a pharmacophore list"
     )

@@ -5,7 +5,7 @@ from rdkit import Chem, DataStructs, RDLogger
 from rdkit.Chem import AllChem, Draw
 
 
-def main(top_div_set_dir: Path, exp_set_file: Path, op_dir: Path):
+def main(top_div_set_dir: Path, exp_set_file: Path, op_dir: Path) -> None:
     """Will determine the tanimoto / other similaries between each
     top div set and each exp set. Will create a .txt writeup file
     describing it
@@ -60,7 +60,7 @@ def main(top_div_set_dir: Path, exp_set_file: Path, op_dir: Path):
         f.write(op)
 
 
-def draw_image(mol, photo_path: Path):
+def draw_image(mol, photo_path: Path) -> None:
     AllChem.Compute2DCoords(mol)
     img = Draw.MolToImage(mol, size=(400, 400))
     if not photo_path.parent.is_dir():

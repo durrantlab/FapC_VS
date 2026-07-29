@@ -9,8 +9,7 @@ def main(
     main_pharmit_output_dir: Path,
     DIR_SCRIPT: Path,
     max_ret_mol: int = 2000,
-
-):
+) -> None:
     """Will take in pharmits input files and create a slurm to run 
     the iterative pharm script.
 

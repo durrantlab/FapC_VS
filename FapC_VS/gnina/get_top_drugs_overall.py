@@ -5,7 +5,8 @@ DIR_SCRIPT: Path = Path(__file__).parent.resolve()
 DIR_STUDY: Path = Path(DIR_SCRIPT / ".." / "..").resolve()
 
 
-def main(docked_dir: Path, csv_rank_file: Path, best_drugs_dir: Path, num_best: int):
+def main(docked_dir: Path, csv_rank_file: Path, 
+         best_drugs_dir: Path, num_best: int) -> None:
     """Will take in the best drugs csv, and it will find the overall top X best.
     It will output them into a csv and give the SDFs seperately + concatted
 
@@ -57,7 +58,7 @@ def main(docked_dir: Path, csv_rank_file: Path, best_drugs_dir: Path, num_best: 
     concat_sdfs(sdf_path, concat_sdf_file)
 
 
-def concat_sdfs(lig_inp_dir: Path, lig_op_file: Path):
+def concat_sdfs(lig_inp_dir: Path, lig_op_file: Path) -> None:
     """Will take in a list of ligands and combine into
     n_sdf number of sdf files. Number of SDF files should
     be how many total jobs will be run

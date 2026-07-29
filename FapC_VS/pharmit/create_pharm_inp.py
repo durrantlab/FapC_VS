@@ -18,7 +18,7 @@ module load pixi
 """
 
 
-def main(sdf_dir: Path, output_dir: Path, DIR_SCRIPT: Path):
+def main(sdf_dir: Path, output_dir: Path, DIR_SCRIPT: Path) -> None:
     """Will take in all SDFs in the path and auto generate a slurm script
     to extract all pharmacophores from them
 
