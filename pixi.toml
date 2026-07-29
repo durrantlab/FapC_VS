@@ -38,6 +38,7 @@ reduce = ">=4.15,<5"
 
 [feature.logs-pred]
 channels = ["conda-forge"]
+platforms = ["linux-64"]
 
 [feature.logs-pred.target.linux-64.pypi-dependencies]
 FapC_VS = { path = ".", editable = true }
