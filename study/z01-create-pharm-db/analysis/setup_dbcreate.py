@@ -12,7 +12,7 @@ def main(
     db_main_path: Path,
     skip_file_format: bool = False,
     DIR_SCRIPT: Path = DIR_SCRIPT,
-):
+) -> None:
     """Takes in library of sdf molecules, edits files to be
     correct format and creates a script that (when run)
     will setup the database
@@ -102,8 +102,6 @@ def fix_names(sdf_file: Path, index: int) -> int:
 if __name__ == "__main__":
     # inputs
     sdf_db_path: Path = Path("/ihome/jdurrant/irh24/Projects/molport_cmpds").resolve()
-    # sdf_db_path: Path = Path("F:\\FapC_VS\\study\\z01-create-pharm-db\\data\\").resolve() # for testing
-    # db_main_path: Path = (DIR_SCRIPT / ".." / "data" / "DB").resolve()
     db_main_path: Path = Path("/ix/jdurrant/durrantlab/irh24/FapC_VS/032-DB").resolve()
 
     main(sdf_db_path, db_main_path, True)
