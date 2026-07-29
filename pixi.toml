@@ -40,7 +40,7 @@ reduce = ">=4.15,<5"
 FapC_VS = { path = ".", editable = true }
 
 [feature.logs-pred.target.linux-64.dependencies]
-python = "=-3.7.6"
+python = "==3.7.6"
 aqsolpred-web = { git = "https://github.com/nacefguessaymi/AqSolPred-web.git" }
 
 [feature.dev.dependencies]
