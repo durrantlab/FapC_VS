@@ -6,12 +6,7 @@ description = "test"
 name = "FapC_VS"
 version = "0.0.0"
 readme = "README.md"
-requires-python = ">=3.10"
-
-# TODO: Keep this here until pixi releases building capabilities
-dependencies = [
-    "loguru>=0.7.2,<0.8",
-]
+requires-python = ">=3.7"
 
 [build-system]
 requires = ["setuptools"]

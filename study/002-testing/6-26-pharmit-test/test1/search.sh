@@ -1,0 +1,6 @@
+pixi run -e pharmit pharmit dbsearch -max-weight 750 \
+    -extra-info -sort-rmsd \
+    -in reg_1_mol1_base_input.json \
+    -out reg_1_mol1_base_output.sdf \
+    -max-hits 2000 \
+    -dbdir /ix/jdurrant/durrantlab/irh24/FapC_VS/032-DB/iis-000-000-000--000-499-999

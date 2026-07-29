@@ -1,5 +1,11 @@
 # FapC_VS
 
+### How To Read Project
+
+Most of this project is in the study directory. For more information on the project, look at the README in that folder.
+
+### Overview of Project
+
 This repository provides a robust, standardized framework that streamlines research projects and adheres to open science principles.
 Everything is included, from reproducible Python environments to an automated website pipeline.
 Join us in advancing open science, promoting transparency, and accelerating innovation by adopting this comprehensive toolkit.

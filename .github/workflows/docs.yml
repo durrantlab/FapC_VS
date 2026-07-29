@@ -33,8 +33,11 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Install pixi
-        uses: prefix-dev/setup-pixi@v0.8.1
+      - name: Install pixi -v
+        uses: prefix-dev/setup-pixi@v0.8.14
+        with:
+          pixi-version: v0.62.2
+          cache: false
 
       - name: Setup environment
         run: pixi install
