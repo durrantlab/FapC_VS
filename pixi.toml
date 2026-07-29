@@ -110,3 +110,4 @@ pharmit = { url = "https://github.com/durrantlab/pharmit-dl/releases/download/v0
 
 [feature.pharmit]
 channels = ["conda-forge"]
+platforms = ["linux-64"]
