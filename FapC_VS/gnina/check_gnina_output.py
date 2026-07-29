@@ -5,6 +5,14 @@ from FapC_VS import enable_logging
 
 
 def main(gnina_input_dir: Path, gnina_output_dir: Path, FILE_LOG: Path) -> None:
+    """Will take in a gnina input dir and output dir and make sure
+    all molecules are present in the output. Ensures none were skipped
+
+    Args:
+        gnina_input_dir: where the input for gnina was placed
+        gnina_output_dir: where the output of gnina was placed
+        FILE_LOG: log file where results of check are placed
+    """
     # setup logging
     enable_logging(FILE_LOG)
     # extract all inputs
