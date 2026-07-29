@@ -25,5 +25,5 @@ best_drugs: holds the top 10 molecules of each pocket (region)
 - `region_<>`: holds the top 10 molecules for that region in seperate SDFs. Named in order from best to worst, indexing starts at 0
 
 ## Analysis
-rank_docked: Will take in all docked molecules, determine the best pose for each (across conforms and regions) and store the score. Will then order on score and output in csv
-get_top_drugs: will take in the best drugs csv, and for each region (box) it will find the top X best molecules. It will output them into a csv, a SDF together and SDFs seperately
+[rank_docked](/study/b03-filter-gnina-op/analysis/rank_docked.py): Will take in all docked molecules, determine the best pose for each (across conforms and regions) and store the score. Will then order on score and output in csv
+[get_top_drugs](/study/b03-filter-gnina-op/analysis/get_top_drugs.py): will take in the best drugs csv, and for each region (box) it will find the top X best molecules. It will output them into a csv, a SDF together and SDFs seperately

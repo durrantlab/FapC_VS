@@ -20,4 +20,4 @@ The interaction naming is based on what the ligand is doing
 - Each sublist (seperated by .) is list of atoms involved in that interaction type with that residue. If it is false, means that the molecule does not interact with it. Atom indexing starts at 1, the type depends on the side of the interaction the ligand is involved in.
 
 ## Analysis
-find_interacts.py: Will take in number of SDF files and a protein file and determine the interactions present for each ligand and which atoms are involved. Output into a csv
+[find_interacts.py](/study/c01-key-top-div-inter/analysis/find_interacts.py): Will take in number of SDF files and a protein file and determine the interactions present for each ligand and which atoms are involved. Output into a csv

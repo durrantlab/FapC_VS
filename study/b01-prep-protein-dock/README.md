@@ -16,4 +16,4 @@ Goal: Setup the protein for docking with [reduce](https://github.com/rlabduke/re
 9nqd_protonated.pdb: the protonated pdb, created with reduce
 
 ## Analysis
-[prep_protein.sh](/analysis/prep_protein.sh): will create protonated protein using reduce
+[prep_protein.sh](/study/b01-prep-protein-dock/analysis/prep_protein.sh): will create protonated protein using reduce

@@ -18,4 +18,4 @@ photos: has an image of every experimental compound and the diversity compound i
 exp_set.sdf: concat SDF with all experimental compounds
 
 ## Analysis
-find_similarity: will determine the tanimoto / other similaries between each top div set and each exp set. Will create a .txt writeup file describing it
+[find_similarity](/study/b04-compare-sets/analysis/find_similarity.py): will determine the tanimoto / other similaries between each top div set and each exp set. Will create a .txt writeup file describing it

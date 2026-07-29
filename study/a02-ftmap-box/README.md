@@ -40,6 +40,6 @@ boxes_highlighted.pml: protein with highlighted boxes.
 no_boxes.pml: protein without boxes
 
 ## Visualization
-[boxes_highlighted.pml](/visualization/boxes_highlighted.pml): sets up seesion with boxes present
+[boxes_highlighted.pml](/study/a02-ftmap-box/visualization/boxes_highlighted.pml): sets up seesion with boxes present
     All .pml scripts point to 9nqd.fftmap.cleared.pdb in data
 
