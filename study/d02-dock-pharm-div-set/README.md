@@ -28,8 +28,9 @@ cleaned_concats: takes the prepped ligands from gypsum and removes the first set
 docked_compounds: each ligand moved to pocket it was docked to (docked to same pocket as parent molecule). Organized same as cleaned_concat
 
 ## Analysis
-create_gnina_inputs.py: Takes in all the SDF to be docked, remove gypsum settings molecule, then creates gnina inputs to be run
+[create_gnina_inputs.py](/study/d02-dock-pharm-div-set/analysis/create_gnina_job_list.py): Takes in all the SDF to be docked, remove gypsum settings molecule, then creates gnina inputs to be run
 run_gnina.sh: submits the batch jobs (created)
-dock.slurm: settings for the batch job
+[dock.slurm](/study/d02-dock-pharm-div-set/analysis/dock.slurm): settings for the batch job
+[dock_single.slurm](/study/d02-dock-pharm-div-set/analysis/dock_single.slurm): settings for a single job, used for testing
 job_list.txt: list of arguments for each run of gnina (created)
-check_output.py: will check that each molecule of input was successfully docked
+[check_output.py](/study/d02-dock-pharm-div-set/analysis/check_output.py): will check that each molecule of input was successfully docked

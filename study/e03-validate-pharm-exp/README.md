@@ -30,10 +30,10 @@ script_output: for each region, each molecule's pharmacophore json with pharmaco
 visual_inspect: for each region, each molecule's pharmacophore json with pharmacophores enabled / disabled depending on visual inspection of low pharm molecules from script
 
 ## Analysis
-find_imp_pharms.py: Will take in pharmacophores for each sdf and its list of interactions to determine key pharmacophores
+[find_imp_pharms.py](/study/e03-validate-pharm-exp/analysis/find_imp_pharms.py): Will take in pharmacophores for each sdf and its list of interactions to determine key pharmacophores
 
 ## Logs
 find_imp_pharms.log: holds output of pharmacophore enabling / disabling script. Check to see if any have 3 or less enabled
 
 ## Visualization
-check_pharms.pse: pymol session used to visually check if certain pharmacophores could be enabled
+[check_pharms.pse](/study/e03-validate-pharm-exp/visualization/check_pharms.pse): pymol session used to visually check if certain pharmacophores could be enabled

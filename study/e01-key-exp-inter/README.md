@@ -24,4 +24,4 @@ exp_set_interacts: holds experimental molecule's interactions
 - Each sublist (seperated by .) is list of atoms involved in that interaction type with that residue. If it is false, means that the molecule does not interact with it. Atom indexing starts at 1, the type depends on the side of the interaction the ligand is involved in.
 
 ## Analysis
-find_interacts.py: Will take in number of SDF files and a protein file and determine the interactions present for each ligand and which atoms are involved. Output into a csv
+[find_interacts.py](/study/e01-key-exp-inter/analysis/find_interacts.py): Will take in number of SDF files and a protein file and determine the interactions present for each ligand and which atoms are involved. Output into a csv

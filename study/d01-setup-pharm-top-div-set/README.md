@@ -26,7 +26,7 @@ split_sdf/ holds all similar molecules, but for each region#/mol#, it is split i
 output_sdf/ holds all similar molecules, now setup with gypsum. Organization: `region_#/mol#/group_#/<>.sdf`
 
 ## Analysis
-setup_gypsum.py: Takes in all the SDF to be gypsumed, splits into X chunks, then creates gypsum inputs to be run
+[setup_gypsum.py](/study/d01-setup-pharm-top-div-set/analysis/setup_gypsum_run.py): Takes in all the SDF to be gypsumed, splits into X chunks, then creates gypsum inputs to be run
 run_gypsum.sh: submits the batch jobs (created)
-run_gypsum.slurm: settings for the batch job
+[run_gypsum.slurm](/study/d01-setup-pharm-top-div-set/analysis/run_gypsum.slurm): settings for the batch job
 job_list.txt: list of arguments for each run of gypsum (created)

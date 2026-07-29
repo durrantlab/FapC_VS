@@ -20,7 +20,8 @@ search_output/ holds the output of pharmacophore search
 - mol#.csv: CSV holding index,name,rmsd,search_iteration for each molecule, sorted by RMSD
 
 ## Analysis
-create_batch_job.py: Will take in pharmits input files and create a slurm to run the iterative pharm script.
-pharm_search.slurm: slurm script for the pharmit search batch job
+[create_batch_job.py](/study/e04-pharm-search-exp-set/analysis/create_batch_job.py): Will take in pharmits input files and create a slurm to run the iterative pharm script.
+[pharm_search.slurm](/study/e04-pharm-search-exp-set/analysis/pharm_search.slurm): slurm script for the pharmit search batch job
+[iterative_pharm.py](/study/e04-pharm-search-exp-set/analysis/iterative_pharm.py): the iterative pharm program command line wrapper
 run_pharmit_search.sh: bash script that runs the batch jobs (created)
 temp/ folder that holds temp data for iterative_pharm. Files deleted when iterative pharmit completes (created)

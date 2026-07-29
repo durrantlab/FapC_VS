@@ -19,6 +19,4 @@ Goal: determine statistics of the top compounds of the similar to experimental s
 top_dock_statistics: data about each molecule. Molecule index = index in SDF of input. Holds: Name,LogS,CNN_VS,CNNaffinity,Group,Molar Mass,Heavy Atoms,PAINS Flags,SMILES,Soluability,Notes
 
 ## Analysis
-molecule_statistics.py: Takes in an SDF file, calculates a number of statistics, and places into a csv file
-predefined_models.py: library to help with finding LogS
-models/ holds pretrained models for predicted LogS
+[molecule_statistics.py](/study/f04-stats-top-sim-set/analysis/molecule_statistics.py): Takes in an SDF file, calculates a number of statistics, and places into a csv file

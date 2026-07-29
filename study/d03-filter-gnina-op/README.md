@@ -26,5 +26,5 @@ best_drugs: holds the top 100 molecules
 - singles: holds the top 100 molecules in seperate SDFs. Named in order from best to worst, indexing starts at 0. r#_[name of molecule].sdf
 
 ## Analysis
-rank_docked: Will take in all docked molecules, determine the best pose for each (across conforms) and store the score. Will then order on score and output in csv
-get_top_drugs: will take in the best drugs csv, and find the top X best molecules. It will output them into a csv, a SDF together and SDFs seperately
+[rank_docked](/study/d03-filter-gnina-op/analysis/rank_docked.py): Will take in all docked molecules, determine the best pose for each (across conforms) and store the score. Will then order on score and output in csv
+[get_top_drugs](/study/d03-filter-gnina-op/analysis/get_top_drugs.py): will take in the best drugs csv, and find the top X best molecules. It will output them into a csv, a SDF together and SDFs seperately
