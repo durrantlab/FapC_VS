@@ -37,8 +37,10 @@ requests = ">=2.34.2,<3"
 [target.linux-64.dependencies]
 reduce = ">=4.15,<5"
 
-[feature.logs-pred.target.linux-64.dependencies]
+[feature.logs-pred.target.linux-64.pypi-dependencies]
 FapC_VS = { path = ".", editable = true }
+
+[feature.logs-pred.target.linux-64.dependencies]
 aqsolpred-web = { git = "https://github.com/nacefguessaymi/AqSolPred-web.git" }
 
 [feature.dev.dependencies]
