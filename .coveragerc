@@ -3,7 +3,7 @@ branch = true
 source = tests
 
 [paths]
-source = metalflare
+source = FapC_VS
 
 [report]
 show_missing = true
