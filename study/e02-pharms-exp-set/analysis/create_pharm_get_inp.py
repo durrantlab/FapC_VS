@@ -1,5 +1,5 @@
-
 from pathlib import Path
+
 from FapC_VS.pharmit import create_pharm_inp
 
 DIR_SCRIPT: Path = Path(__file__).parent.resolve()

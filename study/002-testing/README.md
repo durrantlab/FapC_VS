@@ -9,4 +9,3 @@ Completed: [more info](<https://github.com/durrantlab/FapC_VS/blob/ians-new-glor
 # 6-29-db-test
 Goal: determine how to create a more accurate database
 Did NOT complete: [more info](<https://github.com/durrantlab/FapC_VS/blob/ians-new-glorious-branch/study/002-testing/6-29-db-test/README.md>)
-

@@ -1,5 +1,6 @@
 import math
 from pathlib import Path
+
 from FapC_VS.gnina.create_jobs import create_n_sdf
 
 DIR_SCRIPT: Path = Path(__file__).parent.resolve()

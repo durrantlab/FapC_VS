@@ -1,4 +1,5 @@
 from pathlib import Path
+
 from FapC_VS.pharmit import find_key_interact
 
 DIR_SCRIPT: Path = Path(__file__).parent.resolve()

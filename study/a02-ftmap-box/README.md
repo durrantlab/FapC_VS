@@ -42,4 +42,3 @@ box/region_#.txt: each box output from FTMap. Has format required for GNINA
 ## Visualization
 [boxes_highlighted.pml](/study/a02-ftmap-box/visualization/boxes_highlighted.pml): sets up seesion with boxes present
     All .pml scripts point to 9nqd.fftmap.cleared.pdb in data
-

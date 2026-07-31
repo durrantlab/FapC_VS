@@ -1,5 +1,5 @@
-
 from pathlib import Path
+
 from FapC_VS.gnina import molecule_statistics
 
 DIR_SCRIPT: Path = Path(__file__).parent.resolve()

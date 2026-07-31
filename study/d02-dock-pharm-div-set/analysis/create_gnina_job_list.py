@@ -1,5 +1,5 @@
-
 from pathlib import Path
+
 from FapC_VS.gnina.clean_up_gypsum import clean_up_sdf
 from FapC_VS.gnina.create_jobs import lig_prev_box
 
@@ -30,5 +30,6 @@ if __name__ == "__main__":
     ).resolve()
     """Where the docked compounds will be stored. WIll create files if they do not exist."""
 
-    lig_prev_box.main(lig_inp_dir, box_dirs, pdb_dir, 
-                      cleaned_dir, output_dir, DIR_SCRIPT)
+    lig_prev_box.main(
+        lig_inp_dir, box_dirs, pdb_dir, cleaned_dir, output_dir, DIR_SCRIPT
+    )

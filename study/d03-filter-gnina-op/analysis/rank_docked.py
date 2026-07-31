@@ -1,6 +1,7 @@
 import csv
 import sys
 from pathlib import Path
+
 from FapC_VS.gnina import rank_docked
 
 DIR_SCRIPT: Path = Path(__file__).parent.resolve()

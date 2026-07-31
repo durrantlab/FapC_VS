@@ -1,5 +1,6 @@
 import sys
 from pathlib import Path
+
 from FapC_VS.pharmit import iterative_pharm
 
 DIR_SCRIPT: Path = Path(__file__).parent.resolve()

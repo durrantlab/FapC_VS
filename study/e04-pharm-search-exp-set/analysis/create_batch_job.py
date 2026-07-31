@@ -1,7 +1,7 @@
-
 import shutil
 import sys
 from pathlib import Path
+
 from FapC_VS.pharmit import create_batch_iterative_pharm_job
 
 DIR_SCRIPT: Path = Path(__file__).parent.resolve()

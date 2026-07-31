@@ -1,4 +1,5 @@
 from pathlib import Path
+
 from FapC_VS.pharmit import find_imp_pharms
 
 DIR_SCRIPT: Path = Path(__file__).parent.resolve()
@@ -36,4 +37,6 @@ if __name__ == "__main__":
         op_pharm_dir: Path = (op_dir / "script_output" / region).resolve()
         op_csv_path: Path = (op_dir / "pharm_enabled" / f"{region}.csv").resolve()
 
-        find_imp_pharms.main(sdf_path, csv_path, pharm_json_path, op_pharm_dir, op_csv_path, FILE_LOG)
+        find_imp_pharms.main(
+            sdf_path, csv_path, pharm_json_path, op_pharm_dir, op_csv_path, FILE_LOG
+        )

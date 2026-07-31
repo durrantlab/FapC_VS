@@ -1,4 +1,5 @@
 from pathlib import Path
+
 from FapC_VS.gnina.create_jobs import lig_each_box
 
 DIR_SCRIPT: Path = Path(__file__).parent.resolve()

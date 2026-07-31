@@ -5,34 +5,34 @@ for any pipeline, just for general visualization
 
 ## Data
 9NQD.cif: the FapC Model used, [PDB link](https://www.rcsb.org/structure/9NQD)
-<script> 
+<script>
 document.addEventListener(
-    'DOMContentLoaded', 
-    (event) => { 
+    'DOMContentLoaded',
+    (event) => {
         const viewer = molstar.Viewer.create(
-            'Top-Structure-view', 
-            { 
-                layoutIsExpanded: false, 
-                layoutShowControls: false, 
-                layoutShowRemoteState: false, 
-                layoutShowSequence: true, 
-                layoutShowLog: false, 
-                layoutShowLeftPanel: false, 
-                viewportShowExpand: true, 
-                viewportShowSelectionMode: true, 
+            'Top-Structure-view',
+            {
+                layoutIsExpanded: false,
+                layoutShowControls: false,
+                layoutShowRemoteState: false,
+                layoutShowSequence: true,
+                layoutShowLog: false,
+                layoutShowLeftPanel: false,
+                viewportShowExpand: true,
+                viewportShowSelectionMode: true,
                 viewportShowAnimation: false,  
-                pdbProvider: 'rcsb', 
+                pdbProvider: 'rcsb',
             }
-        ).then(viewer => { 
+        ).then(viewer => {
             viewer.loadStructureFromUrl(
-                "https://files.rcsb.org/download/9NQD.cif", 
+                "https://files.rcsb.org/download/9NQD.cif",
                 "cif"
-                ); 
+                );
             }
-        ); 
+        );
     }
-); 
-</script> 
+);
+</script>
 
 ## Figures
 Variety of PyMol scripts that create figures of FapC fibrils / monomers

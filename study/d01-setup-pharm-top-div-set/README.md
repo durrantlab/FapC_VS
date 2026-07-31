@@ -1,28 +1,28 @@
 
 # d01-setup-pharm-top-div-set
 Goal: take the set of molecules similar to top diversity set and set them up with gypsum.
-- Input: many similar molecules for each molecule in top div set. Each region will have a folder that holds SDFs of similar molecules for each molecule. (region#/mol#.sdf)
-- Output: each molecule’s list of similar molecules, split into chunks of 250 (called groups) and be setup with gypsum. (`region#/mol#/group#/<>.sdf`)
+-   Input: many similar molecules for each molecule in top div set. Each region will have a folder that holds SDFs of similar molecules for each molecule. (region#/mol#.sdf)
+-   Output: each molecule’s list of similar molecules, split into chunks of 250 (called groups) and be setup with gypsum. (`region#/mol#/group#/<>.sdf`)
 
 ## How To Use:
-1) Run gypsum on the molecules
-- Create gypsum input scripts running setup_gypsum_run
- - Check the paths are correct
- - Run with pixi
-- Run gypsum
- - chmod +x run_gypsum.sh
- - ./run_gypsum.sh
-2) Sanity check: split
-- Check that the start and end of group_0 for a specific mol line up with molecule 0 and 249
-- Check that start of group_1 is molecule 250
-- Check that end of group_x is molecule 1999
-3) Sanity check: gypsum
-- Check that start / end of a group is the same molecule as in the split file of the same group
-- Check that all groups are successful by rerunning setup_gypsum and seeing if anything is in job_list.txt
+1)  Run gypsum on the molecules
+-   Create gypsum input scripts running setup_gypsum_run
+-   Check the paths are correct
+-   Run with pixi
+-   Run gypsum
+-   chmod +x run_gypsum.sh
+-   ./run_gypsum.sh
+1)  Sanity check: split
+-   Check that the start and end of group_0 for a specific mol line up with molecule 0 and 249
+-   Check that start of group_1 is molecule 250
+-   Check that end of group_x is molecule 1999
+1)  Sanity check: gypsum
+-   Check that start / end of a group is the same molecule as in the split file of the same group
+-   Check that all groups are successful by rerunning setup_gypsum and seeing if anything is in job_list.txt
 
 ## Data
 split_sdf/ holds all similar molecules, but for each region#/mol#, it is split into groups so each SDF has 250 (so 8 groups / molecule)
-- region_#/mol#/group_#.sdf
+-   region_#/mol#/group_#.sdf
 output_sdf/ holds all similar molecules, now setup with gypsum. Organization: `region_#/mol#/group_#/<>.sdf`
 
 ## Analysis
