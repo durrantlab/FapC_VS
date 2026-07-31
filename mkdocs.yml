@@ -111,11 +111,11 @@ plugins:
 
 hooks:
   - hooks/launchy.py
-colab_base_url: https://colab.research.google.com/github/FapC_VS/FapC_VS/blob/main/study
 
 
 extra:
   generator: false
+  colab_base_url: https://colab.research.google.com/github/FapC_VS/FapC_VS/blob/main/study
 
 extra_css:
   - css/base.css

@@ -5,6 +5,8 @@ for any pipeline, just for general visualization
 
 ## Data
 9NQD.cif: the FapC Model used, [PDB link](https://www.rcsb.org/structure/9NQD)
+
+<div id="Top-Structure-view" class="mol-container" markdown="0"></div>
 <script>
 document.addEventListener(
     'DOMContentLoaded',

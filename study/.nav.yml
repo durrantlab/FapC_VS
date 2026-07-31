@@ -1,14 +1,35 @@
 nav:
   - Home: README.md
-  - Management: management
-  - Methods: methods
-  - Data: data
-  - Analysis: analysis
-  - Figures: figures
-  - Dissemination: dissemination
-  - Miscellaneous: misc
   - API: api
-
+  - 002-testing
+  - 002-testing/6-26-pharmit-test
+  - 002-testing/6-29-db-test
+  - a01-base-data
+  - a02-ftmap-box
+  - a03-setup-div-set
+  - b01-prep-protein-dock
+  - b02-dock-div-set
+  - b03-filter-gnina-op
+  - b04-compare-sets
+  - c01-key-top-div-inter
+  - c02-pharms-top-div-set
+  - c03-validate-pharm-top-div
+  - c04-pharm-search-top-div
+  - d01-setup-pharm-top-div-set
+  - d02-dock-pharm-div-set
+  - d03-filter-gnina-op
+  - d03-filter-gnina-op/figures
+  - d04-stats-top-sim-set
+  - e01-key-exp-inter
+  - e02-pharms-exp-set
+  - e03-validate-pharm-exp
+  - e04-pharm-search-exp-set
+  - f01-setup-pharm-exp-set
+  - f02-dock-pharm-exp-set
+  - f03-filter-gnina-op-pharm-exp
+  - f04-stats-top-sim-set
+  - g01-final-results
+  - z01-create-pharm-db
 sort:
   type: natural
   ignore_case: true

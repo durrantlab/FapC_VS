@@ -102,8 +102,8 @@ mkdocs-print-site-plugin = ">=2.6.0,<3"
 mkdocs-awesome-nav = ">=3.0.0, <4"
 
 [feature.docs.tasks]
-docs = { cmd = ["rm", "-rf", "./public/", "&&", "mkdocs", "build", "-d", "public/"] }
-serve = { cmd = ["mkdocs", "serve"] }
+docs = { cmd = ["rm", "-rf", "./public/", "&&", "mkdocs", "build", "-d", "public/"], env = {NO_MKDOCS_2_WARNING = "1"} }
+serve = { cmd = ["mkdocs", "serve"] , env = {NO_MKDOCS_2_WARNING = "1"}}
 
 [feature.pharmit.target.linux-64.dependencies]
 pharmit = { url = "https://github.com/durrantlab/pharmit-dl/releases/download/v0.1.3/pharmit-0.1.3-h41f06ac_0.conda" }
