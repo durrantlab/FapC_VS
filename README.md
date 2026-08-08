@@ -14,11 +14,6 @@ Join us in advancing open science, promoting transparency, and accelerating inno
 
 To explore or contribute to this project, you must clone the git repository (preferable using `ssh`).
 
-### Information
-
-We have initialized an [Obsidian](https://obsidian.md/) vault at the repository root that we use to write literature, notes, reports, etc. in markdown.
-Once cloned, you can open this repository by opening the repository directory as a Vault.
-
 ### Communication
 
 > No research should be done alone.
